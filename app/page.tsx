@@ -8,6 +8,7 @@ import TeamSection from '@/components/TeamSection';
 import ReviewsSection from '@/components/ReviewsSection';
 import FAQ from '@/components/FAQ';
 import Link from 'next/link';
+export const dynamic = 'force-dynamic';
 
 // Fetch Featured Destinations
 async function getFeaturedDestinations() {

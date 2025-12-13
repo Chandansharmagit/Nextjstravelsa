@@ -1,14 +1,14 @@
 "use client";
 
 import { useSearchParams } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useState, Suspense } from "react";
 import DestinationCard from "@/components/DestinationCard";
 import HowItWorks from "@/components/HowItWorks";
 import { FaSearch, FaFilter, FaCompass, FaSadTear, FaStar, FaChevronDown } from "react-icons/fa";
 import { motion } from "framer-motion";
 import api from "@/lib/api";
 
-export default function SearchPage() {
+function SearchContent() {
     const searchParams = useSearchParams();
     const query = searchParams.get("query");
 
@@ -199,5 +199,13 @@ export default function SearchPage() {
 
             <HowItWorks />
         </main>
+    );
+}
+
+export default function SearchPage() {
+    return (
+        <Suspense fallback={<div className="min-h-screen flex items-center justify-center">Loading search results...</div>}>
+            <SearchContent />
+        </Suspense>
     );
 }
