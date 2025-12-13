@@ -5,7 +5,7 @@ import api from "@/lib/api";
 import { FaCalendarCheck, FaBoxOpen, FaSpinner } from "react-icons/fa";
 
 export default function AdminBookings() {
-    const [bookings, setBookings] = useState([]);
+    const [bookings, setBookings] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
