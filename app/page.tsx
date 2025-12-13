@@ -1,65 +1,145 @@
-import Image from "next/image";
+import Hero from '@/components/Hero';
+import DestinationCard from '@/components/DestinationCard';
+import TourCard from '@/components/TourCard';
+import HowItWorks from '@/components/HowItWorks';
+import WhyChooseUs from '@/components/WhyChooseUs';
+import StatsSection from '@/components/StatsSection';
+import TeamSection from '@/components/TeamSection';
+import ReviewsSection from '@/components/ReviewsSection';
+import FAQ from '@/components/FAQ';
+import Link from 'next/link';
 
-export default function Home() {
+// Fetch Featured Destinations
+async function getFeaturedDestinations() {
+  try {
+    const res = await fetch('https://backendtsa.travelsansr.com/api/destinations?featured=true', {
+      cache: 'no-store',
+    });
+    if (!res.ok) {
+      // Try fetching all if featured call fails or returns 404
+      const fallbackRes = await fetch('https://backendtsa.travelsansr.com/api/destinations', { cache: 'no-store' });
+      if (!fallbackRes.ok) return [];
+      const fallbackData = await fallbackRes.json();
+      return Array.isArray(fallbackData) ? fallbackData : fallbackData.data || fallbackData.destinations || [];
+    }
+    const data = await res.json();
+    const destinations = Array.isArray(data) ? data : data.data || data.destinations || [];
+
+    // If no featured destinations found, fallback to showing some random ones
+    if (destinations.length === 0) {
+      const fallbackRes = await fetch('https://backendtsa.travelsansr.com/api/destinations', { cache: 'no-store' });
+      if (fallbackRes.ok) {
+        const fallbackData = await fallbackRes.json();
+        return Array.isArray(fallbackData) ? fallbackData : fallbackData.data || fallbackData.destinations || [];
+      }
+    }
+    return destinations;
+  } catch (error) {
+    console.error("Failed to fetch destinations:", error);
+    return [];
+  }
+}
+
+// Fetch Popular Tours (Just random tours for now)
+async function getPopularTours() {
+  try {
+    const res = await fetch('https://backendtsa.travelsansr.com/api/tours', {
+      cache: 'no-store',
+    });
+    if (!res.ok) return [];
+
+    // Simulate "popular" by taking first 3
+    const data = await res.json();
+    const tours = Array.isArray(data) ? data : data.data || data.tours || [];
+    return tours.slice(0, 3);
+  } catch (error) {
+    console.error("Failed to fetch tours:", error);
+    return [];
+  }
+}
+
+export default async function Home() {
+  const destinations = await getFeaturedDestinations();
+  const tours = await getPopularTours();
+
   return (
-    <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex min-h-screen w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
+    <main>
+      <Hero />
+
+      {/* Featured Destinations */}
+      <section className="py-20 px-4 xl:px-20 bg-light">
+        <div className="text-center mb-12">
+          <h2 className="text-4xl font-bold text-primary mb-2">Featured Destinations</h2>
+          <p className="text-gray-600">Discover places that everyone is talking about</p>
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          {destinations && destinations.length > 0 ? (
+            destinations.slice(0, 3).map((dest: any) => (
+              <DestinationCard key={dest._id} destination={dest} />
+            ))
+          ) : (
+            <div className="col-span-full text-center text-gray-500">
+              <p>No featured destinations available at the moment.</p>
+              <p className="text-sm">Please make sure backend is running.</p>
+            </div>
+          )}
         </div>
-      </main>
-    </div>
+
+        <div className="text-center mt-12">
+          <Link href="/destinations">
+            <button className="px-8 py-3 rounded-full border border-primary text-primary hover:bg-primary hover:text-white transition duration-300">
+              View All Destinations
+            </button>
+          </Link>
+        </div>
+      </section>
+
+      {/* How It Works */}
+      <HowItWorks />
+
+      {/* Popular Tours */}
+      <section className="py-20 px-4 xl:px-20 bg-light">
+        <div className="text-center mb-12">
+          <h2 className="text-4xl font-bold text-primary mb-2">Popular Tours</h2>
+          <p className="text-gray-600">Best selling packages selected for you</p>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          {tours && tours.length > 0 ? (
+            tours.map((tour: any) => (
+              <TourCard key={tour._id} tour={tour} />
+            ))
+          ) : (
+            <div className="col-span-full text-center text-gray-500">
+              No tours available at the moment.
+            </div>
+          )}
+        </div>
+
+        <div className="text-center mt-12">
+          <Link href="/tours">
+            <button suppressHydrationWarning className="px-8 py-3 rounded-full bg-secondary text-white hover:bg-orange-600 transition duration-300 shadow-xl">
+              View All Tours
+            </button>
+          </Link>
+        </div>
+      </section>
+
+      {/* Why Choose Us */}
+      <WhyChooseUs />
+
+      {/* Stats Section */}
+      <StatsSection />
+
+      {/* Team Section */}
+      <TeamSection />
+
+      {/* Reviews Section */}
+      <ReviewsSection />
+
+      {/* FAQ */}
+      <FAQ />
+    </main>
   );
 }
