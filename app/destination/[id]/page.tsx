@@ -5,7 +5,7 @@ import DestinationClientWrapper from '@/components/DestinationClientWrapper';
 
 async function getDestination(id: string) {
     try {
-        const res = await fetch(`https://backendtsa.travelsansr.com/api/destinations/${id}`, {
+        const res = await fetch(`http://localhost:5000/api/destinations/${id}`, {
             cache: 'no-store'
         });
 
