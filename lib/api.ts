@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const api = axios.create({
-    baseURL: 'https://backendtravelnew.vercel.app/api',
+    baseURL: 'https://backendtsa.travelsansr.com/api',
     withCredentials: true,
     headers: {
         'Content-Type': 'application/json',

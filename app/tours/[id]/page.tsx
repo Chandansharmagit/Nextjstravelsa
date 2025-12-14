@@ -5,7 +5,7 @@ import TourBookingSection from '@/components/TourBookingSection';
 
 async function getTour(id: string) {
     try {
-        const res = await fetch(`https://backendtravelnew.vercel.app/api/tours/${id}`, {
+        const res = await fetch(`https://backendtsa.travelsansr.com/api/tours/${id}`, {
             cache: 'no-store'
         });
         if (res.ok) {
@@ -14,7 +14,7 @@ async function getTour(id: string) {
         }
 
         // Fallback or retry
-        const allRes = await fetch('https://backendtravelnew.vercel.app/api/tours', { cache: 'no-store' });
+        const allRes = await fetch('https://backendtsa.travelsansr.com/api/tours', { cache: 'no-store' });
         if (allRes.ok) {
             const allData = await allRes.json();
             const list = Array.isArray(allData) ? allData : allData.tours || allData.data || [];

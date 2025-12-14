@@ -7,7 +7,7 @@ async function getDestination(id: string) {
         // Assuming API might not have single item endpoint working perfectly or id is different.
         // Let's try the direct endpoint first if standard REST
         // Let's try the direct endpoint first
-        const res = await fetch(`https://backendtravelnew.vercel.app/api/destinations/${id}`, {
+        const res = await fetch(`https://backendtsa.travelsansr.com/api/destinations/${id}`, {
             cache: 'no-store'
         });
 
@@ -18,7 +18,7 @@ async function getDestination(id: string) {
         }
 
         // Fallback: fetch all and find
-        const allRes = await fetch('https://backendtravelnew.vercel.app/api/destinations', { cache: 'no-store' });
+        const allRes = await fetch('https://backendtsa.travelsansr.com/api/destinations', { cache: 'no-store' });
         const data = await allRes.json();
         const list = Array.isArray(data) ? data : data.destinations || [];
         return list.find((d: any) => d._id === id);

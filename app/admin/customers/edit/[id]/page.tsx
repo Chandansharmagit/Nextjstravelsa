@@ -34,7 +34,7 @@ export default function EditCustomerPage() {
 
     const fetchCustomer = async () => {
         try {
-            const res = await fetch(`https://backendtravelnew.vercel.app/api/users/${id}`, {
+            const res = await fetch(`https://backendtsa.travelsansr.com/api/users/${id}`, {
                 credentials: 'include'
             });
             if (!res.ok) throw new Error('Failed to fetch customer');
@@ -63,7 +63,7 @@ export default function EditCustomerPage() {
         setSubmitting(true);
 
         try {
-            const res = await fetch(`https://backendtravelnew.vercel.app/api/users/${id}`, {
+            const res = await fetch(`https://backendtsa.travelsansr.com/api/users/${id}`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',

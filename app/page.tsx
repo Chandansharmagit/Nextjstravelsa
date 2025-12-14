@@ -13,12 +13,12 @@ export const dynamic = 'force-dynamic';
 // Fetch Featured Destinations
 async function getFeaturedDestinations() {
   try {
-    const res = await fetch('https://backendtravelnew.vercel.app/api/destinations?featured=true', {
+    const res = await fetch('https://backendtsa.travelsansr.com/api/destinations?featured=true', {
       cache: 'no-store',
     });
     if (!res.ok) {
       // Try fetching all if featured call fails or returns 404
-      const fallbackRes = await fetch('https://backendtravelnew.vercel.app/api/destinations', { cache: 'no-store' });
+      const fallbackRes = await fetch('https://backendtsa.travelsansr.com/api/destinations', { cache: 'no-store' });
       if (!fallbackRes.ok) return [];
       const fallbackData = await fallbackRes.json();
       return Array.isArray(fallbackData) ? fallbackData : fallbackData.data || fallbackData.destinations || [];
@@ -28,7 +28,7 @@ async function getFeaturedDestinations() {
 
     // If no featured destinations found, fallback to showing some random ones
     if (destinations.length === 0) {
-      const fallbackRes = await fetch('https://backendtravelnew.vercel.app/api/destinations', { cache: 'no-store' });
+      const fallbackRes = await fetch('https://backendtsa.travelsansr.com/api/destinations', { cache: 'no-store' });
       if (fallbackRes.ok) {
         const fallbackData = await fallbackRes.json();
         return Array.isArray(fallbackData) ? fallbackData : fallbackData.data || fallbackData.destinations || [];
@@ -44,7 +44,7 @@ async function getFeaturedDestinations() {
 // Fetch Popular Tours (Just random tours for now)
 async function getPopularTours() {
   try {
-    const res = await fetch('https://backendtravelnew.vercel.app/api/tours', {
+    const res = await fetch('https://backendtsa.travelsansr.com/api/tours', {
       cache: 'no-store',
     });
     if (!res.ok) return [];

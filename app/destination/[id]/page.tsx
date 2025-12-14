@@ -5,7 +5,7 @@ import DestinationClientWrapper from '@/components/DestinationClientWrapper';
 
 async function getDestination(id: string) {
     try {
-        const res = await fetch(`https://backendtravelnew.vercel.app/api/destinations/${id}`, {
+        const res = await fetch(`https://backendtsa.travelsansr.com/api/destinations/${id}`, {
             cache: 'no-store'
         });
 

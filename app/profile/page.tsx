@@ -96,7 +96,7 @@ export default function ProfilePage() {
                             <div className="w-32 h-32 rounded-full overflow-hidden bg-gradient-to-br from-primary to-secondary flex items-center justify-center text-white text-4xl font-bold border-4 border-white shadow-lg">
                                 {user.image ? (
                                     <img
-                                        src={user.image.startsWith('http') ? user.image : `https://backendtravelnew.vercel.app${user.image}`}
+                                        src={user.image.startsWith('http') ? user.image : `https://backendtsa.travelsansr.com${user.image}`}
                                         alt={user.name}
                                         className="w-full h-full object-cover"
                                     />
