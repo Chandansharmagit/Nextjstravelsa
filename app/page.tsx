@@ -13,7 +13,7 @@ export const dynamic = 'force-dynamic';
 // Fetch Featured Destinations
 async function getFeaturedDestinations() {
   try {
-    const res = await fetch('http://localhost:5000/api/destinations?featured=true', {
+    const res = await fetch('https://backendtravelnew.vercel.app/api/destinations?featured=true', {
       cache: 'no-store',
     });
     if (!res.ok) {
@@ -44,7 +44,7 @@ async function getFeaturedDestinations() {
 // Fetch Popular Tours (Just random tours for now)
 async function getPopularTours() {
   try {
-    const res = await fetch('http://localhost:5000/api/tours', {
+    const res = await fetch('https://backendtravelnew.vercel.app/api/tours', {
       cache: 'no-store',
     });
     if (!res.ok) return [];
