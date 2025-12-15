@@ -1,33 +1,24 @@
-# Netlify Configuration for Next.js 16 App Router
-# This file ensures proper SSR deployment and prevents 404 errors
+# Netlify Configuration for Next.js 16 SSR (App Router)
+# CRITICAL: No SPA-style redirects when using @netlify/plugin-nextjs
 
 [build]
   # Build command for Next.js
   command = "npm run build"
   
   # Publish directory for Next.js with SSR
-  # The @netlify/plugin-nextjs reads from .next directory
+  # The @netlify/plugin-nextjs handles routing from .next directory
   publish = ".next"
 
-# Essential Next.js Plugin for SSR Support
+# ⚠️ CRITICAL: @netlify/plugin-nextjs Plugin
+# This plugin MUST be enabled for SSR Next.js apps
+# It converts Next.js pages to Netlify Functions and handles ALL routing
 [[plugins]]
   package = "@netlify/plugin-nextjs"
 
-# Redirect rules for SPA routing
-# These ensure client-side navigation works after page refresh
-[[redirects]]
-  from = "/*"
-  to = "/index.html"
-  status = 200
-  force = false
-  
-# API proxy (if needed for development)
-# Uncomment and configure if you want to proxy API calls
-# [[redirects]]
-#   from = "/api/*"
-#   to = "https://your-backend-api.com/:splat"
-#   status = 200
-#   force = true
+# ⚠️ NO SPA REDIRECTS FOR SSR APPS
+# DO NOT ADD: [[redirects]] from = "/*" to = "/index.html"
+# Why? The plugin intercepts ALL requests and routes them through Next.js runtime
+# Adding a catch-all redirect creates a conflict and causes 404 errors
 
 # Headers for security and performance
 [[headers]]
@@ -38,7 +29,7 @@
     X-Content-Type-Options = "nosniff"
     Referrer-Policy = "strict-origin-when-cross-origin"
 
-# Cache static assets
+# Cache static assets aggressively
 [[headers]]
   for = "/_next/static/*"
   [headers.values]
@@ -48,3 +39,11 @@
   for = "/images/*"
   [headers.values]
     Cache-Control = "public, max-age=31536000, immutable"
+
+# Optional: API Proxy to Backend (if same domain is required)
+# Uncomment ONLY if you need to proxy API requests
+# [[redirects]]
+#   from = "/api/*"
+#   to = "https://backendtsa.travelsansr.com/api/:splat"
+#   status = 200
+#   force = true
