@@ -1,0 +1,50 @@
+# Netlify Configuration for Next.js 16 App Router
+# This file ensures proper SSR deployment and prevents 404 errors
+
+[build]
+  # Build command for Next.js
+  command = "npm run build"
+  
+  # Publish directory for Next.js with SSR
+  # The @netlify/plugin-nextjs reads from .next directory
+  publish = ".next"
+
+# Essential Next.js Plugin for SSR Support
+[[plugins]]
+  package = "@netlify/plugin-nextjs"
+
+# Redirect rules for SPA routing
+# These ensure client-side navigation works after page refresh
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
+  force = false
+  
+# API proxy (if needed for development)
+# Uncomment and configure if you want to proxy API calls
+# [[redirects]]
+#   from = "/api/*"
+#   to = "https://your-backend-api.com/:splat"
+#   status = 200
+#   force = true
+
+# Headers for security and performance
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Frame-Options = "DENY"
+    X-XSS-Protection = "1; mode=block"
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+
+# Cache static assets
+[[headers]]
+  for = "/_next/static/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+[[headers]]
+  for = "/images/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"

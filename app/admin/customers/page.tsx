@@ -19,7 +19,7 @@ export default function CustomersPage() {
 
     const fetchCustomers = async () => {
         try {
-            const response = await fetch('https://backendtsa.travelsansr.com/api/users', {
+            const response = await fetch('http://localhost:5000/api/users', {
                 credentials: 'include' // Include cookies for authentication
             });
 
@@ -53,7 +53,7 @@ export default function CustomersPage() {
     const handleDelete = async (id: string) => {
         if (confirm('Are you sure you want to delete this customer?')) {
             try {
-                const response = await fetch(`https://backendtsa.travelsansr.com/api/users/${id}`, {
+                const response = await fetch(`http://localhost:5000/api/users/${id}`, {
                     method: 'DELETE',
                     credentials: 'include'
                 });

@@ -8,17 +8,19 @@ import TeamSection from '@/components/TeamSection';
 import ReviewsSection from '@/components/ReviewsSection';
 import FAQ from '@/components/FAQ';
 import Link from 'next/link';
+import TrustedPartners from '@/components/TrustedPartners';
+import FeaturedGuides from '@/components/FeaturedGuides';
 export const dynamic = 'force-dynamic';
 
 // Fetch Featured Destinations
 async function getFeaturedDestinations() {
   try {
-    const res = await fetch('https://backendtsa.travelsansr.com/api/destinations?featured=true', {
+    const res = await fetch('http://localhost:5000/api/destinations?featured=true', {
       cache: 'no-store',
     });
     if (!res.ok) {
       // Try fetching all if featured call fails or returns 404
-      const fallbackRes = await fetch('https://backendtsa.travelsansr.com/api/destinations', { cache: 'no-store' });
+      const fallbackRes = await fetch('http://localhost:5000/api/destinations', { cache: 'no-store' });
       if (!fallbackRes.ok) return [];
       const fallbackData = await fallbackRes.json();
       return Array.isArray(fallbackData) ? fallbackData : fallbackData.data || fallbackData.destinations || [];
@@ -28,7 +30,7 @@ async function getFeaturedDestinations() {
 
     // If no featured destinations found, fallback to showing some random ones
     if (destinations.length === 0) {
-      const fallbackRes = await fetch('https://backendtsa.travelsansr.com/api/destinations', { cache: 'no-store' });
+      const fallbackRes = await fetch('http://localhost:5000/api/destinations', { cache: 'no-store' });
       if (fallbackRes.ok) {
         const fallbackData = await fallbackRes.json();
         return Array.isArray(fallbackData) ? fallbackData : fallbackData.data || fallbackData.destinations || [];
@@ -44,7 +46,7 @@ async function getFeaturedDestinations() {
 // Fetch Popular Tours (Just random tours for now)
 async function getPopularTours() {
   try {
-    const res = await fetch('https://backendtsa.travelsansr.com/api/tours', {
+    const res = await fetch('http://localhost:5000/api/tours', {
       cache: 'no-store',
     });
     if (!res.ok) return [];
@@ -66,6 +68,10 @@ export default async function Home() {
   return (
     <main>
       <Hero />
+
+      {/* Trusted Partners */}
+      <TrustedPartners />
+
 
       {/* Featured Destinations */}
       <section className="py-20 px-4 xl:px-20 bg-light">
@@ -138,6 +144,9 @@ export default async function Home() {
 
       {/* Reviews Section */}
       <ReviewsSection />
+
+      {/* Featured Guides */}
+      <FeaturedGuides />
 
       {/* FAQ */}
       <FAQ />

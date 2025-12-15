@@ -1,19 +1,26 @@
 "use client";
 
+import { useState, useEffect, Suspense } from 'react';
+import { useSearchParams } from 'next/navigation';
 import { motion, useScroll, useTransform } from 'framer-motion';
 import { useRef } from 'react';
-import { FaHiking, FaPaw, FaLandmark, FaParachuteBox, FaArrowRight, FaStar, FaQuoteLeft, FaPlay } from 'react-icons/fa';
+import { FaHiking, FaPaw, FaLandmark, FaParachuteBox, FaArrowRight, FaStar, FaQuoteLeft, FaPlay, FaSearch } from 'react-icons/fa';
 import Link from 'next/link';
 import Image from 'next/image';
+import Masonry from 'react-masonry-css';
+import TourCard from '@/components/TourCard';
+import Pagination from '@/components/Pagination';
+import api from '@/lib/api';
 
-const ExperiencesPage = () => {
+// Landing Page View (Original Premium Design)
+const LandingView = () => {
     const categories = [
         {
             id: 1,
             title: "Trekking & Hiking",
             subtitle: "Conquer the Giants",
             icon: <FaHiking className="text-4xl" />,
-            image: "https://img.freepik.com/free-photo/breathtaking-shot-snowy-mountains-cloudy-sky_181624-9640.jpg?w=1380&t=st=1706692800~exp=1706693400~hmac=abcdef", // Mountain
+            image: "https://img.freepik.com/free-photo/breathtaking-shot-snowy-mountains-cloudy-sky_181624-9640.jpg?w=1380&t=st=1706692800~exp=1706693400~hmac=abcdef",
             description: "From the legendary Everest Base Camp to the mystic Annapurna trails, walk amongst the clouds.",
             tags: ["Everest", "Annapurna", "Langtang"]
         },
@@ -22,7 +29,7 @@ const ExperiencesPage = () => {
             title: "Wildlife Safari",
             subtitle: "Into the Jungle",
             icon: <FaPaw className="text-4xl" />,
-            image: "https://img.freepik.com/free-photo/elephant-walking-road-sri-lanka_181624-21146.jpg?w=1380&t=st=1706692800~exp=1706693400~hmac=abcdef", // Elephant/Jungle
+            image: "https://img.freepik.com/free-photo/elephant-walking-road-sri-lanka_181624-21146.jpg?w=1380&t=st=1706692800~exp=1706693400~hmac=abcdef",
             description: "Track the elusive Bengal Tiger and One-Horned Rhino in the dense jungles of Chitwan and Bardia.",
             tags: ["Chitwan", "Bardia", "Elephant Safari"]
         },
@@ -31,7 +38,7 @@ const ExperiencesPage = () => {
             title: "Cultural Immersion",
             subtitle: "Heritage & History",
             icon: <FaLandmark className="text-4xl" />,
-            image: "https://img.freepik.com/free-photo/temple-complex-kathmandu-nepal_181624-37015.jpg?w=1380&t=st=1706692800~exp=1706693400~hmac=abcdef", // Temple
+            image: "https://img.freepik.com/free-photo/temple-complex-kathmandu-nepal_181624-37015.jpg?w=1380&t=st=1706692800~exp=1706693400~hmac=abcdef",
             description: "Lose yourself in the ancient alleyways of Kathmandu and the serene temples of Lumbini.",
             tags: ["UNESCO Sites", "Festivals", "Homestays"]
         },
@@ -40,7 +47,7 @@ const ExperiencesPage = () => {
             title: "Adventure Sports",
             subtitle: "Adrenaline Rush",
             icon: <FaParachuteBox className="text-4xl" />,
-            image: "https://img.freepik.com/free-photo/people-rafting-river_23-2149199342.jpg?w=1380&t=st=1706692800~exp=1706693400~hmac=abcdef", // Rafting
+            image: "https://img.freepik.com/free-photo/people-rafting-river_23-2149199342.jpg?w=1380&t=st=1706692800~exp=1706693400~hmac=abcdef",
             description: "Raft raging rivers, bungee jump from suspension bridges, or paraglide over lakes.",
             tags: ["Rafting", "Bungee", "Paragliding"]
         },
@@ -48,7 +55,7 @@ const ExperiencesPage = () => {
 
     return (
         <main className="bg-white">
-            {/* 1. Cinematic Hero Section with Parallax Effect */}
+            {/* Cinematic Hero Section */}
             <section className="relative h-[85vh] flex items-center justify-center overflow-hidden">
                 <div className="absolute inset-0 bg-black/40 z-10" />
                 <div
@@ -79,12 +86,6 @@ const ExperiencesPage = () => {
                                     Plan Your Trip
                                 </button>
                             </Link>
-                            {/* <div className="flex items-center gap-4 cursor-pointer group">
-                                <div className="w-14 h-14 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center border border-white/30 group-hover:scale-110 transition-transform">
-                                    <FaPlay className="text-white ml-1" />
-                                </div>
-                                <span className="font-semibold text-lg">Watch Film</span>
-                            </div> */}
                         </div>
                     </motion.div>
                 </div>
@@ -101,9 +102,8 @@ const ExperiencesPage = () => {
                 </motion.div>
             </section>
 
-            {/* 2. Intro Text */}
+            {/* Intro Text */}
             <section className="py-24 px-6 xl:px-24 bg-white relative">
-                {/* Decorative background text */}
                 <div className="absolute top-10 left-0 text-[200px] font-bold text-gray-50 opacity-[0.03] select-none pointer-events-none leading-none">
                     EXPLORE
                 </div>
@@ -113,12 +113,12 @@ const ExperiencesPage = () => {
                         Events & <span className="text-primary italic">Experiences</span>
                     </h2>
                     <p className="text-gray-600 text-xl leading-relaxed font-light">
-                        Travel Sansar isn't just about reaching a destination; it's about the journey within. We curate experiences that challenge, inspire, and transform you. Whether you seek the silence of the peaks or the rhythm of the jungle, we have a story waiting for you.
+                        Travel Sansar isn't just about reaching a destination; it's about the journey within. We curate experiences that challenge, inspire, and transform you.
                     </p>
                 </div>
             </section>
 
-            {/* 3. The Experience Categories (Alternating Layout) */}
+            {/* Experience Categories */}
             <section className="pb-24 px-4 xl:px-20 bg-gray-50">
                 <div className="space-y-24">
                     {categories.map((cat, index) => (
@@ -186,7 +186,7 @@ const ExperiencesPage = () => {
                 </div>
             </section>
 
-            {/* 4. Interactive Numbers Section */}
+            {/* Interactive Numbers Section */}
             <section className="py-20 bg-primary text-white">
                 <div className="container mx-auto px-6">
                     <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center divide-x divide-white/20">
@@ -213,4 +213,192 @@ const ExperiencesPage = () => {
     );
 };
 
-export default ExperiencesPage;
+// Listing Page View (for filtered experiences)
+const ListingView = ({ type }: { type: string }) => {
+    const [tours, setTours] = useState<any[]>([]);
+    const [filteredTours, setFilteredTours] = useState<any[]>([]);
+    const [loading, setLoading] = useState(true);
+    const [currentPage, setCurrentPage] = useState(1);
+    const [searchQuery, setSearchQuery] = useState('');
+    const itemsPerPage = 9;
+
+    useEffect(() => {
+        fetchTours();
+    }, []);
+
+    useEffect(() => {
+        filterTours();
+    }, [tours, searchQuery, type]);
+
+    const fetchTours = async () => {
+        try {
+            const res = await api.get('/tours');
+            const data = Array.isArray(res.data) ? res.data : res.data.tours || [];
+            setTours(data);
+        } catch (error) {
+            console.error("Failed to fetch tours:", error);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const filterTours = () => {
+        let filtered = [...tours];
+
+        if (searchQuery) {
+            filtered = filtered.filter(tour =>
+                tour.title?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                tour.description?.toLowerCase().includes(searchQuery.toLowerCase())
+            );
+        }
+
+        if (type) {
+            filtered = filtered.filter(tour =>
+                tour.type?.toLowerCase().includes(type.toLowerCase()) ||
+                tour.title?.toLowerCase().includes(type.toLowerCase())
+            );
+        }
+
+        setFilteredTours(filtered);
+        setCurrentPage(1);
+    };
+
+    const totalPages = Math.ceil(filteredTours.length / itemsPerPage);
+    const startIndex = (currentPage - 1) * itemsPerPage;
+    const endIndex = startIndex + itemsPerPage;
+    const currentTours = filteredTours.slice(startIndex, endIndex);
+
+    const breakpointColumns = {
+        default: 3,
+        1024: 2,
+        640: 1
+    };
+
+    return (
+        <>
+            {/* Hero Section */}
+            <section className="relative h-[50vh] flex items-center justify-center overflow-hidden">
+                <div
+                    className="absolute inset-0 bg-cover bg-center"
+                    style={{ backgroundImage: "url('https://images.unsplash.com/photo-1506905925346-21bda4d32df4?q=80&w=2670&auto=format&fit=crop')" }}
+                />
+                <div className="absolute inset-0 bg-gradient-to-r from-primary/90 to-orange-700/90" />
+
+                <div className="relative z-10 text-center text-white px-4">
+                    <motion.h1
+                        initial={{ opacity: 0, y: 30 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.6 }}
+                        className="text-5xl md:text-6xl font-bold mb-4"
+                    >
+                        {type} Experiences
+                    </motion.h1>
+                    <motion.p
+                        initial={{ opacity: 0, y: 30 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.6, delay: 0.2 }}
+                        className="text-xl md:text-2xl max-w-3xl mx-auto"
+                    >
+                        Discover our curated {type.toLowerCase()} collection
+                    </motion.p>
+                </div>
+            </section>
+
+            {/* Main Content */}
+            <section className="py-20 px-4 xl:px-20 bg-light min-h-screen">
+                {/* Search Bar */}
+                <div className="mb-12">
+                    <div className="bg-white p-6 rounded-2xl shadow-card">
+                        <div className="relative">
+                            <FaSearch className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" />
+                            <input
+                                type="text"
+                                placeholder="Search experiences..."
+                                value={searchQuery}
+                                onChange={(e) => setSearchQuery(e.target.value)}
+                                className="w-full pl-12 pr-4 py-3 border-2 border-gray-200 rounded-xl focus:outline-none focus:border-primary transition"
+                            />
+                        </div>
+                        <div className="mt-4 text-gray-600">
+                            Showing <span className="font-bold text-primary">{currentTours.length}</span> of{' '}
+                            <span className="font-bold text-primary">{filteredTours.length}</span> experiences
+                        </div>
+                    </div>
+                </div>
+
+                {/* Tours Grid */}
+                {loading ? (
+                    <Masonry
+                        breakpointCols={breakpointColumns}
+                        className="flex -ml-6 w-auto"
+                        columnClassName="pl-6 bg-clip-padding"
+                    >
+                        {[...Array(9)].map((_, i) => (
+                            <div key={i} className="mb-6">
+                                <div className={`${i % 3 === 0 ? 'h-[500px]' : 'h-[420px]'} rounded-2xl bg-gray-200 animate-pulse`}></div>
+                            </div>
+                        ))}
+                    </Masonry>
+                ) : currentTours.length > 0 ? (
+                    <>
+                        <Masonry
+                            breakpointCols={breakpointColumns}
+                            className="flex -ml-6 w-auto"
+                            columnClassName="pl-6 bg-clip-padding"
+                        >
+                            {currentTours.map((tour: any, index: number) => {
+                                const isFeatured = index % 3 === 0;
+                                return (
+                                    <motion.div
+                                        key={tour._id}
+                                        initial={{ opacity: 0, y: 30 }}
+                                        animate={{ opacity: 1, y: 0 }}
+                                        transition={{ delay: index * 0.05 }}
+                                        className="mb-6"
+                                    >
+                                        <TourCard tour={tour} featured={isFeatured} />
+                                    </motion.div>
+                                );
+                            })}
+                        </Masonry>
+
+                        {totalPages > 1 && (
+                            <Pagination
+                                currentPage={currentPage}
+                                totalPages={totalPages}
+                                onPageChange={setCurrentPage}
+                            />
+                        )}
+                    </>
+                ) : (
+                    <div className="text-center py-20">
+                        <div className="text-6xl mb-4">🔍</div>
+                        <h3 className="text-2xl font-bold text-gray-700 mb-2">No experiences found</h3>
+                        <p className="text-gray-500">Try adjusting your search</p>
+                    </div>
+                )}
+            </section>
+        </>
+    );
+};
+
+// Main Component
+function ExperiencesContent() {
+    const searchParams = useSearchParams();
+    const type = searchParams.get('type');
+
+    // If type exists, show listing view; otherwise show landing view
+    if (type) {
+        return <ListingView type={type} />;
+    }
+
+    return <LandingView />;
+}
+
+export default function ExperiencesPage() {
+    return (
+        <Suspense fallback={<div className="min-h-screen flex justify-center items-center">Loading...</div>}>
+            <ExperiencesContent />
+        </Suspense>
+    );
+}

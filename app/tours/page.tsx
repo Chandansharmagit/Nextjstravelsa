@@ -1,6 +1,7 @@
 "use client";
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, Suspense } from 'react';
+import { useSearchParams } from 'next/navigation';
 import { motion } from 'framer-motion';
 import Masonry from 'react-masonry-css';
 import TourCard from '@/components/TourCard';
@@ -8,7 +9,10 @@ import Pagination from '@/components/Pagination';
 import { FaSearch, FaClock, FaDollarSign } from 'react-icons/fa';
 import api from '@/lib/api';
 
-export default function ToursPage() {
+function ToursContent() {
+    const searchParams = useSearchParams();
+    const initialCategory = searchParams.get('category') || 'all';
+
     const [tours, setTours] = useState<any[]>([]);
     const [filteredTours, setFilteredTours] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
@@ -16,6 +20,7 @@ export default function ToursPage() {
     const [searchQuery, setSearchQuery] = useState('');
     const [durationFilter, setDurationFilter] = useState('all');
     const [priceFilter, setPriceFilter] = useState('all');
+    const [categoryFilter, setCategoryFilter] = useState(initialCategory);
     const itemsPerPage = 9;
 
     useEffect(() => {
@@ -24,7 +29,7 @@ export default function ToursPage() {
 
     useEffect(() => {
         filterTours();
-    }, [tours, searchQuery, durationFilter, priceFilter]);
+    }, [tours, searchQuery, durationFilter, priceFilter, categoryFilter]);
 
     const fetchTours = async () => {
         try {
@@ -47,6 +52,13 @@ export default function ToursPage() {
                 tour.title?.toLowerCase().includes(searchQuery.toLowerCase()) ||
                 tour.description?.toLowerCase().includes(searchQuery.toLowerCase()) ||
                 tour.destination?.toLowerCase().includes(searchQuery.toLowerCase())
+            );
+        }
+
+        if (categoryFilter !== 'all') {
+            filtered = filtered.filter(tour =>
+                tour.type?.toLowerCase().includes(categoryFilter.toLowerCase()) ||
+                tour.title?.toLowerCase().includes(categoryFilter.toLowerCase())
             );
         }
 
@@ -103,7 +115,7 @@ export default function ToursPage() {
                         transition={{ duration: 0.6 }}
                         className="text-5xl md:text-6xl font-bold mb-4"
                     >
-                        Our Tours
+                        {categoryFilter !== 'all' ? `${categoryFilter} Tours` : 'Our Tours'}
                     </motion.h1>
                     <motion.p
                         initial={{ opacity: 0, y: 30 }}
@@ -111,7 +123,10 @@ export default function ToursPage() {
                         transition={{ duration: 0.6, delay: 0.2 }}
                         className="text-xl md:text-2xl max-w-3xl mx-auto"
                     >
-                        Curated experiences for every type of traveler
+                        {categoryFilter !== 'all'
+                            ? `Explore our curated ${categoryFilter} experiences`
+                            : 'Curated experiences for every type of traveler'
+                        }
                     </motion.p>
                 </div>
             </section>
@@ -232,5 +247,13 @@ export default function ToursPage() {
                 }
             `}</style>
         </>
+    );
+}
+
+export default function ToursPage() {
+    return (
+        <Suspense fallback={<div className="min-h-screen flex justify-center items-center">Loading...</div>}>
+            <ToursContent />
+        </Suspense>
     );
 }

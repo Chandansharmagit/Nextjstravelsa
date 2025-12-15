@@ -24,7 +24,23 @@ const nextConfig: NextConfig = {
       },
       {
         protocol: 'https',
-        hostname: 'backendtsa.travelsansr.com',
+        hostname: 'localhost',
+      },
+      {
+        protocol: 'https',
+        hostname: 'companieslogo.com',
+      },
+      {
+        protocol: 'https',
+        hostname: 'static.tacdn.com',
+      },
+      {
+        protocol: 'https',
+        hostname: 'upload.wikimedia.org',
+      },
+      {
+        protocol: 'https',
+        hostname: 'www.expedia.com',
       }
     ],
   },

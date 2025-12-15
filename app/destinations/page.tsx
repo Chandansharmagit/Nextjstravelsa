@@ -1,6 +1,7 @@
 "use client";
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, Suspense } from 'react';
+import { useSearchParams } from 'next/navigation';
 import { motion } from 'framer-motion';
 import Masonry from 'react-masonry-css';
 import DestinationCard from '@/components/DestinationCard';
@@ -8,12 +9,15 @@ import Pagination from '@/components/Pagination';
 import { FaSearch, FaFilter } from 'react-icons/fa';
 import api from '@/lib/api';
 
-export default function DestinationsPage() {
+function DestinationsContent() {
+    const searchParams = useSearchParams();
+    const initialSearch = searchParams.get('search') || '';
+
     const [destinations, setDestinations] = useState<any[]>([]);
     const [filteredDestinations, setFilteredDestinations] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
     const [currentPage, setCurrentPage] = useState(1);
-    const [searchQuery, setSearchQuery] = useState('');
+    const [searchQuery, setSearchQuery] = useState(initialSearch);
     const [selectedFilter, setSelectedFilter] = useState('all');
     const itemsPerPage = 9;
 
@@ -202,5 +206,13 @@ export default function DestinationsPage() {
                 }
             `}</style>
         </>
+    );
+}
+
+export default function DestinationsPage() {
+    return (
+        <Suspense fallback={<div className="min-h-screen flex justify-center items-center">Loading...</div>}>
+            <DestinationsContent />
+        </Suspense>
     );
 }

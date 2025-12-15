@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { useAuth } from "../context/AuthContext";
-import { FaBars, FaTimes, FaUserCircle } from "react-icons/fa";
+import { FaBars, FaTimes, FaUserCircle, FaChevronDown } from "react-icons/fa";
 import { motion, AnimatePresence } from "framer-motion";
 
 const Navbar = () => {
@@ -28,11 +28,51 @@ const Navbar = () => {
 
     const links = [
         { id: 1, link: "home", path: "/" },
-        { id: 2, link: "destinations", path: "/destinations" },
-        { id: 3, link: "tours", path: "/tours" },
-        { id: 4, link: "experiences", path: "/experiences" },
+        {
+            id: 2,
+            link: "destinations",
+            path: "/destinations",
+            subLinks: [
+                { name: "All Destinations", path: "/destinations" },
+                { name: "Nepal", path: "/destinations?search=Nepal" },
+                { name: "Bhutan", path: "/destinations?search=Bhutan" },
+                { name: "Tibet", path: "/destinations?search=Tibet" },
+            ]
+        },
+        {
+            id: 3,
+            link: "tours",
+            path: "/tours",
+            subLinks: [
+                { name: "Trekking", path: "/tours?category=Trekking" },
+                { name: "Sightseeing", path: "/tours?category=Sightseeing" },
+                { name: "Adventure", path: "/tours?category=Adventure" },
+                { name: "Jungle Safari", path: "/tours?category=Safari" },
+            ]
+        },
+        {
+            id: 4,
+            link: "experiences",
+            path: "/experiences",
+            subLinks: [
+                { name: "Luxury Tours", path: "/experiences?type=Luxury" },
+                { name: "Wellness & Yoga", path: "/experiences?type=Wellness" },
+                { name: "Family Holidays", path: "/experiences?type=Family" },
+                { name: "Honeymoon", path: "/experiences?type=Honeymoon" },
+            ]
+        },
         { id: 5, link: "contact", path: "/contact" },
     ];
+
+    const [mobileSubMenuOpen, setMobileSubMenuOpen] = useState<number | null>(null);
+
+    const toggleMobileSubMenu = (id: number) => {
+        if (mobileSubMenuOpen === id) {
+            setMobileSubMenuOpen(null);
+        } else {
+            setMobileSubMenuOpen(id);
+        }
+    };
 
     // Animation variants for mobile menu items
     const menuItemVariants = {
@@ -67,14 +107,33 @@ const Navbar = () => {
 
                 {/* Desktop Menu */}
                 <ul className="hidden lg:flex items-center gap-8">
-                    {links.map(({ id, link, path }) => (
-                        <li key={id}>
-                            <Link href={path} className="group relative py-2">
+                    {links.map(({ id, link, path, subLinks }) => (
+                        <li key={id} className="relative group">
+                            <Link href={path} className="flex items-center gap-1 py-4">
                                 <span className="capitalize text-[15px] font-medium tracking-wide text-gray-700 transition-colors duration-300 group-hover:text-primary">
                                     {link}
                                 </span>
+                                {subLinks && <FaChevronDown className="text-xs text-gray-500 group-hover:text-primary transition-transform duration-300 group-hover:rotate-180" />}
                                 <span className="absolute bottom-0 left-0 w-0 h-0.5 transition-all duration-300 group-hover:w-full bg-primary" />
                             </Link>
+
+                            {/* Dropdown Menu */}
+                            {subLinks && (
+                                <div className="absolute top-full left-0 w-48 bg-white shadow-lg rounded-xl overflow-hidden invisible opacity-0 group-hover:visible group-hover:opacity-100 transition-all duration-300 transform translate-y-2 group-hover:translate-y-0 z-50 border border-gray-100">
+                                    <ul>
+                                        {subLinks.map((subItem, index) => (
+                                            <li key={index}>
+                                                <Link
+                                                    href={subItem.path}
+                                                    className="block px-6 py-3 text-sm text-gray-600 hover:bg-orange-50 hover:text-primary transition-colors border-b border-gray-50 last:border-none"
+                                                >
+                                                    {subItem.name}
+                                                </Link>
+                                            </li>
+                                        ))}
+                                    </ul>
+                                </div>
+                            )}
                         </li>
                     ))}
                 </ul>
@@ -152,7 +211,7 @@ const Navbar = () => {
 
                             <div className="flex flex-col h-full pb-10">
                                 <ul className="flex flex-col gap-4 w-full">
-                                    {links.map(({ id, link, path }, i) => (
+                                    {links.map(({ id, link, path, subLinks }, i) => (
                                         <motion.li
                                             key={id}
                                             custom={i}
@@ -161,13 +220,49 @@ const Navbar = () => {
                                             variants={menuItemVariants}
                                             className="border-b border-gray-50 pb-2"
                                         >
-                                            <Link
-                                                onClick={() => setNav(false)}
-                                                href={path}
-                                                className="text-2xl font-bold text-gray-800 active:text-primary transition-colors capitalize block py-2"
-                                            >
-                                                {link}
-                                            </Link>
+                                            <div className="flex flex-col">
+                                                <div className="flex justify-between items-center">
+                                                    <Link
+                                                        onClick={() => !subLinks && setNav(false)}
+                                                        href={path}
+                                                        className="text-2xl font-bold text-gray-800 active:text-primary transition-colors capitalize py-2 flex-1"
+                                                    >
+                                                        {link}
+                                                    </Link>
+                                                    {subLinks && (
+                                                        <div
+                                                            onClick={(e) => { e.preventDefault(); toggleMobileSubMenu(id); }}
+                                                            className="p-3 bg-gray-50 rounded-full cursor-pointer"
+                                                        >
+                                                            <FaChevronDown className={`text-gray-500 transition-transform duration-300 ${mobileSubMenuOpen === id ? 'rotate-180' : ''}`} />
+                                                        </div>
+                                                    )}
+                                                </div>
+
+                                                {/* Mobile Submenu */}
+                                                <AnimatePresence>
+                                                    {subLinks && mobileSubMenuOpen === id && (
+                                                        <motion.ul
+                                                            initial={{ height: 0, opacity: 0 }}
+                                                            animate={{ height: "auto", opacity: 1 }}
+                                                            exit={{ height: 0, opacity: 0 }}
+                                                            className="overflow-hidden bg-gray-50 rounded-lg mt-2"
+                                                        >
+                                                            {subLinks.map((sub, idx) => (
+                                                                <li key={idx}>
+                                                                    <Link
+                                                                        onClick={() => setNav(false)}
+                                                                        href={sub.path}
+                                                                        className="block px-6 py-3 text-gray-600 font-medium hover:text-primary"
+                                                                    >
+                                                                        {sub.name}
+                                                                    </Link>
+                                                                </li>
+                                                            ))}
+                                                        </motion.ul>
+                                                    )}
+                                                </AnimatePresence>
+                                            </div>
                                         </motion.li>
                                     ))}
                                 </ul>
