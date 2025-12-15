@@ -3,9 +3,12 @@ import Image from 'next/image';
 import Link from 'next/link';
 import DestinationClientWrapper from '@/components/DestinationClientWrapper';
 
+// Use environment variable for API URL
+const API_URL = process.env.NEXT_PUBLIC_API_URL || 'https://backendtsa.travelsansr.com/api';
+
 async function getDestination(id: string) {
     try {
-        const res = await fetch(`http://localhost:5000/api/destinations/${id}`, {
+        const res = await fetch(`${API_URL}/destinations/${id}`, {
             cache: 'no-store'
         });
 
@@ -15,6 +18,7 @@ async function getDestination(id: string) {
         }
         return null;
     } catch (error) {
+        console.error('Failed to fetch destination:', error);
         return null;
     }
 }

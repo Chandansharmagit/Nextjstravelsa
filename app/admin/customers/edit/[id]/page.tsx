@@ -4,6 +4,9 @@ import { useState, useEffect } from 'react';
 import { useRouter, useParams } from 'next/navigation';
 import { useAuth } from '@/context/AuthContext';
 
+// Use environment variable for API URL
+const API_URL = process.env.NEXT_PUBLIC_API_URL || 'https://backendtsa.travelsansr.com/api';
+
 export default function EditCustomerPage() {
     const params = useParams();
     const router = useRouter();
@@ -34,7 +37,7 @@ export default function EditCustomerPage() {
 
     const fetchCustomer = async () => {
         try {
-            const res = await fetch(`http://localhost:5000/api/users/${id}`, {
+            const res = await fetch(`${API_URL}/users/${id}`, {
                 credentials: 'include'
             });
             if (!res.ok) throw new Error('Failed to fetch customer');

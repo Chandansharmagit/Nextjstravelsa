@@ -5,6 +5,9 @@ import { FaSearch, FaEdit, FaTrash, FaEye } from 'react-icons/fa';
 import Pagination from '@/components/Pagination';
 import Link from 'next/link';
 
+// Use environment variable for API URL
+const API_URL = process.env.NEXT_PUBLIC_API_URL || 'https://backendtsa.travelsansr.com/api';
+
 export default function CustomersPage() {
     const [customers, setCustomers] = useState<any[]>([]);
     const [filteredCustomers, setFilteredCustomers] = useState<any[]>([]);
@@ -19,7 +22,7 @@ export default function CustomersPage() {
 
     const fetchCustomers = async () => {
         try {
-            const response = await fetch('http://localhost:5000/api/users', {
+            const response = await fetch(`${API_URL}/users`, {
                 credentials: 'include' // Include cookies for authentication
             });
 

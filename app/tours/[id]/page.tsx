@@ -3,9 +3,12 @@ import Link from 'next/link';
 import { FaClock, FaMapMarkerAlt, FaMountain, FaQuoteLeft } from 'react-icons/fa';
 import TourBookingSection from '@/components/TourBookingSection';
 
+// Use environment variable for API URL
+const API_URL = process.env.NEXT_PUBLIC_API_URL || 'https://backendtsa.travelsansr.com/api';
+
 async function getTour(id: string) {
     try {
-        const res = await fetch(`http://localhost:5000/api/tours/${id}`, {
+        const res = await fetch(`${API_URL}/tours/${id}`, {
             cache: 'no-store'
         });
         if (res.ok) {
@@ -14,7 +17,7 @@ async function getTour(id: string) {
         }
 
         // Fallback or retry
-        const allRes = await fetch('http://localhost:5000/api/tours', { cache: 'no-store' });
+        const allRes = await fetch(`${API_URL}/tours`, { cache: 'no-store' });
         if (allRes.ok) {
             const allData = await allRes.json();
             const list = Array.isArray(allData) ? allData : allData.tours || allData.data || [];
@@ -23,6 +26,7 @@ async function getTour(id: string) {
         return null;
 
     } catch (error) {
+        console.error('Failed to fetch tour:', error);
         return null;
     }
 }

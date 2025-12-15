@@ -42,7 +42,7 @@ export default function ImageUpload({ value, onChange, label = "Upload Image" }:
             const data = response.data;
             const imageUrl = data.image.startsWith('http')
                 ? data.image
-                : `http://localhost:5000${data.image}`;
+                : `https://backendtsa.travelsansr.com${data.image}`;
 
             onChange(imageUrl);
             setPreview(imageUrl);

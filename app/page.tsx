@@ -12,15 +12,18 @@ import TrustedPartners from '@/components/TrustedPartners';
 import FeaturedGuides from '@/components/FeaturedGuides';
 export const dynamic = 'force-dynamic';
 
+// Use environment variable for API URL
+const API_URL = process.env.NEXT_PUBLIC_API_URL || 'https://backendtsa.travelsansr.com/api';
+
 // Fetch Featured Destinations
 async function getFeaturedDestinations() {
   try {
-    const res = await fetch('http://localhost:5000/api/destinations?featured=true', {
+    const res = await fetch(`${API_URL}/destinations?featured=true`, {
       cache: 'no-store',
     });
     if (!res.ok) {
       // Try fetching all if featured call fails or returns 404
-      const fallbackRes = await fetch('http://localhost:5000/api/destinations', { cache: 'no-store' });
+      const fallbackRes = await fetch(`${API_URL}/destinations`, { cache: 'no-store' });
       if (!fallbackRes.ok) return [];
       const fallbackData = await fallbackRes.json();
       return Array.isArray(fallbackData) ? fallbackData : fallbackData.data || fallbackData.destinations || [];
@@ -30,7 +33,7 @@ async function getFeaturedDestinations() {
 
     // If no featured destinations found, fallback to showing some random ones
     if (destinations.length === 0) {
-      const fallbackRes = await fetch('http://localhost:5000/api/destinations', { cache: 'no-store' });
+      const fallbackRes = await fetch(`${API_URL}/destinations`, { cache: 'no-store' });
       if (fallbackRes.ok) {
         const fallbackData = await fallbackRes.json();
         return Array.isArray(fallbackData) ? fallbackData : fallbackData.data || fallbackData.destinations || [];
@@ -46,7 +49,7 @@ async function getFeaturedDestinations() {
 // Fetch Popular Tours (Just random tours for now)
 async function getPopularTours() {
   try {
-    const res = await fetch('http://localhost:5000/api/tours', {
+    const res = await fetch(`${API_URL}/tours`, {
       cache: 'no-store',
     });
     if (!res.ok) return [];

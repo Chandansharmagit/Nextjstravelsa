@@ -1,13 +1,16 @@
 import Image from 'next/image';
 import Link from 'next/link';
 
+// Use environment variable for API URL
+const API_URL = process.env.NEXT_PUBLIC_API_URL || 'https://backendtsa.travelsansr.com/api';
+
 async function getDestination(id: string) {
     try {
         // Fetch all destinations and find by ID because specific endpoint might not be reliable or needs id lookup
         // Assuming API might not have single item endpoint working perfectly or id is different.
         // Let's try the direct endpoint first if standard REST
         // Let's try the direct endpoint first
-        const res = await fetch(`http://localhost:5000/api/destinations/${id}`, {
+        const res = await fetch(`${API_URL}/destinations/${id}`, {
             cache: 'no-store'
         });
 
@@ -18,12 +21,13 @@ async function getDestination(id: string) {
         }
 
         // Fallback: fetch all and find
-        const allRes = await fetch('http://localhost:5000/api/destinations', { cache: 'no-store' });
+        const allRes = await fetch(`${API_URL}/destinations`, { cache: 'no-store' });
         const data = await allRes.json();
         const list = Array.isArray(data) ? data : data.destinations || [];
         return list.find((d: any) => d._id === id);
 
     } catch (error) {
+        console.error('Failed to fetch destination:', error);
         return null;
     }
 }
