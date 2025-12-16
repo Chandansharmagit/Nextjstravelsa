@@ -20,7 +20,8 @@ interface DestinationProps {
 }
 
 const DestinationCard = ({ destination, featured = false }: DestinationProps) => {
-    const imageSrc = destination.images?.[0]?.path || destination.images?.[0]?.url || destination.image || '/placeholder.jpg';
+    const image0 = destination.images?.[0];
+    const imageSrc = (typeof image0 === 'string' ? image0 : image0?.path || image0?.url) || destination.image || '/placeholder.jpg';
 
     // Get category icon
     const getCategoryIcon = () => {

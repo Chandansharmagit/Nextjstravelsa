@@ -111,7 +111,8 @@ export default function DestinationsAdminPage() {
                                 </thead>
                                 <tbody className="divide-y divide-gray-200">
                                     {currentDestinations.map((dest) => {
-                                        const imageSrc = dest.images?.[0]?.path || dest.images?.[0]?.url || dest.image || '/placeholder.jpg';
+                                        const image0 = dest.images?.[0];
+                                        const imageSrc = (typeof image0 === 'string' ? image0 : image0?.path || image0?.url) || dest.image || '/placeholder.jpg';
                                         return (
                                             <tr key={dest._id} className="hover:bg-gray-50 transition">
                                                 <td className="px-6 py-4">

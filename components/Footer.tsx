@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { FaFacebook, FaTwitter, FaInstagram, FaLinkedin } from "react-icons/fa";
+import { FaFacebook, FaTwitter, FaInstagram, FaLinkedin, FaMapMarkerAlt, FaPhone, FaEnvelope } from "react-icons/fa";
 
 const Footer = () => {
     return (
@@ -11,9 +11,23 @@ const Footer = () => {
                     <h2 className="text-3xl font-bold tracking-wider mb-4">
                         TRAVEL<span className="text-secondary">SANSAR</span>
                     </h2>
-                    <p className="text-gray-300 text-sm leading-relaxed">
+                    <p className="text-gray-300 text-sm leading-relaxed mb-6">
                         Your trusted partner for unforgettable journeys. Explore the world with confidence and comfort.
                     </p>
+                    <ul className="space-y-4">
+                        <li className="flex items-start gap-3 text-gray-400">
+                            <FaMapMarkerAlt className="mt-1 flex-shrink-0 text-secondary" />
+                            <span>Bharatpur-1, Shahid Chowk, Narayahgarh (Krishnaman Plaza)</span>
+                        </li>
+                        <li className="flex items-center gap-3 text-gray-400">
+                            <FaPhone className="flex-shrink-0 text-secondary" />
+                            <span>056-516888, 9855051795</span>
+                        </li>
+                        <li className="flex items-center gap-3 text-gray-400">
+                            <FaEnvelope className="flex-shrink-0 text-secondary" />
+                            <span>info@travelsansar.com</span>
+                        </li>
+                    </ul>
                 </div>
 
                 {/* Quick Links */}
@@ -25,6 +39,7 @@ const Footer = () => {
                         <li><Link href="/tours" className="hover:text-secondary transition">Tours</Link></li>
                         <li><Link href="/experiences" className="hover:text-secondary transition">Experiences</Link></li>
                         <li><Link href="/contact" className="hover:text-secondary transition">Contact</Link></li>
+                        <li><Link href="/careers" className="hover:text-secondary transition">Career</Link></li>
                     </ul>
                 </div>
 

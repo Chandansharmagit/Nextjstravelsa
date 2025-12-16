@@ -66,7 +66,7 @@ export default function EditCustomerPage() {
         setSubmitting(true);
 
         try {
-            const res = await fetch(`http://localhost:5000/api/users/${id}`, {
+            const res = await fetch(`https://backendtsa.travelsansr.com/api/users/${id}`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',

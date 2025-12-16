@@ -32,6 +32,47 @@ async function getDestination(id: string) {
     }
 }
 
+import { Metadata } from 'next';
+import SocialShare from '@/components/SocialShare';
+
+// Exporting dynamic metadata for SEO
+export async function generateMetadata({ params }: { params: { id: string } }): Promise<Metadata> {
+    const destination = await getDestination(params.id);
+
+    if (!destination) {
+        return {
+            title: 'Destination Not Found | Travel Sansar',
+        };
+    }
+
+    const image0 = destination.images?.[0];
+    const imageSrc = (typeof image0 === 'string' ? image0 : image0?.path || image0?.url) || destination.image || 'https://backendtsa.travelsansr.com/uploads/logo.png';
+
+    return {
+        title: `${destination.title} - Travel Sansar`,
+        description: destination.description?.substring(0, 160) || `Explore ${destination.title} with Travel Sansar.`,
+        openGraph: {
+            title: destination.title,
+            description: destination.description?.substring(0, 160),
+            images: [
+                {
+                    url: imageSrc,
+                    width: 1200,
+                    height: 630,
+                    alt: destination.title,
+                },
+            ],
+            type: 'website',
+        },
+        twitter: {
+            card: 'summary_large_image',
+            title: destination.title,
+            description: destination.description?.substring(0, 160),
+            images: [imageSrc],
+        },
+    };
+}
+
 export default async function DestinationDetails({ params }: { params: { id: string } }) {
     const destination = await getDestination(params.id);
 
@@ -39,7 +80,11 @@ export default async function DestinationDetails({ params }: { params: { id: str
         return <div className="min-h-screen flex justify-center items-center">Destination not found</div>;
     }
 
-    const imageSrc = destination.images?.[0]?.path || destination.images?.[0]?.url || destination.image || '/placeholder.jpg';
+    const image0 = destination.images?.[0];
+    const imageSrc = (typeof image0 === 'string' ? image0 : image0?.path || image0?.url) || destination.image || '/placeholder.jpg';
+
+    // Construct the public URL for sharing
+    const shareUrl = `https://www.travelsansar.com/destinations/${params.id}`;
 
     return (
         <section className="min-h-screen pt-32 pb-20 px-4 xl:px-20 bg-white">
@@ -74,6 +119,12 @@ export default async function DestinationDetails({ params }: { params: { id: str
                             Book a Trip Here
                         </button>
                     </div>
+
+                    <SocialShare
+                        url={shareUrl}
+                        title={destination.title}
+                        description={destination.description}
+                    />
                 </div>
             </div>
         </section>

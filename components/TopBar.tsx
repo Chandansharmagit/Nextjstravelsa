@@ -7,7 +7,7 @@ const TopBar = () => {
                 <div className="flex gap-6">
                     <div className="flex items-center gap-2 hover:text-white/80 transition cursor-pointer">
                         <FaPhoneAlt size={12} />
-                        <span>+977 123 456 7890</span>
+                        <span>056-516888, 9855051795</span>
                     </div>
                     <div className="flex items-center gap-2 hover:text-white/80 transition cursor-pointer">
                         <FaEnvelope size={12} />

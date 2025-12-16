@@ -13,6 +13,8 @@ export const metadata: Metadata = {
   description: 'Experience the world with Travel Sansar. Best destinations, tours and experiences.',
 };
 
+import { Toaster } from 'react-hot-toast';
+
 export default function RootLayout({
   children,
 }: {
@@ -23,6 +25,7 @@ export default function RootLayout({
       <body className={`${inter.variable} ${outfit.variable} font-sans`}>
         <AuthProvider>
           <LayoutWrapper>
+            <Toaster position="top-center" />
             {children}
           </LayoutWrapper>
         </AuthProvider>

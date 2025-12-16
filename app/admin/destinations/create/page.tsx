@@ -18,15 +18,63 @@ export default function CreateDestinationPage() {
         bestTime: '',
         thingsToDo: [''],
         featured: false,
-        images: ['']
+        images: [] as any[]
     });
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
+
+        if (formData.images.length < 5) {
+            alert('Please upload at least 5 images.');
+            return;
+        }
+
         setLoading(true);
 
         try {
-            await api.post('/destinations', formData);
+            // Handle image uploads
+            const processedImages = [];
+
+            // Separate files that need uploading vs already uploaded (if any)
+            for (let i = 0; i < formData.images.length; i++) {
+                const img = formData.images[i];
+
+                if (img instanceof File) {
+                    // Upload the file
+                    const uploadFormData = new FormData();
+                    uploadFormData.append('image', img);
+
+                    try {
+                        const response = await api.post('/upload', uploadFormData, {
+                            headers: { 'Content-Type': 'multipart/form-data' },
+                        });
+
+                        let uploadedData = response.data.image;
+                        if (typeof uploadedData === 'string') {
+                            const url = uploadedData.startsWith('http') ? uploadedData : `https://backendtsa.travelsansr.com${uploadedData}`;
+                            uploadedData = { path: url };
+                        }
+                        processedImages.push(uploadedData);
+
+                    } catch (uploadError) {
+                        console.error('Failed to upload image', i + 1, uploadError);
+                        alert(`Failed to upload image ${i + 1}. Please try again.`);
+                        setLoading(false);
+                        return; // Stop the process
+                    }
+                } else {
+                    // Already uploaded object
+                    processedImages.push(img);
+                }
+            }
+
+            // Update formData with processed images
+            const submissionData = {
+                ...formData,
+                images: processedImages
+            };
+
+            await api.post('/destinations', submissionData);
 
             alert('Destination created successfully!');
             router.push('/admin/destinations');
@@ -53,20 +101,7 @@ export default function CreateDestinationPage() {
         setFormData({ ...formData, thingsToDo: updated });
     };
 
-    const addImage = () => {
-        setFormData({ ...formData, images: [...formData.images, ''] });
-    };
 
-    const removeImage = (index: number) => {
-        const updated = formData.images.filter((_, i) => i !== index);
-        setFormData({ ...formData, images: updated });
-    };
-
-    const updateImage = (index: number, value: string) => {
-        const updated = [...formData.images];
-        updated[index] = value;
-        setFormData({ ...formData, images: updated });
-    };
 
     return (
         <div>
@@ -181,34 +216,16 @@ export default function CreateDestinationPage() {
 
                     {/* Images */}
                     <div className="md:col-span-2">
-                        <label className="block text-gray-700 font-bold mb-2">Destination Images</label>
-                        {formData.images.map((image, index) => (
-                            <div key={index} className="flex gap-4 mb-4 items-start">
-                                <div className="flex-1">
-                                    <ImageUpload
-                                        label={`Image ${index + 1}`}
-                                        value={image}
-                                        onChange={(value) => updateImage(index, value)}
-                                    />
-                                </div>
-                                {formData.images.length > 1 && (
-                                    <button
-                                        type="button"
-                                        onClick={() => removeImage(index)}
-                                        className="mt-8 p-3 bg-red-500 text-white rounded-xl hover:bg-red-600 transition"
-                                    >
-                                        <FaTimes />
-                                    </button>
-                                )}
-                            </div>
-                        ))}
-                        <button
-                            type="button"
-                            onClick={addImage}
-                            className="px-4 py-2 bg-primary text-white rounded-xl hover:bg-teal-700 transition flex items-center gap-2"
-                        >
-                            <FaPlus /> Add Another Image
-                        </button>
+                        <ImageUpload
+                            label="Destination Images (Minimum 5 required)"
+                            multiple
+                            autoUpload={false}
+                            value={formData.images}
+                            onChange={(images) => setFormData({ ...formData, images: images as any[] })}
+                        />
+                        <p className="text-sm text-gray-500 mt-2">
+                            Please upload at least 5 images. Images will be uploaded when you click Create Destination.
+                        </p>
                     </div>
 
                     {/* Featured */}
@@ -232,7 +249,7 @@ export default function CreateDestinationPage() {
                         disabled={loading}
                         className="px-8 py-3 bg-secondary text-white rounded-xl font-bold hover:bg-orange-600 transition disabled:opacity-50 disabled:cursor-not-allowed"
                     >
-                        {loading ? 'Creating...' : 'Create Destination'}
+                        {loading ? 'Processing...' : 'Create Destination'}
                     </button>
                     <Link
                         href="/admin/destinations"

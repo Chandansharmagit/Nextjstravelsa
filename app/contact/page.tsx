@@ -33,7 +33,7 @@ const ContactPage = () => {
         {
             icon: <FaPhone className="text-3xl" />,
             title: "Phone",
-            details: "+977 123 456 7890",
+            details: "056-516888, 9855051795",
             subdetails: "Mon-Sat, 9AM-6PM",
             color: "bg-blue-500"
         },
@@ -47,7 +47,7 @@ const ContactPage = () => {
         {
             icon: <FaMapMarkerAlt className="text-3xl" />,
             title: "Address",
-            details: "Thamel, Kathmandu",
+            details: "Bharatpur-1, Shahid Chowk, Narayahgarh (Krishnaman Plaza)",
             subdetails: "Nepal",
             color: "bg-green-500"
         },

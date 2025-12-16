@@ -31,6 +31,47 @@ async function getTour(id: string) {
     }
 }
 
+import { Metadata } from 'next';
+import SocialShare from '@/components/SocialShare';
+
+// Exporting dynamic metadata for SEO
+export async function generateMetadata({ params }: { params: Promise<{ id: string }> }): Promise<Metadata> {
+    const { id } = await params;
+    const tour = await getTour(id);
+
+    if (!tour) {
+        return {
+            title: 'Tour Not Found | Travel Sansar',
+        };
+    }
+
+    const imageSrc = tour.images?.[0]?.url || tour.image || 'https://backendtsa.travelsansr.com/uploads/logo.png';
+
+    return {
+        title: `${tour.title || tour.name} - Travel Sansar`,
+        description: tour.description?.substring(0, 160) || `Experience ${tour.title} with Travel Sansar.`,
+        openGraph: {
+            title: tour.title || tour.name,
+            description: tour.description?.substring(0, 160),
+            images: [
+                {
+                    url: imageSrc,
+                    width: 1200,
+                    height: 630,
+                    alt: tour.title || tour.name,
+                },
+            ],
+            type: 'website',
+        },
+        twitter: {
+            card: 'summary_large_image',
+            title: tour.title || tour.name,
+            description: tour.description?.substring(0, 160),
+            images: [imageSrc],
+        },
+    };
+}
+
 export default async function TourDetails({ params }: { params: Promise<{ id: string }> }) {
     const { id } = await params;
     const tour = await getTour(id);
@@ -48,6 +89,9 @@ export default async function TourDetails({ params }: { params: Promise<{ id: st
 
     const title = tour.title || tour.name || "Untitled Tour";
     const imageSrc = tour.images?.[0]?.url || tour.image || '/placeholder.jpg';
+
+    // Construct the public URL for sharing
+    const shareUrl = `https://www.travelsansar.com/tours/${id}`;
 
     return (
         <main className="bg-white">
@@ -134,6 +178,13 @@ export default async function TourDetails({ params }: { params: Promise<{ id: st
                             </h2>
                             <p className="whitespace-pre-line text-lg">{tour.description}</p>
                         </div>
+
+                        {/* Social Share Component */}
+                        <SocialShare
+                            url={shareUrl}
+                            title={title}
+                            description={tour.description}
+                        />
 
                         {/* Itinerary */}
                         {tour.itinerary && tour.itinerary.length > 0 && (

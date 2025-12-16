@@ -68,6 +68,10 @@ export default function AdminBookings() {
                                                 <span className="inline-flex items-center px-2.5 py-1 rounded-md bg-green-50 text-green-700 text-xs font-bold border border-green-100">
                                                     Tour: {b.tour.title}
                                                 </span>
+                                            ) : b.service ? (
+                                                <span className="inline-flex items-center px-2.5 py-1 rounded-md bg-purple-50 text-purple-700 text-xs font-bold border border-purple-100">
+                                                    Service: {b.service.title}
+                                                </span>
                                             ) : <span className="text-gray-400">N/A</span>}
                                         </td>
                                         <td className="px-6 py-4">

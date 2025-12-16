@@ -4,7 +4,7 @@ import { useAuth } from '@/context/AuthContext';
 import { useRouter, usePathname } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
-import { FaTachometerAlt, FaUsers, FaMapMarkedAlt, FaSuitcase, FaUserTie, FaComments, FaSignOutAlt, FaCalendarCheck, FaEnvelope, FaBars, FaTimes, FaChevronLeft, FaChevronRight } from 'react-icons/fa';
+import { FaTachometerAlt, FaUsers, FaMapMarkedAlt, FaSuitcase, FaUserTie, FaComments, FaSignOutAlt, FaCalendarCheck, FaEnvelope, FaBars, FaTimes, FaChevronLeft, FaChevronRight, FaCog, FaChartLine, FaBriefcase, FaFileAlt } from 'react-icons/fa';
 import { motion, AnimatePresence } from 'framer-motion';
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
@@ -57,6 +57,9 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
         { icon: <FaUsers />, label: 'Customers', path: '/admin/customers' },
         { icon: <FaMapMarkedAlt />, label: 'Destinations', path: '/admin/destinations' },
         { icon: <FaSuitcase />, label: 'Tours', path: '/admin/tours' },
+        { icon: <FaBriefcase />, label: 'Jobs', path: '/admin/jobs' },
+        { icon: <FaFileAlt />, label: 'Applications', path: '/admin/applications' },
+        { icon: <FaCog />, label: 'Services', path: '/admin/services' },
         { icon: <FaUserTie />, label: 'Team', path: '/admin/team' },
         { icon: <FaComments />, label: 'Feedback', path: '/admin/feedback' },
     ];
@@ -122,8 +125,8 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                                 key={item.path}
                                 href={item.path}
                                 className={`flex items-center gap-3 ${isSidebarCollapsed ? 'justify-center px-4' : 'px-6'} py-4 transition-all ${isActive
-                                        ? 'bg-secondary text-white'
-                                        : 'text-white/80 hover:bg-white/10 hover:text-white'
+                                    ? 'bg-secondary text-white'
+                                    : 'text-white/80 hover:bg-white/10 hover:text-white'
                                     }`}
                                 title={isSidebarCollapsed ? item.label : undefined}
                             >
@@ -158,7 +161,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                     </div>
                 )}
 
-                {/* Collapse Toggle Button (Desktop Only) */}
+                 /* Collapse Toggle Button (Desktop Only) */
                 <button
                     onClick={() => setIsSidebarCollapsed(!isSidebarCollapsed)}
                     className="hidden lg:flex absolute -right-3 top-20 w-6 h-6 bg-secondary text-white rounded-full items-center justify-center hover:bg-orange-600 transition-colors shadow-lg"

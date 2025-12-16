@@ -10,6 +10,7 @@ import FAQ from '@/components/FAQ';
 import Link from 'next/link';
 import TrustedPartners from '@/components/TrustedPartners';
 import FeaturedGuides from '@/components/FeaturedGuides';
+import FeaturedServices from '@/components/FeaturedServices';
 export const dynamic = 'force-dynamic';
 
 // Use environment variable for API URL
@@ -64,9 +65,25 @@ async function getPopularTours() {
   }
 }
 
+// Fetch Services
+async function getServices() {
+  try {
+    const res = await fetch(`${API_URL}/services`, {
+      cache: 'no-store',
+    });
+    if (!res.ok) return [];
+    const data = await res.json();
+    return Array.isArray(data) ? data.slice(0, 4) : [];
+  } catch (error) {
+    console.error("Failed to fetch services:", error);
+    return [];
+  }
+}
+
 export default async function Home() {
   const destinations = await getFeaturedDestinations();
   const tours = await getPopularTours();
+  const services = await getServices();
 
   return (
     <main>
@@ -75,6 +92,8 @@ export default async function Home() {
       {/* Trusted Partners */}
       <TrustedPartners />
 
+      {/* Services Section */}
+      <FeaturedServices services={services} />
 
       {/* Featured Destinations */}
       <section className="py-20 px-4 xl:px-20 bg-light">
@@ -141,6 +160,8 @@ export default async function Home() {
 
       {/* Stats Section */}
       <StatsSection />
+
+
 
       {/* Team Section */}
       <TeamSection />

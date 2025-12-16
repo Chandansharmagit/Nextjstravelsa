@@ -1,8 +1,6 @@
 import axios from 'axios';
 
-// Use environment variable for API URL, fallback to production URL
 const API_URL = process.env.NEXT_PUBLIC_API_URL || 'https://backendtsa.travelsansr.com/api';
-
 const api = axios.create({
     baseURL: API_URL,
     withCredentials: true,

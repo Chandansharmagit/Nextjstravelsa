@@ -54,12 +54,6 @@ const Navbar = () => {
             id: 4,
             link: "experiences",
             path: "/experiences",
-            subLinks: [
-                { name: "Luxury Tours", path: "/experiences?type=Luxury" },
-                { name: "Wellness & Yoga", path: "/experiences?type=Wellness" },
-                { name: "Family Holidays", path: "/experiences?type=Family" },
-                { name: "Honeymoon", path: "/experiences?type=Honeymoon" },
-            ]
         },
         { id: 5, link: "contact", path: "/contact" },
     ];

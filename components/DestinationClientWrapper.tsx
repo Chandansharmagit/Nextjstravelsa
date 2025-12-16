@@ -38,7 +38,7 @@ const DestinationClientWrapper = ({ destinationTitle, destinationId }: Destinati
                     <div className="bg-primary text-white p-6 rounded-2xl shadow-card">
                         <h3 className="text-xl font-bold mb-2">Need Help?</h3>
                         <p className="text-white/80 text-sm mb-4">Call our travel experts 24/7</p>
-                        <p className="text-2xl font-bold">+977 123 456 7890</p>
+                        <p className="text-2xl font-bold">056-516888, 9855051795</p>
                     </div>
                 </div>
             </div>

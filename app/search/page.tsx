@@ -30,13 +30,19 @@ function SearchContent() {
                 const lowerQuery = query.toLowerCase();
 
                 // Advanced client-side search filtering
-                const filtered = allDests.filter((d: any) =>
-                    (d.title && d.title.toLowerCase().includes(lowerQuery)) ||
-                    (d.name && d.name.toLowerCase().includes(lowerQuery)) ||
-                    (d.location && d.location.toLowerCase().includes(lowerQuery)) ||
-                    (d.description && d.description.toLowerCase().includes(lowerQuery)) ||
-                    (d.thingsToDo && d.thingsToDo.toLowerCase().includes(lowerQuery))
-                );
+                const filtered = allDests.filter((d: any) => {
+                    const inTitle = d.title?.toLowerCase().includes(lowerQuery);
+                    const inName = d.name?.toLowerCase().includes(lowerQuery);
+                    const inLocation = d.location?.toLowerCase().includes(lowerQuery);
+                    const inDescription = d.description?.toLowerCase().includes(lowerQuery);
+
+                    // Safe check for thingsToDo array
+                    const inThingsToDo = Array.isArray(d.thingsToDo)
+                        ? d.thingsToDo.some((t: string) => t.toLowerCase().includes(lowerQuery))
+                        : typeof d.thingsToDo === 'string' && d.thingsToDo.toLowerCase().includes(lowerQuery);
+
+                    return inTitle || inName || inLocation || inDescription || inThingsToDo;
+                });
                 setDestinations(filtered);
             } catch (error) {
                 console.error("Error fetching search results:", error);
