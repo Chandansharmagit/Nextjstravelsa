@@ -3,6 +3,7 @@ import Image from 'next/image';
 import { Metadata } from 'next';
 import SocialShare from '@/components/SocialShare';
 import DestinationImageGallery from '@/components/DestinationImageGallery';
+import DestinationClientWrapper from '@/components/DestinationClientWrapper';
 
 // Use environment variable for API URL
 const API_URL = process.env.NEXT_PUBLIC_API_URL || 'https://backendtsa.travelsansr.com/api';
@@ -200,31 +201,11 @@ export default async function DestinationPage({ params }: { params: Promise<{ id
 
                     </div>
 
-                    {/* Right Column: Sticky Sidebar */}
-                    <div className="relative">
-                        <div className="sticky top-24 space-y-6">
-                            {/* Booking Card */}
-                            <div className="bg-white p-6 rounded-2xl shadow-card border border-gray-100">
-                                <h3 className="text-xl font-bold text-teal-800 mb-4">Plan Your Trip</h3>
-                                <p className="text-gray-600 text-sm mb-6">
-                                    Interested in visiting {destination.title}? Contact us to arrange a custom package.
-                                </p>
-                                <button className="w-full py-3 bg-gradient-to-r from-orange-400 to-red-400 text-white font-bold rounded-xl shadow-lg hover:shadow-xl hover:-translate-y-1 transition-all duration-300 mb-3">
-                                    Book Now
-                                </button>
-                                <button className="w-full py-3 bg-white border-2 border-teal-600 text-teal-700 font-bold rounded-xl hover:bg-teal-50 transition-all duration-300">
-                                    Ask a Question
-                                </button>
-                            </div>
-
-                            {/* Help Card */}
-                            <div className="bg-teal-700 p-8 rounded-2xl shadow-lg text-white">
-                                <h3 className="text-xl font-bold mb-2">Need Help?</h3>
-                                <p className="text-teal-100 text-sm mb-4">Call our travel experts 24/7</p>
-                                <p className="text-2xl font-bold">056-516888, 9855051795</p>
-                            </div>
-                        </div>
-                    </div>
+                    {/* Right Column: Sticky Sidebar - Client Component */}
+                    <DestinationClientWrapper
+                        destinationTitle={destination.title}
+                        destinationId={destination._id}
+                    />
                 </div>
             </div>
         </main>
