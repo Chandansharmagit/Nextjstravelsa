@@ -46,7 +46,38 @@ export async function generateMetadata({ params }: { params: { id: string } }): 
     }
 
     const image0 = destination.images?.[0];
-    const imageSrc = (typeof image0 === 'string' ? image0 : image0?.path || image0?.url) || destination.image || 'https://backendtsa.travelsansr.com/uploads/logo.png';
+    let imageSrc = (typeof image0 === 'string' ? image0 : image0?.path || image0?.url) || destination.image;
+
+    // Use a relevant placeholder if no image exists, rather than the logo
+    if (!imageSrc) {
+        // If no image, we might want to return a generic 'travel' placeholder or just undefined
+        // But user specifically doesn't want the logo. 
+        // Let's use the local placeholder card image if available, or just omit if acceptable, 
+        // but for OG we need an image.
+        // Let's try to not set a fallback here and see if we can find *any* image in the array
+        if (destination.images && destination.images.length > 0) {
+            const anyImg = destination.images.find((img: any) => img?.path || img?.url || typeof img === 'string');
+            if (anyImg) {
+                imageSrc = typeof anyImg === 'string' ? anyImg : anyImg.path || anyImg.url;
+            }
+        }
+    }
+
+    // Ensure absolute URL for Open Graph
+    if (imageSrc && !imageSrc.startsWith('http')) {
+        const baseUrl = 'https://backendtsa.travelsansr.com';
+        const cleanPath = imageSrc.startsWith('/') ? imageSrc : `/${imageSrc}`;
+        imageSrc = `${baseUrl}${cleanPath}`;
+    }
+
+    const openGraphImages = imageSrc ? [
+        {
+            url: imageSrc,
+            width: 1200,
+            height: 630,
+            alt: destination.title,
+        }
+    ] : []; // Don't send logo if no image found
 
     return {
         title: `${destination.title} - Travel Sansar`,
@@ -54,14 +85,8 @@ export async function generateMetadata({ params }: { params: { id: string } }): 
         openGraph: {
             title: destination.title,
             description: destination.description?.substring(0, 160),
-            images: [
-                {
-                    url: imageSrc,
-                    width: 1200,
-                    height: 630,
-                    alt: destination.title,
-                },
-            ],
+            url: `https://www.travelsansar.com/destinations/${params.id}`,
+            images: openGraphImages,
             type: 'website',
         },
         twitter: {
