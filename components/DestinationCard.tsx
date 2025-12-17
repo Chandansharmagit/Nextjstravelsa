@@ -17,9 +17,10 @@ interface DestinationProps {
         featured?: boolean;
     };
     featured?: boolean;
+    className?: string;
 }
 
-const DestinationCard = ({ destination, featured = false }: DestinationProps) => {
+const DestinationCard = ({ destination, featured = false, className }: DestinationProps) => {
     const image0 = destination.images?.[0];
     const imageSrc = (typeof image0 === 'string' ? image0 : image0?.path || image0?.url) || destination.image || '/placeholder.jpg';
 
@@ -39,6 +40,14 @@ const DestinationCard = ({ destination, featured = false }: DestinationProps) =>
         return firstSentence?.substring(0, 80) + (firstSentence?.length > 80 ? '...' : '');
     };
 
+    // Determine height class: use explicit className's height if present, otherwise default
+    const defaultHeight = featured ? 'h-[500px]' : 'h-[400px]';
+    // If className has a height utility, we assume it overrides. But parsing standard regex is tricky. 
+    // SAFEST: Just append className. Since Tailwind uses the "last class wins" rule often, 
+    // IF we put className last. However, arbitrary values like h-[500px] might have specificity.
+    // Better: If className is provided, make it h-full if the user sets it, but we can't control specificity easily without tailwind-merge.
+    // Logic: If className is provided, we pass it. We'll prioritize h-full if passed in className by placing it last.
+
     return (
         <Link href={`/destination/${destination._id}`}>
             <motion.div
@@ -47,8 +56,7 @@ const DestinationCard = ({ destination, featured = false }: DestinationProps) =>
                 viewport={{ once: true }}
                 whileHover={{ y: -8 }}
                 transition={{ duration: 0.3 }}
-                className={`group relative overflow-hidden rounded-2xl cursor-pointer ${featured ? 'h-[500px]' : 'h-[400px]'
-                    } shadow-lg hover:shadow-2xl transition-all duration-300`}
+                className={`group relative overflow-hidden rounded-2xl cursor-pointer shadow-lg hover:shadow-2xl transition-all duration-300 ${className || defaultHeight}`}
             >
                 {/* Full Image Background */}
                 <div className="absolute inset-0">

@@ -18,10 +18,11 @@ interface DestinationImageGalleryProps {
 
 export default function DestinationImageGallery({ images, mainImage, title }: DestinationImageGalleryProps) {
     // Normalize images to an array of URL strings
-    const allImages = images.map(img => {
+    const allImages = (images || []).map(img => {
+        if (!img) return null;
         if (typeof img === 'string') return img;
-        return img.path || img.url || '/placeholder.jpg';
-    });
+        return img.path || img.url || null;
+    }).filter((img): img is string => !!img);
 
     // If mainImage is provided and distinct, distinct it or just ensure we have a list
     // Typically, images array contains all gallery images.
@@ -79,8 +80,8 @@ export default function DestinationImageGallery({ images, mainImage, title }: De
                             key={idx}
                             onClick={() => setSelectedIndex(idx)}
                             className={`relative w-24 h-24 flex-shrink-0 rounded-xl overflow-hidden border-2 transition-all duration-300 ${selectedIndex === idx
-                                    ? 'border-orange-500 ring-2 ring-orange-200 scale-105'
-                                    : 'border-transparent opacity-70 hover:opacity-100 hover:border-gray-300'
+                                ? 'border-orange-500 ring-2 ring-orange-200 scale-105'
+                                : 'border-transparent opacity-70 hover:opacity-100 hover:border-gray-300'
                                 }`}
                         >
                             <Image

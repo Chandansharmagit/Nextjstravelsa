@@ -11,36 +11,51 @@ import Link from 'next/link';
 import TrustedPartners from '@/components/TrustedPartners';
 import FeaturedGuides from '@/components/FeaturedGuides';
 import FeaturedServices from '@/components/FeaturedServices';
+import { TiltCard } from '@/components/TiltCard';
 export const dynamic = 'force-dynamic';
 
 // Use environment variable for API URL
 const API_URL = process.env.NEXT_PUBLIC_API_URL || 'https://backendtsa.travelsansr.com/api';
 
 // Fetch Featured Destinations
+// Fetch Featured Destinations
 async function getFeaturedDestinations() {
   try {
-    const res = await fetch(`${API_URL}/destinations?featured=true`, {
-      cache: 'no-store',
-    });
-    if (!res.ok) {
-      // Try fetching all if featured call fails or returns 404
-      const fallbackRes = await fetch(`${API_URL}/destinations`, { cache: 'no-store' });
-      if (!fallbackRes.ok) return [];
-      const fallbackData = await fallbackRes.json();
-      return Array.isArray(fallbackData) ? fallbackData : fallbackData.data || fallbackData.destinations || [];
-    }
-    const data = await res.json();
-    const destinations = Array.isArray(data) ? data : data.data || data.destinations || [];
+    let destinations: any[] = [];
 
-    // If no featured destinations found, fallback to showing some random ones
-    if (destinations.length === 0) {
-      const fallbackRes = await fetch(`${API_URL}/destinations`, { cache: 'no-store' });
-      if (fallbackRes.ok) {
-        const fallbackData = await fallbackRes.json();
-        return Array.isArray(fallbackData) ? fallbackData : fallbackData.data || fallbackData.destinations || [];
+    // 1. Try to get featured destinations
+    try {
+      const res = await fetch(`${API_URL}/destinations?featured=true`, { cache: 'no-store' });
+      if (res.ok) {
+        const data = await res.json();
+        destinations = Array.isArray(data) ? data : data.data || data.destinations || [];
+      }
+    } catch (e) {
+      console.warn("Featured fetch failed, continuing to fallback", e);
+    }
+
+    // 2. If we don't have enough (less than 6), fetch generic ones to fill the grid
+    if (destinations.length < 6) {
+      try {
+        const fallbackRes = await fetch(`${API_URL}/destinations`, { cache: 'no-store' });
+        if (fallbackRes.ok) {
+          const fallbackData = await fallbackRes.json();
+          const allDestinations = Array.isArray(fallbackData) ? fallbackData : fallbackData.data || fallbackData.destinations || [];
+
+          // Filter out existing ones to avoid duplicates
+          const existingIds = new Set(destinations.map((d: any) => d._id));
+          const extras = allDestinations.filter((d: any) => !existingIds.has(d._id));
+
+          // Fill up to 6 items
+          destinations = [...destinations, ...extras];
+        }
+      } catch (e) {
+        console.warn("Fallback fetch failed", e);
       }
     }
-    return destinations;
+
+    // Return up to 6 items
+    return destinations.slice(0, 6);
   } catch (error) {
     console.error("Failed to fetch destinations:", error);
     return [];
@@ -102,11 +117,21 @@ export default async function Home() {
           <p className="text-gray-600">Discover places that everyone is talking about</p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 auto-rows-[minmax(400px,auto)]">
           {destinations && destinations.length > 0 ? (
-            destinations.slice(0, 3).map((dest: any) => (
-              <DestinationCard key={dest._id} destination={dest} />
-            ))
+            destinations.map((dest: any, index: number) => {
+              // First item is featured (large) if we have enough items to make a grid
+              const isFirst = index === 0;
+              const cardClass = isFirst ? "md:col-span-2 md:row-span-2 h-full" : "h-full";
+
+              return (
+                <TiltCard key={dest._id} className={cardClass}>
+                  <div className="h-full">
+                    <DestinationCard destination={dest} featured={isFirst} className="h-full" />
+                  </div>
+                </TiltCard>
+              );
+            })
           ) : (
             <div className="col-span-full text-center text-gray-500">
               <p>No featured destinations available at the moment.</p>
