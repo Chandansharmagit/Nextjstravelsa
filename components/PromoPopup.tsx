@@ -47,7 +47,7 @@ const PromoPopup = () => {
                         {/* Close Button */}
                         <button
                             onClick={handleClose}
-                            className="absolute top-4 right-4 z-10 w-8 h-8 flex items-center justify-center bg-white rounded-full shadow-md text-gray-400 hover:text-gray-600 transition"
+                            className="absolute top-4 right-4 z-50 w-8 h-8 flex items-center justify-center bg-white rounded-full shadow-md text-gray-400 hover:text-gray-600 transition"
                         >
                             <FaTimes />
                         </button>
