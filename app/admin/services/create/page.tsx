@@ -79,7 +79,7 @@ export default function CreateServicePage() {
                                     name="price"
                                     required
                                     className="w-full px-4 py-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition"
-                                    placeholder="e.g. $50 or $20/day"
+                                    placeholder="e.g. Rs. 5000 or Rs. 2000/day"
                                     onChange={handleChange}
                                 />
                             </div>

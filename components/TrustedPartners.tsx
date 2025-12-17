@@ -4,12 +4,10 @@ import Image from 'next/image';
 import { motion } from 'framer-motion';
 
 const partners = [
-    { name: 'Nepal Tourism Board', logo: 'https://companieslogo.com/img/orig/TRIP-f63c878d.png?t=1658990666' }, // Mock logo
+    { name: 'Airbnb', logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/6/69/Airbnb_Logo_B%C3%A9lo.svg/2560px-Airbnb_Logo_B%C3%A9lo.svg.png' },
     { name: 'TripAdvisor', logo: 'https://static.tacdn.com/img2/brand_refresh/Tripadvisor_lockup_horizontal_secondary.svg' },
-    { name: 'Lonely Planet', logo: 'https://upload.wikimedia.org/wikipedia/commons/9/90/Lonely_Planet_Logo.svg' },
     { name: 'Expedia', logo: 'https://www.expedia.com/_dms/header/logo.svg?locale=en_US&siteid=1' },
-    { name: 'Booking.com', logo: 'https://upload.wikimedia.org/wikipedia/commons/b/be/Booking.com_logo.svg' },
-    { name: 'Qatar Airways', logo: 'https://upload.wikimedia.org/wikipedia/commons/c/c2/Qatar_Airways_logo_2006.svg' }
+    { name: 'Booking.com', logo: 'https://upload.wikimedia.org/wikipedia/commons/b/be/Booking.com_logo.svg' }
 ];
 
 export default function TrustedPartners() {

@@ -2,16 +2,22 @@
 
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { FaConciergeBell, FaSearch } from 'react-icons/fa';
+import { FaConciergeBell, FaSearch, FaEye } from 'react-icons/fa';
 import Image from 'next/image';
 import api from '@/lib/api';
 import ServiceBookingModal from '@/components/ServiceBookingModal';
+import ServiceDetailsModal from '@/components/ServiceDetailsModal';
+import FAQ from '@/components/FAQ';
 
 export default function ServicesPage() {
     const [services, setServices] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
-    const [selectedService, setSelectedService] = useState<any>(null);
-    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [selectedService, setSelectedService] = useState<any>(null); // For booking
+    const [isBookingModalOpen, setIsBookingModalOpen] = useState(false);
+
+    // For details view
+    const [selectedDetailService, setSelectedDetailService] = useState<any>(null);
+    const [isDetailModalOpen, setIsDetailModalOpen] = useState(false);
 
     useEffect(() => {
         fetchServices();
@@ -30,7 +36,12 @@ export default function ServicesPage() {
 
     const handleBookNow = (service: any) => {
         setSelectedService(service);
-        setIsModalOpen(true);
+        setIsBookingModalOpen(true);
+    };
+
+    const handleViewDetails = (service: any) => {
+        setSelectedDetailService(service);
+        setIsDetailModalOpen(true);
     };
 
     return (
@@ -74,7 +85,7 @@ export default function ServicesPage() {
                                 transition={{ delay: index * 0.1 }}
                                 className="bg-white rounded-2xl overflow-hidden shadow-card group hover:shadow-2xl transition-all duration-300 border border-gray-100 flex flex-col"
                             >
-                                <div className="relative h-56 overflow-hidden bg-gray-100">
+                                <div className="relative h-56 overflow-hidden bg-gray-100 cursor-pointer" onClick={() => handleViewDetails(service)}>
                                     {service.image ? (
                                         <Image
                                             src={service.image}
@@ -90,11 +101,17 @@ export default function ServicesPage() {
                                     <div className="absolute top-4 right-4 bg-white/90 backdrop-blur px-3 py-1 rounded-full text-sm font-bold text-primary shadow-sm">
                                         {service.price}
                                     </div>
+
+                                    <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+                                        <button className="bg-white/90 text-gray-900 px-6 py-2 rounded-full font-bold transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300 shadow-lg">
+                                            View Details
+                                        </button>
+                                    </div>
                                 </div>
 
                                 <div className="p-8 flex-1 flex flex-col">
                                     <div className="mb-4">
-                                        <h3 className="text-2xl font-bold text-gray-800 mb-2 group-hover:text-primary transition-colors">
+                                        <h3 className="text-2xl font-bold text-gray-800 mb-2 group-hover:text-primary transition-colors cursor-pointer" onClick={() => handleViewDetails(service)}>
                                             {service.title}
                                         </h3>
                                         <p className="text-gray-600 line-clamp-3 leading-relaxed">
@@ -102,12 +119,18 @@ export default function ServicesPage() {
                                         </p>
                                     </div>
 
-                                    <div className="mt-auto pt-6 border-t border-gray-100 flex items-center justify-between">
+                                    <div className="mt-auto pt-6 border-t border-gray-100 grid grid-cols-2 gap-3">
+                                        <button
+                                            onClick={() => handleViewDetails(service)}
+                                            className="py-3 px-4 bg-gray-100 text-gray-700 rounded-xl font-bold hover:bg-gray-200 transition-colors flex items-center justify-center gap-2"
+                                        >
+                                            <FaEye /> Details
+                                        </button>
                                         <button
                                             onClick={() => handleBookNow(service)}
-                                            className="w-full py-3 bg-gray-900 text-white rounded-xl font-bold hover:bg-primary hover:-translate-y-1 transition-all shadow-lg hover:shadow-primary/30"
+                                            className="py-3 px-4 bg-gray-900 text-white rounded-xl font-bold hover:bg-primary hover:-translate-y-1 transition-all shadow-lg hover:shadow-primary/30"
                                         >
-                                            Book This Service
+                                            Book Now
                                         </button>
                                     </div>
                                 </div>
@@ -126,11 +149,21 @@ export default function ServicesPage() {
             {/* Booking Modal */}
             {selectedService && (
                 <ServiceBookingModal
-                    isOpen={isModalOpen}
-                    onClose={() => setIsModalOpen(false)}
+                    isOpen={isBookingModalOpen}
+                    onClose={() => setIsBookingModalOpen(false)}
                     service={selectedService}
+                />
+            )}
+
+            {/* Details Modal */}
+            {selectedDetailService && (
+                <ServiceDetailsModal
+                    isOpen={isDetailModalOpen}
+                    onClose={() => setIsDetailModalOpen(false)}
+                    service={selectedDetailService}
                 />
             )}
         </main>
     );
 }
+

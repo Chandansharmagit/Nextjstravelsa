@@ -73,6 +73,17 @@ const Footer = () => {
 
             <div className="border-t border-white/10 pt-8 text-center text-gray-400 text-sm">
                 <p>&copy; {new Date().getFullYear()} Travel Sansar. All rights reserved.</p>
+                <div className="flex items-center justify-center gap-4 mt-4 text-xs font-mono text-gray-500">
+                    <span className="flex items-center gap-2">
+                        Designed & Developed by <span className="text-secondary font-bold">Chandan Sharma</span>
+                    </span>
+                    <a href="https://www.facebook.com/Chandan.Sharma.8689" target="_blank" rel="noopener noreferrer" className="hover:text-blue-500 transition-colors">
+                        <FaFacebook size={16} />
+                    </a>
+                    <a href="https://wa.me/9779845427041" target="_blank" rel="noopener noreferrer" className="hover:text-green-500 transition-colors">
+                        <FaPhone size={14} />
+                    </a>
+                </div>
             </div>
         </footer>
     );

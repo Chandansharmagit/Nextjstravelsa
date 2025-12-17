@@ -55,7 +55,8 @@ const Navbar = () => {
             link: "experiences",
             path: "/experiences",
         },
-        { id: 5, link: "contact", path: "/contact" },
+        { id: 5, link: "faq", path: "/faq" },
+        { id: 6, link: "contact", path: "/contact" },
     ];
 
     const [mobileSubMenuOpen, setMobileSubMenuOpen] = useState<number | null>(null);
