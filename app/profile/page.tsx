@@ -18,7 +18,8 @@ export default function ProfilePage() {
         email: '',
         phone: '',
         address: '',
-        country: ''
+        country: '',
+        image: ''
     });
 
     const [bookings, setBookings] = useState([]);
@@ -32,7 +33,8 @@ export default function ProfilePage() {
                 email: user.email || '',
                 phone: user.phone || '',
                 address: user.address || '',
-                country: user.country || 'Nepal'
+                country: user.country || 'Nepal',
+                image: user.image || ''
             });
             fetchBookings();
         }
@@ -70,7 +72,6 @@ export default function ProfilePage() {
         try {
             const res = await api.put('/users/profile', formData);
             if (res.status === 200 || res.status === 201) {
-                alert('Profile updated successfully!');
                 setIsEditing(false);
                 // Reload to refresh context
                 window.location.reload();
@@ -94,9 +95,13 @@ export default function ProfilePage() {
                         {/* Profile Picture */}
                         <div className="relative group">
                             <div className="w-32 h-32 rounded-full overflow-hidden bg-gradient-to-br from-primary to-secondary flex items-center justify-center text-white text-4xl font-bold border-4 border-white shadow-lg">
-                                {user.image ? (
+                                {(formData.image || user.image) ? (
                                     <img
-                                        src={user.image.startsWith('http') ? user.image : `https://backendtsa.travelsansr.com${user.image}`}
+                                        src={
+                                            (formData.image || user.image || '').startsWith('http')
+                                                ? (formData.image || user.image)
+                                                : `https://backendtsa.travelsansr.com${formData.image || user.image}`
+                                        }
                                         alt={user.name}
                                         className="w-full h-full object-cover"
                                     />
@@ -114,30 +119,25 @@ export default function ProfilePage() {
                                         const file = e.target.files?.[0];
                                         if (!file) return;
 
-                                        const formData = new FormData();
-                                        formData.append('image', file);
+                                        const uploadFormData = new FormData();
+                                        uploadFormData.append('image', file);
 
                                         try {
-                                            const res = await api.post('/upload/local', formData, {
+                                            const res = await api.post('/upload', uploadFormData, {
                                                 headers: {
                                                     'Content-Type': 'multipart/form-data',
                                                 },
                                             });
 
-                                            // Update user profile immediately with new image
-                                            const imageUrl = res.data.image;
+                                            // Get Cloudinary URL from response
+                                            const imageUrl = res.data.image.path;
 
-                                            // Update form data state
+                                            // Update form data state (not saved yet - user must click Save Changes)
                                             setFormData(prev => ({ ...prev, image: imageUrl }));
                                             setIsEditing(true);
 
-                                            // Optional: Log success
-                                            console.log('Image uploaded:', imageUrl);
-                                            alert('Image uploaded successfully. Click "Save Changes" to save it permanently.');
-
                                         } catch (err) {
                                             console.error(err);
-                                            alert('Upload failed');
                                         }
                                     }}
                                 />

@@ -190,7 +190,13 @@ export default function AuthPage() {
 
                     {!isSignUp && (
                         <div className="text-center mt-4">
-                            <button type="button" className="text-sm text-blue-600 hover:text-blue-800 font-medium">Forgot Password?</button>
+                            <button
+                                type="button"
+                                onClick={() => router.push('/forgot-password')}
+                                className="text-sm text-blue-600 hover:text-blue-800 font-medium"
+                            >
+                                Forgot Password?
+                            </button>
                         </div>
                     )}
 
@@ -329,7 +335,13 @@ export default function AuthPage() {
                             />
                         </div>
 
-                        <a href="#" className="text-sm text-blue-600 hover:text-blue-800 my-4 font-medium">Forgot your password?</a>
+                        <button
+                            type="button"
+                            onClick={() => router.push('/forgot-password')}
+                            className="text-sm text-blue-600 hover:text-blue-800 my-4 font-medium"
+                        >
+                            Forgot your password?
+                        </button>
                         <button
                             type="submit"
                             disabled={isLoading}
@@ -391,7 +403,7 @@ export default function AuthPage() {
                                         setFormData({ name: '', email: '', password: '', confirmPassword: '' });
                                     }}
                                 >
-                                 Create Account?
+                                    Create Account?
                                 </button>
                             </div>
                         </div>

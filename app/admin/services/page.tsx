@@ -6,11 +6,13 @@ import { FaPlus, FaEdit, FaTrash, FaSearch, FaConciergeBell } from "react-icons/
 import Image from "next/image";
 import api from "@/lib/api";
 import { toast } from "react-hot-toast";
+import Modal from "@/components/Modal";
 
 export default function AdminServicesPage() {
     const [services, setServices] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
     const [searchTerm, setSearchTerm] = useState("");
+    const [isLimitModalOpen, setIsLimitModalOpen] = useState(false);
 
     useEffect(() => {
         fetchServices();
@@ -48,11 +50,12 @@ export default function AdminServicesPage() {
         <div className="p-6 md:p-10">
             <div className="flex flex-col md:flex-row justify-between items-center mb-8 gap-4">
                 <h1 className="text-3xl font-bold text-gray-800">Manage Services</h1>
-                <Link href="/admin/services/create">
-                    <button className="flex items-center gap-2 px-6 py-3 bg-primary text-white rounded-lg hover:bg-orange-600 transition shadow-lg">
-                        <FaPlus /> Add New Service
-                    </button>
-                </Link>
+                <button
+                    onClick={() => setIsLimitModalOpen(true)}
+                    className="flex items-center gap-2 px-6 py-3 bg-primary text-white rounded-lg hover:bg-orange-600 transition shadow-lg"
+                >
+                    <FaPlus /> Add New Service
+                </button>
             </div>
 
             {/* Stats Cards (Optional - using simplified layout for now) */}
@@ -147,6 +150,29 @@ export default function AdminServicesPage() {
                     </table>
                 </div>
             </div>
+
+            {/* Limit Warning Modal */}
+            <Modal
+                isOpen={isLimitModalOpen}
+                onClose={() => setIsLimitModalOpen(false)}
+                title="Storage Limit Exceeded"
+            >
+                <div className="text-center py-6">
+                    <div className="w-20 h-20 bg-orange-100 rounded-full flex items-center justify-center mx-auto mb-6 text-orange-600">
+                        <FaPlus className="text-4xl transform rotate-45" />
+                    </div>
+                    <p className="text-lg text-gray-700 leading-relaxed mb-8">
+                        Your package of Cloudinary image saved exceed limit.
+                        Please subscribe to another plan to enable uploading.
+                    </p>
+                    <button
+                        onClick={() => setIsLimitModalOpen(false)}
+                        className="w-full py-4 bg-primary text-white rounded-xl font-bold hover:bg-teal-700 transition shadow-lg"
+                    >
+                        Got it
+                    </button>
+                </div>
+            </Modal>
         </div>
     );
 }

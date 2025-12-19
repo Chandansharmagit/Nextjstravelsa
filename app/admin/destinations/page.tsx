@@ -6,6 +6,7 @@ import Link from 'next/link';
 import Pagination from '@/components/Pagination';
 import Image from 'next/image';
 import api from '@/lib/api';
+import Modal from '@/components/Modal';
 
 export default function DestinationsAdminPage() {
     const [destinations, setDestinations] = useState<any[]>([]);
@@ -13,6 +14,7 @@ export default function DestinationsAdminPage() {
     const [searchQuery, setSearchQuery] = useState('');
     const [currentPage, setCurrentPage] = useState(1);
     const [loading, setLoading] = useState(true);
+    const [isLimitModalOpen, setIsLimitModalOpen] = useState(false);
     const itemsPerPage = 10;
 
     useEffect(() => {
@@ -65,11 +67,12 @@ export default function DestinationsAdminPage() {
                     <h1 className="text-3xl font-bold text-gray-800">Destinations Management</h1>
                     <p className="text-gray-600 mt-2">Manage your travel destinations</p>
                 </div>
-                <Link href="/admin/destinations/create">
-                    <button className="px-6 py-3 bg-secondary text-white rounded-xl font-bold hover:bg-orange-600 transition shadow-lg flex items-center gap-2">
-                        <FaPlus /> Add Destination
-                    </button>
-                </Link>
+                <button
+                    onClick={() => setIsLimitModalOpen(true)}
+                    className="px-6 py-3 bg-secondary text-white rounded-xl font-bold hover:bg-orange-600 transition shadow-lg flex items-center gap-2"
+                >
+                    <FaPlus /> Add Destination
+                </button>
             </div>
 
             {/* Search Bar */}
@@ -170,6 +173,28 @@ export default function DestinationsAdminPage() {
                         )}
                     </>
                 )}
+                {/* Limit Warning Modal */}
+                <Modal
+                    isOpen={isLimitModalOpen}
+                    onClose={() => setIsLimitModalOpen(false)}
+                    title="Storage Limit Exceeded"
+                >
+                    <div className="text-center py-6">
+                        <div className="w-20 h-20 bg-orange-100 rounded-full flex items-center justify-center mx-auto mb-6 text-orange-600">
+                            <FaPlus className="text-4xl transform rotate-45" />
+                        </div>
+                        <p className="text-lg text-gray-700 leading-relaxed mb-8">
+                            Your package of Cloudinary image saved exceed limit.
+                            Please subscribe to another plan to enable uploading.
+                        </p>
+                        <button
+                            onClick={() => setIsLimitModalOpen(false)}
+                            className="w-full py-4 bg-primary text-white rounded-xl font-bold hover:bg-teal-700 transition shadow-lg"
+                        >
+                            Got it
+                        </button>
+                    </div>
+                </Modal>
             </div>
         </div>
     );
