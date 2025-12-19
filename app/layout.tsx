@@ -1,5 +1,5 @@
 import type { Metadata } from 'next';
-import { Inter, Outfit } from 'next/font/google'; // Adding Outfit as requested for modern typography
+import { Inter, Outfit, Playfair_Display } from 'next/font/google'; // Adding Playfair Display for aesthetic typography
 import './globals.css';
 import LayoutWrapper from '@/components/LayoutWrapper';
 import { AuthProvider } from '@/context/AuthContext';
@@ -7,6 +7,12 @@ import { AuthProvider } from '@/context/AuthContext';
 // Load fonts
 const inter = Inter({ subsets: ['latin'], variable: '--font-inter' });
 const outfit = Outfit({ subsets: ['latin'], variable: '--font-outfit' });
+const playfair = Playfair_Display({
+  subsets: ['latin'],
+  variable: '--font-playfair',
+  weight: ['400', '500', '600', '700', '800', '900'],
+  style: ['normal', 'italic']
+});
 
 export const metadata: Metadata = {
   title: 'Travel Sansar - Best Travel Agency in Nepal | Fly Now',
@@ -58,7 +64,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={`${inter.variable} ${outfit.variable} font-sans`}>
+      <body className={`${inter.variable} ${outfit.variable} ${playfair.variable} font-sans`}>
         <AuthProvider>
           <LayoutWrapper>
             <Toaster position="top-center" />

@@ -73,8 +73,8 @@ const Footer = () => {
 
             {/* Large Footer Typography */}
             <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-full text-center pointer-events-none select-none overflow-hidden leading-none z-0">
-                <h1 className="text-[12vw] md:text-[180px] font-black text-white/10 tracking-[10px] md:tracking-[20px] whitespace-nowrap uppercase italic ml-[10px] md:ml-[20px]">
-                    TRAVEL SANSAR
+                <h1 className="text-[12vw] md:text-[150px] font-black text-white/10 tracking-[10px] md:tracking-[20px] whitespace-nowrap uppercase italic ml-[10px] md:ml-[20px]">
+                    TRAVEL SANSR
                 </h1>
             </div>
 
