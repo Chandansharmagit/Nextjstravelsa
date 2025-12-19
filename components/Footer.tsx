@@ -3,8 +3,8 @@ import { FaFacebook, FaTwitter, FaInstagram, FaLinkedin, FaMapMarkerAlt, FaPhone
 
 const Footer = () => {
     return (
-        <footer className="bg-primary text-white pt-16 pb-8">
-            <div className="max-w-7xl mx-auto px-4 xl:px-20 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-12">
+        <footer className="bg-primary text-white pt-16 pb-0 relative overflow-hidden">
+            <div className="max-w-7xl mx-auto px-4 xl:px-20 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-20 relative z-10">
 
                 {/* Brand */}
                 <div>
@@ -71,7 +71,14 @@ const Footer = () => {
                 </div>
             </div>
 
-            <div className="border-t border-white/10 pt-8 text-center text-gray-400 text-sm">
+            {/* Large Footer Typography */}
+            <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-full text-center pointer-events-none select-none overflow-hidden leading-none z-0">
+                <h1 className="text-[12vw] md:text-[180px] font-black text-white/10 tracking-[10px] md:tracking-[20px] whitespace-nowrap uppercase italic ml-[10px] md:ml-[20px]">
+                    TRAVEL SANSAR
+                </h1>
+            </div>
+
+            <div className="border-t border-white/10 pt-8 pb-8 text-center text-gray-400 text-sm relative z-10 glass-effect-light">
                 <p>&copy; {new Date().getFullYear()} Travel Sansar. All rights reserved.</p>
                 <div className="flex items-center justify-center gap-4 mt-4 text-xs font-mono text-gray-500">
                     <span className="flex items-center gap-2">

@@ -20,7 +20,7 @@ const Hero = () => {
             {/* Background Image Overlay */}
             <div
                 className="absolute top-0 left-0 w-full h-full bg-cover bg-center"
-                style={{ backgroundImage: 'url("https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?q=80&w=2070&auto=format&fit=crop")' }} // Stunning Hotel/Resort/Relax vibe
+                style={{ backgroundImage: 'url("/images/christmas_hero.jpg")' }}
             >
                 {/* Gradient Overlay for text readability */}
                 <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-b from-black/60 via-black/20 to-black/60"></div>

@@ -8,6 +8,9 @@ import Footer from "./Footer";
 import FeedbackWidget from "./FeedbackWidget";
 import LoginPopup from "./LoginPopup";
 import PromoPopup from "./PromoPopup";
+import SnowEffect from "./SnowEffect";
+import ChristmasDecorations from "./ChristmasDecorations";
+import ChristmasPopup from "./ChristmasPopup";
 
 export default function LayoutWrapper({ children }: { children: React.ReactNode }) {
     const pathname = usePathname();
@@ -23,6 +26,9 @@ export default function LayoutWrapper({ children }: { children: React.ReactNode 
             <Navbar />
             <LoginPopup />
             <PromoPopup />
+            <SnowEffect />
+            <ChristmasDecorations />
+            <ChristmasPopup />
             <main className="min-h-screen">
                 {children}
             </main>
