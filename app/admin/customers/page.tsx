@@ -116,6 +116,9 @@ export default function CustomersPage() {
                                         <th className="px-6 py-4 text-left text-sm font-bold text-gray-700">Email</th>
                                         <th className="px-6 py-4 text-left text-sm font-bold text-gray-700">Phone</th>
                                         <th className="px-6 py-4 text-left text-sm font-bold text-gray-700">Bookings</th>
+                                        <th className="px-6 py-4 text-left text-sm font-bold text-gray-700">Last Login</th>
+                                        <th className="px-6 py-4 text-left text-sm font-bold text-gray-700">Location</th>
+                                        <th className="px-6 py-4 text-left text-sm font-bold text-gray-700">IP Address</th>
                                         <th className="px-6 py-4 text-left text-sm font-bold text-gray-700">Joined</th>
                                         <th className="px-6 py-4 text-right text-sm font-bold text-gray-700">Actions</th>
                                     </tr>
@@ -130,6 +133,15 @@ export default function CustomersPage() {
                                                 <span className="px-3 py-1 bg-primary/10 text-primary rounded-full text-sm font-semibold">
                                                     {customer.bookings || 0}
                                                 </span>
+                                            </td>
+                                            <td className="px-6 py-4 text-gray-600 text-sm">
+                                                {customer.lastLoginAt ? new Date(customer.lastLoginAt).toLocaleString() : 'Never'}
+                                            </td>
+                                            <td className="px-6 py-4 text-gray-600 text-sm">
+                                                {customer.lastLoginLocation || 'N/A'}
+                                            </td>
+                                            <td className="px-6 py-4 text-gray-600 text-sm font-mono">
+                                                {customer.lastLoginIp || 'N/A'}
                                             </td>
                                             <td className="px-6 py-4 text-gray-600">
                                                 {customer.createdAt ? new Date(customer.createdAt).toLocaleDateString() : 'N/A'}

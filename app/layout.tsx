@@ -56,6 +56,7 @@ export const metadata: Metadata = {
 };
 
 import { Toaster } from 'react-hot-toast';
+import Script from 'next/script';
 
 export default function RootLayout({
   children,
@@ -65,6 +66,12 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${inter.variable} ${outfit.variable} ${playfair.variable} font-sans`}>
+        {/* CookieYes Banner */}
+        <Script
+          id="cookieyes"
+          src="https://cdn-cookieyes.com/client_data/bb6fabec6e847069137c97e35351c79f/script.js"
+          strategy="beforeInteractive"
+        />
         <AuthProvider>
           <LayoutWrapper>
             <Toaster position="top-center" />
