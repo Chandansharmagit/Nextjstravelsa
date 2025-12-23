@@ -2,6 +2,7 @@
 
 import { useSearchParams } from "next/navigation";
 import { useEffect, useState, Suspense } from "react";
+import Link from "next/link";
 import DestinationCard from "@/components/DestinationCard";
 import { FaSearch, FaFilter, FaCompass, FaSadTear, FaStar, FaChevronDown, FaArrowRight } from "react-icons/fa";
 import { motion, AnimatePresence } from "framer-motion";
