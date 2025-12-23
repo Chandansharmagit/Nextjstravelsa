@@ -1,9 +1,10 @@
 "use client";
 
 import { useState } from 'react';
-import { FaCheck, FaTimes, FaCalendarAlt, FaUserFriends, FaStar } from 'react-icons/fa';
+import { FaCheck, FaCalendarAlt, FaUserFriends, FaStar, FaShieldAlt, FaArrowRight, FaBolt } from 'react-icons/fa';
 import { motion, AnimatePresence } from 'framer-motion';
 import BookNowForm from './BookNowForm';
+import Modal from './Modal';
 
 interface TourBookingSectionProps {
     tour: {
@@ -20,110 +21,109 @@ interface TourBookingSectionProps {
 const TourBookingSection = ({ tour }: TourBookingSectionProps) => {
     const [isModalOpen, setIsModalOpen] = useState(false);
 
+    const benefits = [
+        "Best Price Guarantee",
+        "No Hidden Charges",
+        "Safe & Secure Booking",
+        "Free Cancellation"
+    ];
+
     return (
         <>
-            {/* Sticky Booking Card */}
-            <div className="bg-white rounded-2xl shadow-card p-6 border border-gray-100 sticky top-32">
-                <div className="flex items-end gap-2 mb-6">
-                    <span className="text-gray-500 font-medium">From</span>
-                    <span className="text-4xl font-bold text-primary">NRS {tour.price}</span>
-                </div>
+            <motion.div
+                initial={{ opacity: 0, scale: 0.95 }}
+                animate={{ opacity: 1, scale: 1 }}
+                className="bg-white/70 backdrop-blur-3xl rounded-[40px] shadow-[0_32px_120px_-20px_rgba(0,0,0,0.15)] border border-white/60 p-8 overflow-hidden"
+            >
+                {/* Decorative Elements */}
+                <div className="absolute top-0 right-0 w-32 h-32 bg-blue-600/5 rounded-full blur-3xl -mr-16 -mt-16" />
+                <div className="absolute bottom-0 left-0 w-32 h-32 bg-indigo-600/5 rounded-full blur-3xl -ml-16 -mb-16" />
 
-                <div className="space-y-4 mb-8">
-                    <div className="flex items-center justify-between p-3 bg-gray-50 rounded-xl">
-                        <div className="flex items-center gap-3 text-gray-700">
-                            <FaCalendarAlt className="text-secondary" />
-                            <span className="font-medium">Duration</span>
-                        </div>
-                        <span className="font-bold">{tour.duration} Days</span>
+                <div className="relative z-10">
+                    <div className="inline-flex items-center gap-2 px-3 py-1 bg-blue-50 text-blue-600 text-[10px] font-black uppercase tracking-[0.2em] rounded-full mb-6 h-font">
+                        <FaBolt className="text-[8px]" />
+                        Instant Confirmation
                     </div>
 
-                    {tour.maxTravelers && (
-                        <div className="flex items-center justify-between p-3 bg-gray-50 rounded-xl">
-                            <div className="flex items-center gap-3 text-gray-700">
-                                <FaUserFriends className="text-secondary" />
-                                <span className="font-medium">Group Size</span>
+                    <div className="flex items-baseline gap-2 mb-8">
+                        <span className="text-4xl md:text-5xl font-black text-slate-900 tracking-tighter h-font leading-none">
+                            <span className="text-sm font-black text-slate-400 uppercase tracking-widest mr-2 align-middle">NRS</span>
+                            {tour.price}
+                        </span>
+                        <span className="text-slate-400 font-bold text-sm">/ person</span>
+                    </div>
+
+                    <div className="space-y-3 mb-10">
+                        <div className="group flex items-center justify-between p-4 bg-white/50 hover:bg-white rounded-2xl border border-slate-100 transition-all">
+                            <div className="flex items-center gap-3">
+                                <div className="w-8 h-8 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center group-hover:bg-blue-600 group-hover:text-white transition-colors">
+                                    <FaCalendarAlt size={14} />
+                                </div>
+                                <span className="text-xs font-black text-slate-400 uppercase tracking-widest h-font">Duration</span>
                             </div>
-                            <span className="font-bold">Max {tour.maxTravelers}</span>
+                            <span className="text-sm font-black text-slate-900 h-font">{tour.duration} Days</span>
                         </div>
-                    )}
 
-                    <div className="flex items-center justify-between p-3 bg-gray-50 rounded-xl">
-                        <div className="flex items-center gap-3 text-gray-700">
-                            <FaStar className="text-secondary" />
-                            <span className="font-medium">Difficulty</span>
+                        <div className="group flex items-center justify-between p-4 bg-white/50 hover:bg-white rounded-2xl border border-slate-100 transition-all">
+                            <div className="flex items-center gap-3">
+                                <div className="w-8 h-8 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center group-hover:bg-amber-600 group-hover:text-white transition-colors">
+                                    <FaShieldAlt size={14} />
+                                </div>
+                                <span className="text-xs font-black text-slate-400 uppercase tracking-widest h-font">Difficulty</span>
+                            </div>
+                            <span className="text-sm font-black text-slate-900 h-font capitalize">{tour.difficulty || 'Moderate'}</span>
                         </div>
-                        <span className="font-bold capitalize">{tour.difficulty || 'Moderate'}</span>
+
+                        <div className="group flex items-center justify-between p-4 bg-white/50 hover:bg-white rounded-2xl border border-slate-100 transition-all">
+                            <div className="flex items-center gap-3">
+                                <div className="w-8 h-8 rounded-xl bg-indigo-50 text-indigo-600 flex items-center justify-center group-hover:bg-indigo-600 group-hover:text-white transition-colors">
+                                    <FaUserFriends size={14} />
+                                </div>
+                                <span className="text-xs font-black text-slate-400 uppercase tracking-widest h-font">Group Size</span>
+                            </div>
+                            <span className="text-sm font-black text-slate-900 h-font">Max {tour.maxTravelers || 12}</span>
+                        </div>
+                    </div>
+
+                    <motion.button
+                        whileHover={{ scale: 1.02, y: -4 }}
+                        whileTap={{ scale: 0.98 }}
+                        onClick={() => setIsModalOpen(true)}
+                        className="w-full py-5 bg-slate-900 text-white font-black text-[10px] uppercase tracking-[0.3em] rounded-[24px] hover:bg-black transition-all shadow-2xl shadow-slate-900/20 group relative overflow-hidden h-font"
+                    >
+                        <div className="absolute inset-0 bg-gradient-to-r from-blue-600 to-indigo-600 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                        <span className="relative z-10 flex items-center justify-center gap-3">
+                            Initiate Expedition
+                            <FaArrowRight className="group-hover:translate-x-2 transition-transform" />
+                        </span>
+                    </motion.button>
+
+                    <div className="mt-8 pt-8 border-t border-slate-100">
+                        <div className="grid grid-cols-1 gap-3">
+                            {benefits.map((benefit, idx) => (
+                                <div key={idx} className="flex items-center gap-3 text-[10px] font-black text-slate-500 uppercase tracking-widest h-font">
+                                    <div className="w-4 h-4 rounded-full bg-emerald-50 text-emerald-500 flex items-center justify-center">
+                                        <FaCheck size={8} />
+                                    </div>
+                                    {benefit}
+                                </div>
+                            ))}
+                        </div>
                     </div>
                 </div>
+            </motion.div>
 
-                <button
-                    onClick={() => setIsModalOpen(true)}
-                    className="w-full py-4 bg-secondary text-white font-bold text-lg rounded-xl hover:bg-orange-600 transition-all shadow-lg hover:shadow-xl transform hover:-translate-y-1 mb-4"
-                >
-                    Book This Tour
-                </button>
-                {/* 
-                <button className="w-full py-4 border-2 border-primary text-primary font-bold text-lg rounded-xl hover:bg-primary hover:text-white transition-all">
-                    Ask a Question
-                </button> */}
-
-                <div className="mt-6 pt-6 border-t border-gray-100">
-                    <div className="space-y-2">
-                        <div className="flex items-center gap-2 text-sm text-gray-600">
-                            <FaCheck className="text-green-500" />
-                            <span>Best Price Guarantee</span>
-                        </div>
-                        <div className="flex items-center gap-2 text-sm text-gray-600">
-                            <FaCheck className="text-green-500" />
-                            <span>No Hidden Charges</span>
-                        </div>
-                        <div className="flex items-center gap-2 text-sm text-gray-600">
-                            <FaCheck className="text-green-500" />
-                            <span>Safe & Secure Booking</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            {/* Booking Modal */}
-            <AnimatePresence>
-                {isModalOpen && (
-                    <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-                        <motion.div
-                            initial={{ opacity: 0 }}
-                            animate={{ opacity: 1 }}
-                            exit={{ opacity: 0 }}
-                            onClick={() => setIsModalOpen(false)}
-                            className="absolute inset-0 bg-black/60 backdrop-blur-sm"
-                        />
-                        <motion.div
-                            initial={{ opacity: 0, scale: 0.9, y: 20 }}
-                            animate={{ opacity: 1, scale: 1, y: 0 }}
-                            exit={{ opacity: 0, scale: 0.9, y: 20 }}
-                            className="relative bg-white rounded-2xl w-full max-w-xl max-h-[90vh] overflow-y-auto shadow-2xl"
-                        >
-                            <div className="sticky top-0 bg-white border-b border-gray-100 p-4 flex justify-between items-center z-10">
-                                <h3 className="text-xl font-bold text-gray-800">Book {tour.title}</h3>
-                                <button
-                                    onClick={() => setIsModalOpen(false)}
-                                    className="p-2 hover:bg-gray-100 rounded-full transition"
-                                >
-                                    <FaTimes className="text-gray-500" />
-                                </button>
-                            </div>
-
-                            <div className="p-6">
-                                <BookNowForm
-                                    destinationId={tour._id}
-                                    destinationTitle={tour.title}
-                                    onSuccess={() => setIsModalOpen(false)}
-                                />
-                            </div>
-                        </motion.div>
-                    </div>
-                )}
-            </AnimatePresence>
+            <Modal
+                isOpen={isModalOpen}
+                onClose={() => setIsModalOpen(false)}
+                title="Secure Your Spot"
+            >
+                <BookNowForm
+                    destinationId={tour._id}
+                    destinationTitle={tour.title}
+                    onSuccess={() => setIsModalOpen(false)}
+                />
+            </Modal>
         </>
     );
 };

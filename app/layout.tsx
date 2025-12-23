@@ -70,7 +70,7 @@ export default function RootLayout({
         <Script
           id="cookieyes"
           src="https://cdn-cookieyes.com/client_data/bb6fabec6e847069137c97e35351c79f/script.js"
-          strategy="beforeInteractive"
+          strategy="lazyOnload"
         />
         <AuthProvider>
           <LayoutWrapper>
@@ -116,6 +116,6 @@ export default function RootLayout({
           </LayoutWrapper>
         </AuthProvider>
       </body>
-    </html>
+    </html >
   );
 }

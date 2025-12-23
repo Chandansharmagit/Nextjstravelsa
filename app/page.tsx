@@ -12,6 +12,7 @@ import TrustedPartners from '@/components/TrustedPartners';
 import FeaturedGuides from '@/components/FeaturedGuides';
 import FeaturedServices from '@/components/FeaturedServices';
 import { TiltCard } from '@/components/TiltCard';
+import ApproachSection from '@/components/ApproachSection';
 export const dynamic = 'force-dynamic';
 
 // Use environment variable for API URL
@@ -151,6 +152,9 @@ export default async function Home() {
 
       {/* How It Works */}
       <HowItWorks />
+
+      {/* Our Approach */}
+      <ApproachSection />
 
       {/* Popular Tours */}
       <section className="py-20 px-4 xl:px-20 bg-light">

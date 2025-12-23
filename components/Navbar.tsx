@@ -4,350 +4,186 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { useAuth } from "../context/AuthContext";
-import { FaBars, FaTimes, FaUserCircle, FaChevronDown } from "react-icons/fa";
-import { motion, AnimatePresence } from "framer-motion";
+import { FaBars, FaTimes, FaFacebookF, FaInstagram, FaGlobeAmericas } from "react-icons/fa";
+import { motion, AnimatePresence, useScroll, useMotionValueEvent } from "framer-motion";
+import { usePathname } from "next/navigation";
 
 const Navbar = () => {
     const { user, logout } = useAuth();
-    const [nav, setNav] = useState(false);
+    const pathname = usePathname();
     const [scrolled, setScrolled] = useState(false);
+    const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+    const { scrollY } = useScroll();
 
-    const toggleNav = () => setNav(!nav);
+    useMotionValueEvent(scrollY, "change", (latest) => {
+        setScrolled(latest > 50);
+    });
 
-    useEffect(() => {
-        const handleScroll = () => {
-            if (window.scrollY > 50) {
-                setScrolled(true);
-            } else {
-                setScrolled(false);
-            }
-        };
-        window.addEventListener("scroll", handleScroll);
-        return () => window.removeEventListener("scroll", handleScroll);
-    }, []);
-
-    const links = [
-        { id: 1, link: "home", path: "/" },
-        {
-            id: 2,
-            link: "destinations",
-            path: "/destinations",
-            subLinks: [
-                { name: "All Destinations", path: "/destinations" },
-                { name: "Nepal", path: "/destinations?search=Nepal" },
-                { name: "Bhutan", path: "/destinations?search=Bhutan" },
-                { name: "Tibet", path: "/destinations?search=Tibet" },
-            ]
-        },
-        {
-            id: 3,
-            link: "tours",
-            path: "/tours",
-            subLinks: [
-                { name: "Trekking", path: "/tours?category=Trekking" },
-                { name: "Sightseeing", path: "/tours?category=Sightseeing" },
-                { name: "Adventure", path: "/tours?category=Adventure" },
-                { name: "Jungle Safari", path: "/tours?category=Safari" },
-            ]
-        },
-        {
-            id: 4,
-            link: "experiences",
-            path: "/experiences",
-        },
-        { id: 5, link: "faq", path: "/faq" },
-        { id: 6, link: "contact", path: "/contact" },
+    const menuItems = [
+        { name: "Destinations", path: "/destinations" },
+        { name: "Tours", path: "/tours" },
+        { name: "Experiences", path: "/experiences" },
+        { name: "FAQ", path: "/faq" },
+        { name: "Contact", path: "/contact" },
+        { name: "About", path: "/about" },
     ];
 
-    const [mobileSubMenuOpen, setMobileSubMenuOpen] = useState<number | null>(null);
-
-    const toggleMobileSubMenu = (id: number) => {
-        if (mobileSubMenuOpen === id) {
-            setMobileSubMenuOpen(null);
-        } else {
-            setMobileSubMenuOpen(id);
-        }
-    };
-
-    // Animation variants for mobile menu items
-    const menuItemVariants = {
-        hidden: { opacity: 0, x: 20 },
-        visible: (i: number) => ({
-            opacity: 1,
-            x: 0,
-            transition: { delay: i * 0.1, duration: 0.3 }
-        })
-    };
+    const isActive = (path: string) => pathname === path;
 
     return (
-        <nav
-            className={`sticky top-0 w-full z-40 transition-all duration-300 ease-in-out font-sans ${scrolled
-                ? "bg-white/90 backdrop-blur-sm shadow-md py-2" // Reduced blur, simpler shadow
-                : "bg-white/95 backdrop-blur-sm py-3 shadow-sm border-b border-christmas-gold/20"
-                }`}
-        >
+        <header className="fixed top-0 left-0 right-0 z-[100] transition-all duration-700 pointer-events-none px-6 lg:px-12 pt-3 lg:pt-4">
+            <div className="max-w-[1600px] mx-auto flex items-center justify-between gap-4">
 
-
-
-            <div className="flex justify-between items-center w-full px-6 xl:px-24 max-w-[1440px] mx-auto h-14 md:h-16 relative z-40">
-                {/* Logo Section */}
-                <Link href="/" className="relative z-50 flex items-center group">
-                    {/* Holly Decoration */}
-                    <div className="absolute -left-6 top-0 text-2xl transform -rotate-12 opacity-0 group-hover:opacity-100 transition-all duration-500 scale-0 group-hover:scale-110">
-                        🌿
-                    </div>
-                    <div className="relative h-10 w-32 md:h-12 md:w-40 transition-all duration-300 transform group-hover:scale-105">
+                {/* Left Section: Logo Pill */}
+                <motion.div
+                    initial={{ x: -50, opacity: 0 }}
+                    animate={{ x: 0, opacity: 1 }}
+                    className={`
+                        flex items-center pointer-events-auto
+                        bg-white/40 backdrop-blur-2xl border border-white/40
+                        px-6 py-4 rounded-[32px] shadow-[0_15px_35px_-5px_rgba(212,175,55,0.1)]
+                        transition-all duration-500 hover:shadow-[0_20px_45px_-5px_rgba(212,175,55,0.15)]
+                    `}
+                >
+                    <Link href="/" className="relative h-7 w-28 shrink-0 active:scale-95 transition-transform">
                         <Image
                             src="/logo-new.png"
-                            alt="TravelSansar Logo"
+                            alt="Travel Sansar"
                             fill
                             className="object-contain"
                             priority
                         />
-                        {/* Animated Badge */}
-                        <div className="absolute -top-3 -right-3 bg-gradient-to-br from-red-500 to-red-700 text-white text-[9px] font-extrabold px-2 py-1 rounded-full animate-bounce shadow-lg border border-white">
-                            XMAS 🎄
-                        </div>
-                    </div>
-                </Link>
+                    </Link>
+                </motion.div>
 
-                {/* Desktop Menu */}
-                <ul className="hidden lg:flex items-center gap-8">
-                    {links.map(({ id, link, path, subLinks }) => (
-                        <li key={id} className="relative group">
-                            <Link href={path} className="flex items-center gap-1 py-4">
-                                <span className="capitalize text-[15px] font-bold tracking-wide text-gray-700 transition-colors duration-300 group-hover:text-christmas-red drop-shadow-sm">
-                                    {link}
-                                </span>
-                                {subLinks && <FaChevronDown className="text-xs text-christmas-gold group-hover:text-christmas-red transition-transform duration-300 group-hover:rotate-180" />}
-                                {/* Animated Underline - Gold */}
-                                <span className="absolute bottom-0 left-0 w-0 h-0.5 transition-all duration-300 group-hover:w-full bg-gradient-to-r from-christmas-gold to-yellow-300 shadow-[0_0_10px_rgba(255,215,0,0.6)]" />
-                            </Link>
-
-                            {/* Dropdown Menu */}
-                            {subLinks && (
-                                <div className="absolute top-full left-0 w-48 bg-white/90 backdrop-blur-xl shadow-xl rounded-xl overflow-hidden invisible opacity-0 group-hover:visible group-hover:opacity-100 transition-all duration-300 transform translate-y-2 group-hover:translate-y-0 z-50 border border-white/50 ring-1 ring-christmas-gold/20">
-                                    <ul>
-                                        {subLinks.map((subItem, index) => (
-                                            <li key={index}>
-                                                <Link
-                                                    href={subItem.path}
-                                                    className="block px-6 py-3 text-sm text-gray-700 font-medium hover:bg-red-50 hover:text-christmas-red transition-colors border-b border-gray-100 last:border-none"
-                                                >
-                                                    {subItem.name}
-                                                </Link>
-                                            </li>
-                                        ))}
-                                    </ul>
-                                </div>
+                {/* Center Section: Navigation Capsule */}
+                <motion.nav
+                    initial={{ y: -30, opacity: 0 }}
+                    animate={{ y: 0, opacity: 1 }}
+                    className={`
+                        hidden lg:flex items-center gap-1 pointer-events-auto
+                        bg-white/40 backdrop-blur-2xl border border-white/40
+                        px-2 py-2 rounded-full shadow-[0_15px_35px_-5px_rgba(0,0,0,0.05)]
+                        transition-all duration-500
+                        ${scrolled ? "scale-95 translate-y-[-5%]" : ""}
+                    `}
+                >
+                    {menuItems.map((item) => (
+                        <Link
+                            key={item.name}
+                            href={item.path}
+                            className={`
+                                relative px-6 py-3 text-[11px] font-bold uppercase tracking-[0.2em] transition-all duration-300 rounded-full h-font
+                                ${isActive(item.path)
+                                    ? "text-[#4A4036] bg-[#D4AF37]/10"
+                                    : "text-[#8D7B68] hover:text-[#4A4036] hover:bg-white/30"
+                                }
+                            `}
+                        >
+                            {item.name}
+                            {isActive(item.path) && (
+                                <motion.div
+                                    layoutId="studio_active"
+                                    className="absolute inset-0 border border-[#D4AF37]/20 rounded-full"
+                                />
                             )}
-                        </li>
+                        </Link>
                     ))}
-                </ul>
+                </motion.nav>
 
-                {/* Desktop Auth Section */}
-                <div className="hidden lg:flex items-center gap-5">
+                {/* Right Section: Socials & Auth */}
+                <motion.div
+                    initial={{ x: 50, opacity: 0 }}
+                    animate={{ x: 0, opacity: 1 }}
+                    className="flex items-center gap-3 pointer-events-auto"
+                >
+                    {/* Socials Group */}
+                    <div className="hidden sm:flex items-center gap-2 bg-white/40 backdrop-blur-2xl border border-white/40 p-2 rounded-full shadow-lg">
+                        <a href="#" className="w-10 h-10 rounded-full bg-white/40 flex items-center justify-center text-[#8D7B68] hover:text-white hover:bg-[#D4AF37] transition-all duration-500 shadow-sm">
+                            <FaInstagram size={14} />
+                        </a>
+                        <a href="#" className="w-10 h-10 rounded-full bg-white/40 flex items-center justify-center text-[#8D7B68] hover:text-white hover:bg-[#D4AF37] transition-all duration-500 shadow-sm">
+                            <FaFacebookF size={14} />
+                        </a>
+                    </div>
+
+                    {/* Mobile Toggle */}
+                    <button
+                        onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+                        className="lg:hidden w-12 h-12 flex items-center justify-center rounded-full bg-white/40 backdrop-blur-2xl border border-white/40 text-[#8D7B68] hover:text-[#4A4036] transition-all shadow-lg"
+                    >
+                        {mobileMenuOpen ? <FaTimes size={18} /> : <FaBars size={18} />}
+                    </button>
+
+                    {/* User Node */}
                     {user ? (
-                        <div className="flex items-center gap-4 pl-4 border-l border-gray-200">
-                            {/* Profile Link with Santa Hat */}
-                            <Link href="/profile" className="flex items-center gap-3 group cursor-pointer relative">
-                                {/* Santa Hat Decoration */}
-                                <div className="absolute -top-4 -left-3 text-2xl transform -rotate-12 filter drop-shadow-md z-50 pointer-events-none">
-                                    🎅
-                                </div>
-                                {user.image ? (
-                                    <div className="w-10 h-10 rounded-full overflow-hidden border-2 border-christmas-gold group-hover:border-christmas-red transition-colors relative shadow-md">
-                                        <Image src={user.image} alt={user.name} fill className="object-cover" />
-                                    </div>
-                                ) : (
-                                    <FaUserCircle className="text-4xl text-gray-300 group-hover:text-christmas-red transition-colors" />
-
-                                )}
-                                <div className="flex flex-col">
-                                    <span className="font-bold text-sm text-gray-800 leading-tight group-hover:text-christmas-red transition-colors">
-                                        {user.name?.split(' ')[0] || "User"}
-                                    </span>
-                                    <span className="text-[10px] text-christmas-gold font-bold uppercase tracking-wider">My Account</span>
-                                </div>
-                            </Link>
-
+                        <div className="flex items-center gap-2">
                             {user.role === 'admin' && (
-                                <Link href="/admin">
-                                    <span className="text-[10px] font-bold px-2 py-0.5 bg-gray-800 text-white rounded uppercase tracking-wider hover:bg-black transition border border-gray-700 shadow-sm">
-                                        Admin
-                                    </span>
+                                <Link href="/admin/destinations" className="px-5 py-2.5 rounded-full bg-[#D4AF37] text-white text-[9px] font-bold uppercase tracking-[0.2em] hover:bg-[#B8962E] transition-all shadow-lg shadow-[#D4AF37]/20">
+                                    Dashboard
                                 </Link>
                             )}
-
-                            <button
-                                onClick={logout}
-                                className="text-xs font-bold text-red-500 hover:text-red-700 transition-colors uppercase tracking-wide ml-2 bg-red-50 px-2 py-1 rounded hover:bg-red-100"
-                            >
-                                Logout
-                            </button>
+                            <Link href="/profile" className="flex items-center bg-white/40 backdrop-blur-2xl border border-white/40 p-1.5 rounded-full shadow-lg hover:border-[#D4AF37]/30 transition-all">
+                                <div className="w-10 h-10 rounded-full overflow-hidden border border-white shadow-inner">
+                                    {user.image ? <Image src={user.image} alt={user.name} width={40} height={40} className="object-cover" /> : <div className="w-full h-full bg-[#F5F2ED] flex items-center justify-center text-[#D4AF37]"><FaBars /></div>}
+                                </div>
+                            </Link>
                         </div>
                     ) : (
-                        <div className="flex items-center gap-4">
-                            <Link href="/login">
-                                <span className="font-bold text-sm text-gray-600 hover:text-christmas-red transition-colors">
-                                    Log In
-                                </span>
-                            </Link>
-                            <Link href="/register">
-                                {/* Candy Cane Button */}
-                                <button suppressHydrationWarning className="px-7 py-2.5 rounded-full text-white text-sm font-extrabold shadow-lg shadow-red-500/30 transform hover:-translate-y-0.5 hover:shadow-red-600/50 border-2 border-white transition-all duration-300 overflow-hidden relative group">
-                                    <span className="absolute inset-0 w-full h-full bg-[repeating-linear-gradient(45deg,#D32F2F,#D32F2F_10px,#ff7f7f_10px,#ff7f7f_20px)] animate-candy-stripe group-hover:opacity-100 opacity-90"></span>
-                                    <span className="relative z-10 flex items-center gap-2 text-shadow">
-                                        BOOK NOW <span className="text-lg">🎁</span>
-                                    </span>
-                                </button>
-                            </Link>
-                        </div>
+                        <Link href="/login" className="px-7 py-3.5 rounded-full bg-[#4A4036] text-[#F5F2ED] text-[10px] font-bold uppercase tracking-[0.25em] hover:bg-[#D4AF37] transition-all duration-500 shadow-xl">
+                            Entry
+                        </Link>
                     )}
-                </div>
-
-                {/* Mobile Menu Icon */}
-                <div onClick={toggleNav} className="cursor-pointer z-50 lg:hidden text-christmas-red p-2 -mr-2 rounded-full hover:bg-red-50 transition drop-shadow-sm">
-                    {nav ? <FaTimes size={24} /> : <FaBars size={24} />}
-                </div>
-
-                {/* Mobile Menu Overlay */}
-                <AnimatePresence>
-                    {nav && (
-                        <motion.div
-                            initial={{ opacity: 0, x: "100%" }}
-                            animate={{ opacity: 1, x: 0 }}
-                            exit={{ opacity: 0, x: "100%" }}
-                            transition={{ type: "spring", stiffness: 80, damping: 15 }}
-                            className="fixed inset-0 w-full h-screen bg-white/95 backdrop-blur-xl z-40 flex flex-col pt-24 px-6 font-sans overflow-y-auto"
-                        >
-                            {/* Decorative background elements */}
-                            <div className="absolute top-0 right-0 w-64 h-64 bg-red-100/50 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2 -z-10 animate-pulse"></div>
-
-                            <div className="flex flex-col h-full pb-10">
-                                <ul className="flex flex-col gap-4 w-full">
-                                    {links.map(({ id, link, path, subLinks }, i) => (
-                                        <motion.li
-                                            key={id}
-                                            custom={i}
-                                            initial="hidden"
-                                            animate="visible"
-                                            variants={menuItemVariants}
-                                            className="border-b border-gray-100 pb-2"
-                                        >
-                                            <div className="flex flex-col">
-                                                <div className="flex justify-between items-center">
-                                                    <Link
-                                                        onClick={() => !subLinks && setNav(false)}
-                                                        href={path}
-                                                        className="text-2xl font-bold text-gray-800 active:text-christmas-red transition-colors capitalize py-2 flex-1"
-                                                    >
-                                                        {link}
-                                                    </Link>
-                                                    {subLinks && (
-                                                        <div
-                                                            onClick={(e) => { e.preventDefault(); toggleMobileSubMenu(id); }}
-                                                            className="p-3 bg-gray-50 rounded-full cursor-pointer text-christmas-red"
-                                                        >
-                                                            <FaChevronDown className={`transition-transform duration-300 ${mobileSubMenuOpen === id ? 'rotate-180' : ''}`} />
-                                                        </div>
-                                                    )}
-                                                </div>
-
-                                                {/* Mobile Submenu */}
-                                                <AnimatePresence>
-                                                    {subLinks && mobileSubMenuOpen === id && (
-                                                        <motion.ul
-                                                            initial={{ height: 0, opacity: 0 }}
-                                                            animate={{ height: "auto", opacity: 1 }}
-                                                            exit={{ height: 0, opacity: 0 }}
-                                                            className="overflow-hidden bg-red-50/50 rounded-lg mt-2 border border-red-100"
-                                                        >
-                                                            {subLinks.map((sub, idx) => (
-                                                                <li key={idx}>
-                                                                    <Link
-                                                                        onClick={() => setNav(false)}
-                                                                        href={sub.path}
-                                                                        className="block px-6 py-3 text-gray-700 font-medium hover:text-christmas-red"
-                                                                    >
-                                                                        {sub.name}
-                                                                    </Link>
-                                                                </li>
-                                                            ))}
-                                                        </motion.ul>
-                                                    )}
-                                                </AnimatePresence>
-                                            </div>
-                                        </motion.li>
-                                    ))}
-                                </ul>
-
-                                <div className="mt-8 pt-8 border-t border-gray-100">
-                                    {user ? (
-                                        <div className="flex flex-col gap-6">
-                                            <div className="flex items-center gap-4">
-                                                {user.image ? (
-                                                    <div className="w-12 h-12 rounded-full overflow-hidden border-2 border-christmas-gold relative shadow-lg">
-                                                        <Image src={user.image} alt={user.name} fill className="object-cover" />
-                                                    </div>
-                                                ) : (
-                                                    <FaUserCircle className="text-5xl text-gray-300" />
-                                                )}
-                                                <div>
-                                                    <div className="text-xl font-bold text-gray-800 flex items-center gap-2">
-                                                        {user.name} <span>🎅</span>
-                                                    </div>
-                                                    <div className="text-sm text-gray-500">{user.email}</div>
-                                                </div>
-                                            </div>
-
-                                            <div className="grid grid-cols-2 gap-3">
-                                                <Link onClick={() => setNav(false)} href="/profile">
-                                                    <button className="w-full py-3 rounded-lg border border-gray-200 text-gray-700 font-bold hover:bg-gray-50 transition-all">
-                                                        Profile
-                                                    </button>
-                                                </Link>
-                                                <button
-                                                    onClick={() => { logout(); setNav(false); }}
-                                                    className="w-full py-3 rounded-lg border border-red-100 text-red-500 font-bold hover:bg-red-50 transition-all"
-                                                >
-                                                    Log Out
-                                                </button>
-                                            </div>
-
-                                            {user.role === 'admin' && (
-                                                <Link onClick={() => setNav(false)} href="/admin">
-                                                    <button className="w-full py-3 rounded-lg bg-gray-900 text-white font-bold transition-all shadow-lg">
-                                                        Admin Dashboard
-                                                    </button>
-                                                </Link>
-                                            )}
-                                        </div>
-                                    ) : (
-                                        <div className="flex flex-col gap-4">
-                                            <Link onClick={() => setNav(false)} href="/login" className="w-full">
-                                                <button className="w-full py-4 rounded-xl border border-gray-200 text-gray-800 font-bold hover:border-gray-300 transition-all text-lg">
-                                                    Log In
-                                                </button>
-                                            </Link>
-                                            <Link onClick={() => setNav(false)} href="/register" className="w-full">
-                                                {/* Mobile Candy Cane Button */}
-                                                <button suppressHydrationWarning className="w-full py-4 rounded-xl text-white font-bold shadow-lg shadow-red-500/20 hover:shadow-red-500/30 transform hover:-translate-y-1 transition-all text-lg overflow-hidden relative">
-                                                    <span className="absolute inset-0 w-full h-full bg-[repeating-linear-gradient(45deg,#D32F2F,#D32F2F_10px,#ff7f7f_10px,#ff7f7f_20px)] animate-candy-stripe opacity-90"></span>
-                                                    <span className="relative z-10 flex items-center justify-center gap-2">
-                                                        BOOK NOW 🎁
-                                                    </span>
-                                                </button>
-                                            </Link>
-                                        </div>
-                                    )}
-                                </div>
-                            </div>
-                        </motion.div>
-                    )}
-                </AnimatePresence>
+                </motion.div>
             </div>
-        </nav>
+
+            {/* Mobile Studio Menu */}
+            <AnimatePresence>
+                {mobileMenuOpen && (
+                    <motion.div
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: 20 }}
+                        className="absolute inset-x-6 top-[120px] pointer-events-auto lg:hidden"
+                    >
+                        <div className="bg-[#F5F2ED]/95 backdrop-blur-3xl border border-white rounded-[40px] p-10 shadow-3xl overflow-hidden relative">
+                            {/* Decorative Grain/Mesh */}
+                            <div className="absolute inset-0 opacity-[0.03] pointer-events-none bg-[url('https://grainy-gradients.vercel.app/noise.svg')]" />
+
+                            <nav className="flex flex-col gap-3">
+                                {menuItems.map((item) => (
+                                    <Link
+                                        key={item.name}
+                                        href={item.path}
+                                        onClick={() => setMobileMenuOpen(false)}
+                                        className={`
+                                            px-8 py-5 rounded-[24px] text-[15px] font-bold uppercase tracking-[0.4em] transition-all h-font
+                                            ${isActive(item.path) ? "bg-[#D4AF37]/10 text-[#4A4036]" : "text-[#8D7B68] hover:text-[#4A4036] hover:bg-white/50"}
+                                        `}
+                                    >
+                                        {item.name}
+                                    </Link>
+                                ))}
+                            </nav>
+
+                            <div className="mt-8 pt-8 border-t border-[#8D7B68]/10 flex justify-between items-center">
+                                <div className="flex gap-4">
+                                    <FaInstagram className="text-[#8D7B68]/40 hover:text-[#D4AF37] cursor-pointer" />
+                                    <FaFacebookF className="text-[#8D7B68]/40 hover:text-[#D4AF37] cursor-pointer" />
+                                </div>
+                                <span className="text-[10px] uppercase tracking-[0.2em] text-[#8D7B68]/30 font-bold">Studio Travel Sansar</span>
+                            </div>
+                        </div>
+                    </motion.div>
+                )}
+            </AnimatePresence>
+
+            <style jsx global>{`
+                @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;800&display=swap');
+                .h-font { font-family: 'Outfit', sans-serif; }
+                body { background-color: #FDFCFB !important; } /* Soft neutral studio background base */
+            `}</style>
+        </header>
     );
 };
 

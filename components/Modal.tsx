@@ -41,28 +41,31 @@ const Modal = ({ isOpen, onClose, title, children }: ModalProps) => {
                     />
 
                     {/* Modal */}
-                    <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+                    <div className="fixed inset-0 z-[60] flex items-center justify-center p-4 sm:p-6">
                         <motion.div
-                            initial={{ opacity: 0, scale: 0.95, y: 20 }}
+                            initial={{ opacity: 0, scale: 0.9, y: 40 }}
                             animate={{ opacity: 1, scale: 1, y: 0 }}
-                            exit={{ opacity: 0, scale: 0.95, y: 20 }}
-                            transition={{ duration: 0.2 }}
-                            className="bg-white rounded-2xl shadow-2xl w-full max-w-lg max-h-[90vh] overflow-y-auto relative"
+                            exit={{ opacity: 0, scale: 0.9, y: 40 }}
+                            transition={{ type: "spring", damping: 25, stiffness: 300 }}
+                            className="bg-white/70 backdrop-blur-3xl rounded-[40px] shadow-[0_32px_120px_-20px_rgba(0,0,0,0.2)] w-full max-w-2xl max-h-[90vh] overflow-hidden relative border border-white/60"
                             onClick={(e) => e.stopPropagation()}
                         >
                             {/* Header */}
-                            <div className="sticky top-0 bg-white border-b border-gray-200 px-6 py-4 flex justify-between items-center rounded-t-2xl">
-                                <h2 className="text-2xl font-bold text-primary">{title}</h2>
+                            <div className="px-8 pt-8 pb-4 flex justify-between items-center relative z-10">
+                                <div>
+                                    <h2 className="text-3xl font-black text-slate-900 tracking-tighter h-font leading-none">{title}</h2>
+                                    <div className="mt-2 w-12 h-1 bg-blue-600 rounded-full" />
+                                </div>
                                 <button
                                     onClick={onClose}
-                                    className="text-gray-400 hover:text-gray-600 transition-colors p-2 hover:bg-gray-100 rounded-full"
+                                    className="w-12 h-12 flex items-center justify-center text-slate-400 hover:text-slate-900 transition-all hover:bg-white/50 rounded-2xl border border-transparent hover:border-slate-100"
                                 >
                                     <FaTimes size={20} />
                                 </button>
                             </div>
 
                             {/* Content */}
-                            <div className="p-6">
+                            <div className="p-8 overflow-y-auto max-h-[calc(90vh-100px)] scrollbar-hide">
                                 {children}
                             </div>
                         </motion.div>

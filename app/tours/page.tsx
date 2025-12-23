@@ -2,11 +2,11 @@
 
 import { useState, useEffect, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import Masonry from 'react-masonry-css';
 import TourCard from '@/components/TourCard';
 import Pagination from '@/components/Pagination';
-import { FaSearch, FaClock, FaDollarSign } from 'react-icons/fa';
+import { FaSearch, FaClock, FaTag, FaCompass, FaChevronDown } from 'react-icons/fa';
 import api from '@/lib/api';
 
 function ToursContent() {
@@ -34,7 +34,6 @@ function ToursContent() {
     const fetchTours = async () => {
         try {
             const res = await api.get('/tours');
-            // Handle both array and object wrapper formats
             const data = Array.isArray(res.data) ? res.data : res.data.tours || [];
             setTours(data);
         } catch (error) {
@@ -91,168 +90,204 @@ function ToursContent() {
     const endIndex = startIndex + itemsPerPage;
     const currentTours = filteredTours.slice(startIndex, endIndex);
 
-    // Masonry breakpoints - Pinterest style
     const breakpointColumns = {
         default: 3,
         1024: 2,
         640: 1
     };
 
-    return (
-        <>
-            {/* Hero Section */}
-            <section className="relative h-[50vh] flex items-center justify-center overflow-hidden">
-                <div
-                    className="absolute inset-0 bg-cover bg-center"
-                    style={{ backgroundImage: "url('https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?q=80&w=2070&auto=format&fit=crop')" }}
-                />
-                <div className="absolute inset-0 bg-gradient-to-r from-secondary/90 to-orange-700/90" />
+    const inputClasses = "w-full pl-12 pr-4 py-4 bg-white/50 backdrop-blur-md border border-slate-200 rounded-2xl focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500 transition-all outline-none font-bold text-slate-700 placeholder:text-slate-400 placeholder:font-medium";
 
-                <div className="relative z-10 text-center text-white px-4">
+    return (
+        <main className="bg-[#f8fafc] min-h-screen pb-32 pt-20 overflow-x-hidden relative font-sans">
+            {/* Ambient Background Elements */}
+            <div className="absolute inset-0 z-0 pointer-events-none">
+                <div className="absolute top-[10%] left-[5%] w-[45%] h-[40%] bg-blue-400/5 rounded-full blur-[120px] animate-pulse" />
+                <div className="absolute bottom-[20%] right-[10%] w-[40%] h-[40%] bg-indigo-400/5 rounded-full blur-[120px] animate-pulse" style={{ animationDelay: '3s' }} />
+            </div>
+
+            <div className="container mx-auto px-4 xl:px-20 relative z-10">
+                {/* Header Section */}
+                <div className="pt-20 pb-16 text-center max-w-4xl mx-auto">
+                    <motion.div
+                        initial={{ opacity: 0, scale: 0.9 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        className="inline-flex items-center gap-2 px-4 py-2 bg-blue-50 rounded-full text-blue-600 text-[10px] font-black uppercase tracking-[0.2em] mb-6 h-font"
+                    >
+                        <FaCompass className="text-xs" />
+                        Next-Gen Journeys
+                    </motion.div>
+
                     <motion.h1
-                        initial={{ opacity: 0, y: 30 }}
+                        initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
-                        transition={{ duration: 0.6 }}
-                        className="text-5xl md:text-6xl font-bold mb-4"
+                        transition={{ delay: 0.1 }}
+                        className="text-5xl md:text-8xl font-black text-slate-900 tracking-tighter mb-8 leading-none p-font"
                     >
-                        {categoryFilter !== 'all' ? `${categoryFilter} Tours` : 'Our Tours'}
+                        {categoryFilter !== 'all' ? (
+                            <><span className="text-blue-600">{categoryFilter}</span> <br /> Expeditions</>
+                        ) : (
+                            <>Epic <br /> <span className="text-blue-600">Adventures</span></>
+                        )}
                     </motion.h1>
+
                     <motion.p
-                        initial={{ opacity: 0, y: 30 }}
+                        initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
-                        transition={{ duration: 0.6, delay: 0.2 }}
-                        className="text-xl md:text-2xl max-w-3xl mx-auto"
+                        transition={{ delay: 0.2 }}
+                        className="text-slate-500 font-bold text-lg md:text-xl leading-relaxed max-w-2xl mx-auto"
                     >
-                        {categoryFilter !== 'all'
-                            ? `Explore our curated ${categoryFilter} experiences`
-                            : 'Curated experiences for every type of traveler'
-                        }
+                        Beyond the horizon lies your next story. Choose from our expertly crafted tours designed for the modern explorer.
                     </motion.p>
                 </div>
-            </section>
 
-            {/* Main Content - Aligned with Navbar */}
-            <section className="py-20 px-4 xl:px-20 bg-light min-h-screen">
-                {/* Search and Filter Bar */}
-                <div className="mb-12">
-                    <div className="bg-white p-6 rounded-2xl shadow-card">
-                        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                            <div className="relative md:col-span-1">
-                                <FaSearch className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" />
+                {/* Filter section */}
+                <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.3 }}
+                    className="mb-16 max-w-6xl mx-auto"
+                >
+                    <div className="bg-white/70 backdrop-blur-3xl p-6 rounded-[40px] shadow-[0_32px_80px_-16px_rgba(0,0,0,0.08)] border border-white/60">
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 items-center">
+                            <div className="relative group lg:col-span-1">
+                                <FaSearch className="absolute left-5 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-blue-500 transition-colors" />
                                 <input
                                     type="text"
-                                    placeholder="Search tours..."
+                                    placeholder="Quest for..."
                                     value={searchQuery}
                                     onChange={(e) => setSearchQuery(e.target.value)}
-                                    className="w-full pl-12 pr-4 py-3 border-2 border-gray-200 rounded-xl focus:outline-none focus:border-primary transition"
+                                    className={inputClasses}
                                 />
                             </div>
-                            <div className="relative">
-                                <FaClock className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" />
+
+                            <div className="relative group">
+                                <FaClock className="absolute left-5 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-blue-500 transition-colors" />
                                 <select
                                     value={durationFilter}
                                     onChange={(e) => setDurationFilter(e.target.value)}
-                                    className="w-full pl-12 pr-4 py-3 border-2 border-gray-200 rounded-xl focus:outline-none focus:border-primary transition appearance-none bg-white"
+                                    className={`${inputClasses} appearance-none pr-10`}
                                 >
-                                    <option value="all">All Durations</option>
-                                    <option value="short">Short (1-3 days)</option>
-                                    <option value="medium">Medium (4-7 days)</option>
-                                    <option value="long">Long (8+ days)</option>
+                                    <option value="all">Any Duration</option>
+                                    <option value="short">Swift (1-3 days)</option>
+                                    <option value="medium">Classic (4-7 days)</option>
+                                    <option value="long">Grand (8+ days)</option>
                                 </select>
                             </div>
-                            <div className="relative">
-                                <FaDollarSign className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" />
+
+                            <div className="relative group">
+                                <FaTag className="absolute left-5 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-blue-500 transition-colors" />
                                 <select
                                     value={priceFilter}
                                     onChange={(e) => setPriceFilter(e.target.value)}
-                                    className="w-full pl-12 pr-4 py-3 border-2 border-gray-200 rounded-xl focus:outline-none focus:border-primary transition appearance-none bg-white"
+                                    className={`${inputClasses} appearance-none pr-10`}
                                 >
-                                    <option value="all">All Prices</option>
-                                    <option value="budget">Budget (&lt;$500)</option>
-                                    <option value="moderate">Moderate ($500-$1500)</option>
-                                    <option value="luxury">Luxury (&gt;$1500)</option>
+                                    <option value="all">Any Value</option>
+                                    <option value="budget">Essential (&lt;500)</option>
+                                    <option value="moderate">Premium (500-1500)</option>
+                                    <option value="luxury">Luxury (&gt;1500)</option>
+                                </select>
+                            </div>
+
+                            <div className="relative group">
+                                <FaCompass className="absolute left-5 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-blue-500 transition-colors" />
+                                <select
+                                    value={categoryFilter}
+                                    onChange={(e) => setCategoryFilter(e.target.value)}
+                                    className={`${inputClasses} appearance-none pr-10`}
+                                >
+                                    <option value="all">All Realms</option>
+                                    <option value="trekking">Trekking</option>
+                                    <option value="adventure">High Octane</option>
+                                    <option value="culture">Ancestral</option>
+                                    <option value="nature">Wilderness</option>
                                 </select>
                             </div>
                         </div>
-                        <div className="mt-4 text-gray-600">
-                            Showing <span className="font-bold text-secondary">{currentTours.length}</span> of{' '}
-                            <span className="font-bold text-secondary">{filteredTours.length}</span> tours
-                        </div>
                     </div>
-                </div>
 
-                {/* Pinterest-Style Masonry Grid */}
+                    <div className="mt-6 flex justify-center gap-4">
+                        <span className="px-5 py-2 bg-slate-900 text-white text-[10px] font-black uppercase tracking-widest rounded-full shadow-xl shadow-slate-900/10 h-font">
+                            {filteredTours.length} Experiences Found
+                        </span>
+                    </div>
+                </motion.div>
+
+                {/* Tour Grid */}
                 {loading ? (
-                    <Masonry
-                        breakpointCols={breakpointColumns}
-                        className="flex -ml-6 w-auto"
-                        columnClassName="pl-6 bg-clip-padding"
-                    >
-                        {[...Array(9)].map((_, i) => (
-                            <div key={i} className="mb-6">
-                                <div className={`${i % 3 === 0 ? 'h-[500px]' : 'h-[420px]'} rounded-2xl bg-gray-200 animate-pulse overflow-hidden`}>
-                                    <div className="h-full bg-gradient-to-br from-gray-200 via-gray-300 to-gray-200" style={{
-                                        backgroundSize: '200% 200%',
-                                        animation: 'shimmer 2s infinite'
-                                    }} />
-                                </div>
-                            </div>
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                        {[...Array(6)].map((_, i) => (
+                            <div key={i} className={`${i % 2 === 0 ? 'h-[500px]' : 'h-[420px]'} rounded-[40px] bg-slate-200 animate-pulse`} />
                         ))}
-                    </Masonry>
+                    </div>
                 ) : currentTours.length > 0 ? (
-                    <>
+                    <AnimatePresence mode="popLayout">
                         <Masonry
                             breakpointCols={breakpointColumns}
-                            className="flex -ml-6 w-auto"
-                            columnClassName="pl-6 bg-clip-padding"
+                            className="flex -ml-8 w-auto h-masonry"
+                            columnClassName="pl-8 bg-clip-padding"
                         >
-                            {currentTours.map((tour: any, index: number) => {
-                                const isFeatured = index % 3 === 0;
-                                return (
-                                    <motion.div
-                                        key={tour._id}
-                                        initial={{ opacity: 0, y: 30 }}
-                                        animate={{ opacity: 1, y: 0 }}
-                                        transition={{ delay: index * 0.05 }}
-                                        className="mb-6"
-                                    >
-                                        <TourCard tour={tour} featured={isFeatured} />
-                                    </motion.div>
-                                );
-                            })}
+                            {currentTours.map((tour: any, index: number) => (
+                                <motion.div
+                                    key={tour._id}
+                                    initial={{ opacity: 0, y: 40 }}
+                                    animate={{ opacity: 1, y: 0 }}
+                                    exit={{ opacity: 0, scale: 0.9 }}
+                                    transition={{
+                                        type: "spring",
+                                        damping: 25,
+                                        stiffness: 100,
+                                        delay: index * 0.05
+                                    }}
+                                    className="mb-8"
+                                >
+                                    <TourCard
+                                        tour={tour}
+                                        featured={index % 5 === 0}
+                                    />
+                                </motion.div>
+                            ))}
                         </Masonry>
-
-                        {totalPages > 1 && (
-                            <Pagination
-                                currentPage={currentPage}
-                                totalPages={totalPages}
-                                onPageChange={setCurrentPage}
-                            />
-                        )}
-                    </>
+                    </AnimatePresence>
                 ) : (
-                    <div className="text-center py-20">
-                        <div className="text-6xl mb-4">🔍</div>
-                        <h3 className="text-2xl font-bold text-gray-700 mb-2">No tours found</h3>
-                        <p className="text-gray-500">Try adjusting your search or filters</p>
+                    <motion.div
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        className="text-center py-40 bg-white/40 backdrop-blur-md rounded-[48px] border border-white/60"
+                    >
+                        <div className="text-8xl mb-8 grayscale group-hover:grayscale-0 transition-all duration-500">🔭</div>
+                        <h3 className="text-3xl font-black text-slate-900 tracking-tighter mb-4 h-font">No Adventures Discovered</h3>
+                        <p className="text-slate-500 font-bold max-w-sm mx-auto">Venture elsewhere or adjust your pursuit parameters.</p>
+                    </motion.div>
+                )}
+
+                {totalPages > 1 && (
+                    <div className="mt-20">
+                        <Pagination
+                            currentPage={currentPage}
+                            totalPages={totalPages}
+                            onPageChange={setCurrentPage}
+                        />
                     </div>
                 )}
-            </section>
+            </div>
 
             <style jsx global>{`
-                @keyframes shimmer {
-                    0% { background-position: 0% 50%; }
-                    50% { background-position: 100% 50%; }
-                    100% { background-position: 0% 50%; }
-                }
+                @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Outfit:wght@800;900&display=swap');
+                
+                .p-font { font-family: 'Playfair Display', serif; }
+                .h-font { font-family: 'Outfit', sans-serif; }
+                .h-masonry { align-items: flex-start; }
             `}</style>
-        </>
+        </main>
     );
 }
 
 export default function ToursPage() {
     return (
-        <Suspense fallback={<div className="min-h-screen flex justify-center items-center">Loading...</div>}>
+        <Suspense fallback={<div className="min-h-screen flex justify-center items-center bg-[#f8fafc]">
+            <div className="w-12 h-12 border-4 border-blue-600 border-t-transparent rounded-full animate-spin" />
+        </div>}>
             <ToursContent />
         </Suspense>
     );

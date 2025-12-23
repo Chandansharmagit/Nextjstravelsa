@@ -3,6 +3,8 @@
 import { useState, FormEvent } from "react";
 import { useAuth } from "@/context/AuthContext";
 import api from "@/lib/api";
+import { motion, AnimatePresence } from "framer-motion";
+import { FaUser, FaEnvelope, FaPhone, FaUsers, FaCalendarAlt, FaEdit, FaCheckCircle, FaExclamationCircle } from "react-icons/fa";
 
 interface BookNowFormProps {
     destinationTitle: string;
@@ -26,7 +28,6 @@ const BookNowForm = ({ destinationTitle, destinationId, onSuccess }: BookNowForm
     const handleSubmit = async (e: FormEvent) => {
         e.preventDefault();
 
-        // Auth Check
         if (!user) {
             setShowLoginModal(true);
             return;
@@ -64,129 +65,159 @@ const BookNowForm = ({ destinationTitle, destinationId, onSuccess }: BookNowForm
         }
     };
 
+    const inputClasses = "w-full pl-12 pr-4 py-4 bg-white/50 backdrop-blur-md border border-slate-200 rounded-2xl focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500 transition-all outline-none font-bold text-slate-700 placeholder:text-slate-400 placeholder:font-medium";
+    const labelClasses = "block text-xs font-black text-slate-400 uppercase tracking-widest mb-2 ml-1 h-font";
+
     return (
-        <form onSubmit={handleSubmit} className="space-y-4">
-            <div className="bg-secondary/10 p-4 rounded-xl border-l-4 border-secondary">
-                <p className="text-sm text-gray-700">
-                    <span className="font-semibold">Booking for:</span> {destinationTitle}
-                </p>
-            </div>
-
-            <div>
-                <label htmlFor="book-name" className="block text-sm font-semibold text-gray-700 mb-2">
-                    Full Name *
-                </label>
-                <input
-                    type="text"
-                    id="book-name"
-                    required
-                    value={formData.name}
-                    onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-secondary focus:border-transparent transition-all outline-none"
-                    placeholder="John Doe"
-                />
-            </div>
-
-            <div>
-                <label htmlFor="book-email" className="block text-sm font-semibold text-gray-700 mb-2">
-                    Email Address *
-                </label>
-                <input
-                    type="email"
-                    id="book-email"
-                    required
-                    value={formData.email}
-                    onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-secondary focus:border-transparent transition-all outline-none"
-                    placeholder="john@example.com"
-                />
-            </div>
-
-            <div>
-                <label htmlFor="book-phone" className="block text-sm font-semibold text-gray-700 mb-2">
-                    Phone Number *
-                </label>
-                <input
-                    type="tel"
-                    id="book-phone"
-                    required
-                    value={formData.phone}
-                    onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-secondary focus:border-transparent transition-all outline-none"
-                    placeholder="+977 98XXXXXXXX"
-                />
-            </div>
-
-            <div className="grid grid-cols-2 gap-4">
+        <form onSubmit={handleSubmit} className="space-y-6">
+            <motion.div
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="bg-blue-50/50 p-6 rounded-[32px] border border-blue-100/50 flex items-center gap-4"
+            >
+                <div className="w-12 h-12 rounded-2xl bg-white shadow-sm flex items-center justify-center text-blue-600 text-xl">
+                    <FaCheckCircle className="opacity-20 absolute scale-150" />
+                    <FaEdit className="relative z-10" />
+                </div>
                 <div>
-                    <label htmlFor="travelers" className="block text-sm font-semibold text-gray-700 mb-2">
-                        Travelers *
-                    </label>
-                    <select
-                        id="travelers"
-                        required
-                        value={formData.travelers}
-                        onChange={(e) => setFormData({ ...formData, travelers: e.target.value })}
-                        className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-secondary focus:border-transparent transition-all outline-none"
-                    >
-                        {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((num) => (
-                            <option key={num} value={num}>
-                                {num} {num === 1 ? "Person" : "People"}
-                            </option>
-                        ))}
-                        <option value="10+">10+ People</option>
-                    </select>
+                    <p className="text-[10px] font-black text-blue-600 uppercase tracking-widest mb-0.5">Reservation For</p>
+                    <p className="text-lg font-black text-slate-900 tracking-tight leading-none">{destinationTitle}</p>
+                </div>
+            </motion.div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="relative">
+                    <label className={labelClasses}>Full Name</label>
+                    <div className="relative group">
+                        <FaUser className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-blue-500 transition-colors" />
+                        <input
+                            type="text"
+                            required
+                            value={formData.name}
+                            onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                            className={inputClasses}
+                            placeholder="Chandan Sharma"
+                        />
+                    </div>
                 </div>
 
-                <div>
-                    <label htmlFor="travelDate" className="block text-sm font-semibold text-gray-700 mb-2">
-                        Travel Date *
-                    </label>
+                <div className="relative">
+                    <label className={labelClasses}>Email Address</label>
+                    <div className="relative group">
+                        <FaEnvelope className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-blue-500 transition-colors" />
+                        <input
+                            type="email"
+                            required
+                            value={formData.email}
+                            onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                            className={inputClasses}
+                            placeholder="hello@example.com"
+                        />
+                    </div>
+                </div>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="relative">
+                    <label className={labelClasses}>Phone Number</label>
+                    <div className="relative group">
+                        <FaPhone className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-blue-500 transition-colors" />
+                        <input
+                            type="tel"
+                            required
+                            value={formData.phone}
+                            onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+                            className={inputClasses}
+                            placeholder="+977 98XXXXXXXX"
+                        />
+                    </div>
+                </div>
+
+                <div className="relative">
+                    <label className={labelClasses}>Travelers</label>
+                    <div className="relative group">
+                        <FaUsers className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-blue-500 transition-colors" />
+                        <select
+                            required
+                            value={formData.travelers}
+                            onChange={(e) => setFormData({ ...formData, travelers: e.target.value })}
+                            className={inputClasses}
+                        >
+                            {[1, 2, 3, 4, 5, 10].map((num) => (
+                                <option key={num} value={num}>
+                                    {num} {num === 1 ? "Explorer" : "Explorers"}
+                                </option>
+                            ))}
+                            <option value="10+">Expedition (10+)</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div className="relative">
+                <label className={labelClasses}>Preferred Start Date</label>
+                <div className="relative group">
+                    <FaCalendarAlt className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-blue-500 transition-colors" />
                     <input
                         type="date"
-                        id="travelDate"
                         required
                         value={formData.travelDate}
                         onChange={(e) => setFormData({ ...formData, travelDate: e.target.value })}
                         min={new Date().toISOString().split("T")[0]}
-                        className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-secondary focus:border-transparent transition-all outline-none"
+                        className={inputClasses}
                     />
                 </div>
             </div>
 
-            <div>
-                <label htmlFor="specialRequests" className="block text-sm font-semibold text-gray-700 mb-2">
-                    Special Requests
-                </label>
+            <div className="relative">
+                <label className={labelClasses}>Expedition Notes</label>
                 <textarea
-                    id="specialRequests"
                     rows={4}
                     value={formData.specialRequests}
                     onChange={(e) => setFormData({ ...formData, specialRequests: e.target.value })}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-secondary focus:border-transparent transition-all outline-none resize-none"
-                    placeholder="Any special requirements or preferences?"
+                    className="w-full p-5 bg-white/50 backdrop-blur-md border border-slate-200 rounded-[32px] focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500 transition-all outline-none font-bold text-slate-700 placeholder:text-slate-400 placeholder:font-medium resize-none"
+                    placeholder="Tell us about your dream trip preferences..."
                 />
             </div>
 
-            {submitStatus === "success" && (
-                <div className="bg-green-50 border border-green-200 text-green-800 px-4 py-3 rounded-xl">
-                    ✓ Booking request submitted! We'll contact you shortly to confirm.
-                </div>
-            )}
+            <AnimatePresence>
+                {submitStatus === "success" && (
+                    <motion.div
+                        initial={{ opacity: 0, scale: 0.9 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        className="bg-green-500/10 backdrop-blur-md border border-green-500/20 text-green-700 px-6 py-4 rounded-2xl flex items-center gap-3 font-bold"
+                    >
+                        <FaCheckCircle className="shrink-0" />
+                        Booking request launched! We'll reach out soon.
+                    </motion.div>
+                )}
 
-            {submitStatus === "error" && (
-                <div className="bg-red-50 border border-red-200 text-red-800 px-4 py-3 rounded-xl">
-                    ✗ Something went wrong (or you need to login). Please try again.
-                </div>
-            )}
+                {submitStatus === "error" && (
+                    <motion.div
+                        initial={{ opacity: 0, scale: 0.9 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        className="bg-red-500/10 backdrop-blur-md border border-red-500/20 text-red-700 px-6 py-4 rounded-2xl flex items-center gap-3 font-bold"
+                    >
+                        <FaExclamationCircle className="shrink-0" />
+                        Launch failed. Please verify your details or login.
+                    </motion.div>
+                )}
+            </AnimatePresence>
 
-            <button
+            <motion.button
                 type="submit"
                 disabled={isSubmitting}
-                className="w-full py-4 bg-secondary text-white font-bold text-lg rounded-xl hover:bg-orange-600 transition-all shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
+                whileHover={{ scale: 1.02, y: -2 }}
+                whileTap={{ scale: 0.98 }}
+                className="w-full py-5 bg-slate-900 text-white font-black text-xs uppercase tracking-[0.3em] rounded-[32px] hover:bg-black transition-all shadow-2xl shadow-slate-900/20 disabled:opacity-50 disabled:cursor-not-allowed group relative overflow-hidden"
             >
-                {isSubmitting ? "Processing..." : "Submit Booking Request"}
-            </button>
+                <div className="absolute inset-0 bg-gradient-to-r from-blue-600 to-indigo-600 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                <span className="relative z-10">{isSubmitting ? "Launching..." : "Initiate Reservation"}</span>
+            </motion.button>
+
+            <style jsx global>{`
+                .h-font { font-family: 'Outfit', sans-serif; }
+            `}</style>
         </form>
     );
 };
