@@ -4,6 +4,7 @@ import Link from 'next/link';
 import SocialShare from '@/components/SocialShare';
 import DestinationImageGallery from '@/components/DestinationImageGallery';
 import DestinationClientWrapper from '@/components/DestinationClientWrapper';
+import SimilarTrips from '@/components/SimilarTrips';
 import { motion, AnimatePresence } from 'framer-motion';
 import { FaMapMarkerAlt, FaClock, FaArrowLeft, FaCheck } from 'react-icons/fa';
 
@@ -176,6 +177,12 @@ export default function DestinationView({ destination }: { destination: any }) {
                         destinationId={destination._id}
                     />
                 </div>
+
+                {/* Similar Trips Section */}
+                <SimilarTrips
+                    currentDestinationId={destination._id}
+                    currentLocation={destination.location}
+                />
             </div>
 
             <style jsx global>{`

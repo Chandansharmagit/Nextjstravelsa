@@ -29,7 +29,7 @@ export default function LayoutWrapper({ children }: { children: React.ReactNode 
             <SnowEffect />
             <ChristmasDecorations />
             <ChristmasPopup />
-            <main className="min-h-screen">
+            <main className="min-h-screen pt-[115px]">
                 {children}
             </main>
             <FeedbackWidget />
