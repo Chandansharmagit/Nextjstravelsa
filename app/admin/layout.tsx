@@ -65,11 +65,11 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     ];
 
     return (
-        <div className="flex min-h-screen bg-gray-100">
+        <div className="flex min-h-screen bg-[#f8fafc]">
             {/* Mobile Menu Button */}
             <button
                 onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-                className="lg:hidden fixed top-4 left-4 z-[60] p-3 bg-primary text-white rounded-lg shadow-lg"
+                className="lg:hidden fixed top-4 left-4 z-[70] p-3 bg-primary text-white rounded-xl shadow-lg hover:scale-105 active:scale-95 transition-all"
             >
                 {isMobileMenuOpen ? <FaTimes size={20} /> : <FaBars size={20} />}
             </button>
@@ -82,7 +82,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                         animate={{ opacity: 1 }}
                         exit={{ opacity: 0 }}
                         onClick={() => setIsMobileMenuOpen(false)}
-                        className="lg:hidden fixed inset-0 bg-black/50 z-40"
+                        className="lg:hidden fixed inset-0 bg-black/40 backdrop-blur-sm z-[55]"
                     />
                 )}
             </AnimatePresence>
@@ -91,82 +91,112 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
             <motion.aside
                 initial={false}
                 animate={{
-                    width: isSidebarCollapsed ? '80px' : '256px',
-                    x: isMobileMenuOpen ? 0 : window.innerWidth < 1024 ? '-100%' : 0
+                    width: isSidebarCollapsed ? '88px' : '280px',
+                    x: isMobileMenuOpen ? 0 : typeof window !== 'undefined' && window.innerWidth < 1024 ? -300 : 0
                 }}
-                transition={{ duration: 0.3 }}
-                className={`bg-primary text-white h-screen fixed left-0 top-0 z-50 flex flex-col shadow-xl ${isMobileMenuOpen ? 'translate-x-0' : 'lg:translate-x-0 -translate-x-full'
+                transition={{ type: "spring", stiffness: 300, damping: 30 }}
+                className={`bg-[#0f172a] text-white h-screen fixed left-0 top-0 z-[60] flex flex-col shadow-2xl overflow-hidden border-r border-white/5 ${isMobileMenuOpen ? 'translate-x-0' : 'lg:translate-x-0 -translate-x-full'
                     }`}
             >
+                {/* Glassmorphic Background Effect */}
+                <div className="absolute inset-0 bg-gradient-to-b from-primary/10 to-transparent pointer-events-none" />
+
                 {/* Header */}
-                <div className={`p-6 flex-shrink-0 border-b border-white/10 ${isSidebarCollapsed ? 'px-4' : ''}`}>
+                <div className={`p-8 flex-shrink-0 border-b border-white/5 relative ${isSidebarCollapsed ? 'px-6' : ''}`}>
                     {isSidebarCollapsed ? (
                         <div className="flex justify-center">
-                            <div className="w-10 h-10 bg-secondary rounded-lg flex items-center justify-center font-bold text-lg">
+                            <motion.div
+                                whileHover={{ scale: 1.1, rotate: 5 }}
+                                className="w-12 h-12 bg-gradient-to-br from-secondary to-orange-600 rounded-xl flex items-center justify-center font-bold text-xl shadow-lg"
+                            >
                                 T
-                            </div>
+                            </motion.div>
                         </div>
                     ) : (
-                        <Link href="/admin">
-                            <h1 className="text-2xl font-bold">
-                                TRAVEL<span className="text-secondary">SANSAR</span>
-                            </h1>
-                            <p className="text-sm text-white/70 mt-1">Admin Panel</p>
+                        <Link href="/admin" className="block group">
+                            <motion.h1
+                                initial={{ opacity: 0 }}
+                                animate={{ opacity: 1 }}
+                                className="text-2xl font-black tracking-tighter"
+                            >
+                                TRAVEL<span className="text-secondary group-hover:text-orange-400 transition-colors">SANSAR</span>
+                            </motion.h1>
+                            <p className="text-[10px] uppercase tracking-[0.2em] text-white/40 mt-1 font-bold">Professional Admin</p>
                         </Link>
                     )}
                 </div>
 
                 {/* Navigation */}
-                <nav className="mt-6 flex-1 overflow-y-auto">
-                    {menuItems.map((item) => {
-                        const isActive = pathname === item.path;
-                        return (
-                            <Link
-                                key={item.path}
-                                href={item.path}
-                                className={`flex items-center gap-3 ${isSidebarCollapsed ? 'justify-center px-4' : 'px-6'} py-4 transition-all ${isActive
-                                    ? 'bg-secondary text-white'
-                                    : 'text-white/80 hover:bg-white/10 hover:text-white'
-                                    }`}
-                                title={isSidebarCollapsed ? item.label : undefined}
-                            >
-                                <span className="text-xl flex-shrink-0">{item.icon}</span>
-                                {!isSidebarCollapsed && <span className="font-medium">{item.label}</span>}
-                            </Link>
-                        );
-                    })}
+                <nav className="mt-8 flex-1 overflow-y-auto px-4 custom-scrollbar">
+                    <div className="space-y-1">
+                        {menuItems.map((item) => {
+                            const isActive = pathname === item.path;
+                            return (
+                                <Link
+                                    key={item.path}
+                                    href={item.path}
+                                    className={`group flex items-center gap-3 rounded-xl transition-all duration-300 ${isSidebarCollapsed ? 'justify-center py-4' : 'px-4 py-3'} ${isActive
+                                        ? 'bg-secondary shadow-lg shadow-secondary/20 text-white'
+                                        : 'text-white/50 hover:bg-white/5 hover:text-white'
+                                        }`}
+                                    title={isSidebarCollapsed ? item.label : undefined}
+                                >
+                                    <span className={`text-xl flex-shrink-0 transition-transform duration-300 ${isActive ? 'scale-110' : 'group-hover:scale-110'}`}>
+                                        {item.icon}
+                                    </span>
+                                    {!isSidebarCollapsed && (
+                                        <span className="font-semibold text-sm tracking-wide">{item.label}</span>
+                                    )}
+                                    {isActive && !isSidebarCollapsed && (
+                                        <motion.div
+                                            layoutId="activeIndicator"
+                                            className="ml-auto w-1.5 h-1.5 rounded-full bg-white shadow-[0_0_8px_rgba(255,255,255,0.8)]"
+                                        />
+                                    )}
+                                </Link>
+                            );
+                        })}
+                    </div>
 
-                    <button
-                        onClick={logout}
-                        className={`w-full flex items-center gap-3 ${isSidebarCollapsed ? 'justify-center px-4' : 'px-6'} py-4 text-white/80 hover:bg-white/10 hover:text-white transition-all mt-4`}
-                        title={isSidebarCollapsed ? 'Logout' : undefined}
-                    >
-                        <FaSignOutAlt className="text-xl flex-shrink-0" />
-                        {!isSidebarCollapsed && <span className="font-medium">Logout</span>}
-                    </button>
+                    <div className="mt-8 pt-8 border-t border-white/5">
+                        <button
+                            onClick={logout}
+                            className={`w-full group flex items-center gap-3 rounded-xl transition-all duration-300 ${isSidebarCollapsed ? 'justify-center py-4' : 'px-4 py-3'} text-white/40 hover:bg-red-500/10 hover:text-red-400`}
+                            title={isSidebarCollapsed ? 'Logout' : undefined}
+                        >
+                            <FaSignOutAlt className="text-xl flex-shrink-0 transition-transform group-hover:-translate-x-1" />
+                            {!isSidebarCollapsed && <span className="font-semibold text-sm tracking-wide">Sign Out</span>}
+                        </button>
+                    </div>
                 </nav>
 
                 {/* User Profile */}
                 {!isSidebarCollapsed && (
-                    <div className="p-6 border-t border-white/10 mt-auto flex-shrink-0 bg-primary">
-                        <div className="flex items-center gap-3">
-                            <div className="w-10 h-10 rounded-full bg-secondary flex items-center justify-center font-bold flex-shrink-0">
-                                {user.name?.charAt(0).toUpperCase()}
+                    <div className="p-6 m-4 mt-auto rounded-2xl bg-white/5 border border-white/5 backdrop-blur-md flex-shrink-0">
+                        <div className="flex items-center gap-4">
+                            <div className="relative">
+                                <div className="w-12 h-12 rounded-full border-2 border-secondary/50 p-0.5">
+                                    <div className="w-full h-full rounded-full bg-secondary flex items-center justify-center font-bold text-white text-lg shadow-inner">
+                                        {user.name?.charAt(0).toUpperCase()}
+                                    </div>
+                                </div>
+                                <div className="absolute bottom-0 right-0 w-3 h-3 bg-green-500 rounded-full border-2 border-[#0f172a]" />
                             </div>
                             <div className="overflow-hidden">
-                                <p className="font-medium text-sm truncate">{user.name}</p>
-                                <p className="text-xs text-white/70">Administrator</p>
+                                <p className="font-bold text-sm tracking-tight truncate">{user.name}</p>
+                                <p className="text-[10px] uppercase font-heavy tracking-widest text-secondary">Admin</p>
                             </div>
                         </div>
                     </div>
                 )}
 
-                 /* Collapse Toggle Button (Desktop Only) */
+
+                {/* Collapse Toggle Button (Desktop Only) */}
                 <button
                     onClick={() => setIsSidebarCollapsed(!isSidebarCollapsed)}
-                    className="hidden lg:flex absolute -right-3 top-20 w-6 h-6 bg-secondary text-white rounded-full items-center justify-center hover:bg-orange-600 transition-colors shadow-lg"
+                    className="hidden lg:flex absolute -right-3 top-24 w-8 h-8 bg-secondary text-white rounded-xl items-center justify-center hover:bg-orange-600 hover:scale-110 active:scale-90 transition-all shadow-xl z-[70] border-2 border-white/10"
                 >
-                    {isSidebarCollapsed ? <FaChevronRight size={12} /> : <FaChevronLeft size={12} />}
+                    {isSidebarCollapsed ? <FaChevronRight size={14} /> : <FaChevronLeft size={14} />}
                 </button>
             </motion.aside>
 
@@ -174,12 +204,36 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
             <motion.div
                 initial={false}
                 animate={{
-                    marginLeft: window.innerWidth >= 1024 ? (isSidebarCollapsed ? '80px' : '256px') : '0px'
+                    marginLeft: typeof window !== 'undefined' && window.innerWidth >= 1024 ? (isSidebarCollapsed ? '88px' : '280px') : '0px'
                 }}
-                transition={{ duration: 0.3 }}
-                className="flex-1 p-4 md:p-8 w-full lg:pt-8 pt-20"
+                transition={{ type: "spring", stiffness: 300, damping: 30 }}
+                className="flex-1 w-full flex flex-col min-h-screen"
             >
-                {children}
+                {/* Top Glass Header */}
+                <header className="sticky top-0 z-[40] w-full px-8 h-20 flex items-center justify-between border-b border-gray-200 bg-white/70 backdrop-blur-xl">
+                    <div>
+                        <h2 className="text-sm font-semibold text-gray-500 uppercase tracking-widest">
+                            Overview / <span className="text-primary">{pathname.split('/').pop() || 'Dashboard'}</span>
+                        </h2>
+                    </div>
+
+                    <div className="flex items-center gap-4">
+                        <button className="p-2 text-gray-400 hover:text-primary transition-colors">
+                            <FaChartLine size={20} />
+                        </button>
+                        <div className="h-6 w-[1px] bg-gray-200 mx-2" />
+                        <div className="flex items-center gap-3">
+                            <div className="text-right hidden sm:block">
+                                <p className="text-xs font-bold text-gray-800">{user.name}</p>
+                                <p className="text-[10px] text-gray-500">Super Admin</p>
+                            </div>
+                        </div>
+                    </div>
+                </header>
+
+                <main className="flex-1 p-8 lg:p-12">
+                    {children}
+                </main>
             </motion.div>
         </div>
     );

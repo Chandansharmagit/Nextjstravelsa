@@ -6,6 +6,7 @@ import Link from 'next/link';
 import Pagination from '@/components/Pagination';
 import api from '@/lib/api';
 import Modal from '@/components/Modal';
+import ConfirmModal from '@/components/ConfirmModal';
 
 export default function ToursAdminPage() {
     const [tours, setTours] = useState<any[]>([]);
@@ -14,6 +15,8 @@ export default function ToursAdminPage() {
     const [currentPage, setCurrentPage] = useState(1);
     const [loading, setLoading] = useState(true);
     const [isLimitModalOpen, setIsLimitModalOpen] = useState(false);
+    const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+    const [itemToDelete, setItemToDelete] = useState<string | null>(null);
     const itemsPerPage = 10;
 
     useEffect(() => {
@@ -47,16 +50,21 @@ export default function ToursAdminPage() {
         }
     };
 
-    const handleDelete = async (id: string) => {
-        if (confirm('Are you sure you want to delete this tour?')) {
-            try {
-                await api.delete(`/tours/${id}`);
-                setTours(tours.filter(t => t._id !== id));
-                alert('Tour deleted successfully');
-            } catch (error) {
-                console.error('Failed to delete:', error);
-                alert('Failed to delete tour');
-            }
+    const handleDeleteClick = (id: string) => {
+        setItemToDelete(id);
+        setIsDeleteModalOpen(true);
+    };
+
+    const confirmDelete = async () => {
+        if (!itemToDelete) return;
+        try {
+            await api.delete(`/tours/${itemToDelete}`);
+            setTours(tours.filter(t => t._id !== itemToDelete));
+        } catch (error) {
+            console.error('Failed to delete:', error);
+        } finally {
+            setItemToDelete(null);
+            setIsDeleteModalOpen(false);
         }
     };
 
@@ -65,78 +73,98 @@ export default function ToursAdminPage() {
     const currentTours = filteredTours.slice(startIndex, startIndex + itemsPerPage);
 
     return (
-        <div>
-            <div className="flex justify-between items-center mb-8">
+        <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-700">
+            <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
                 <div>
-                    <h1 className="text-3xl font-bold text-gray-800">Tours Management</h1>
-                    <p className="text-gray-600 mt-2">Manage your tour packages</p>
+                    <h1 className="text-4xl font-black text-gray-900 tracking-tight">
+                        Tours <span className="text-secondary">Packages</span>
+                    </h1>
+                    <p className="text-gray-500 mt-2 font-medium">Manage and refine your tour experiences</p>
                 </div>
                 <button
                     onClick={() => setIsLimitModalOpen(true)}
-                    className="px-6 py-3 bg-secondary text-white rounded-xl font-bold hover:bg-orange-600 transition shadow-lg flex items-center gap-2"
+                    className="admin-btn-secondary flex items-center gap-3"
                 >
-                    <FaPlus /> Add Tour
+                    <FaPlus size={14} /> <span>Add Tour</span>
                 </button>
             </div>
 
-            <div className="bg-white rounded-2xl shadow-card p-6 mb-6">
-                <div className="relative">
-                    <FaSearch className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" />
+            {/* Search Bar */}
+            <div className="admin-card p-8">
+                <div className="relative group">
+                    <FaSearch className="absolute left-6 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-primary transition-colors" />
                     <input
                         type="text"
-                        placeholder="Search tours..."
+                        placeholder="Search tours by title or destination..."
                         value={searchQuery}
                         onChange={(e) => setSearchQuery(e.target.value)}
-                        className="w-full pl-12 pr-4 py-3 border-2 border-gray-200 rounded-xl focus:outline-none focus:border-primary transition"
+                        className="admin-input-premium w-full pl-14 pr-6 py-4 border-2 border-gray-100 rounded-2xl focus:outline-none focus:border-primary/30 focus:bg-white bg-gray-50/50 transition-all duration-300 font-medium"
                     />
                 </div>
-                <p className="mt-3 text-sm text-gray-600">
-                    Showing {currentTours.length} of {filteredTours.length} tours
-                </p>
+                <div className="mt-4 flex items-center justify-between">
+                    <p className="text-xs font-black uppercase tracking-widest text-gray-400">
+                        Registered Tours: <span className="text-primary">{filteredTours.length}</span>
+                    </p>
+                    <p className="text-[10px] font-bold text-gray-400 italic font-mono uppercase tracking-tighter">Live Database Access</p>
+                </div>
             </div>
 
-            <div className="bg-white rounded-2xl shadow-card overflow-hidden">
+            {/* Table Section */}
+            <div className="admin-card overflow-hidden">
                 {loading ? (
-                    <div className="text-center py-20">
-                        <div className="inline-block animate-spin rounded-full h-16 w-16 border-t-4 border-b-4 border-primary"></div>
+                    <div className="flex flex-col items-center justify-center py-24 gap-4">
+                        <div className="inline-block animate-spin rounded-full h-12 w-12 border-t-4 border-b-4 border-primary shadow-lg shadow-primary/20"></div>
+                        <p className="text-xs font-black uppercase tracking-[0.2em] text-gray-400">Loading Fleet...</p>
                     </div>
                 ) : (
                     <>
                         <div className="overflow-x-auto">
-                            <table className="w-full">
-                                <thead className="bg-gray-50 border-b-2 border-gray-200">
+                            <table className="w-full text-left">
+                                <thead className="admin-table-header">
                                     <tr>
-                                        <th className="px-6 py-4 text-left text-sm font-bold text-gray-700">Title</th>
-                                        <th className="px-6 py-4 text-left text-sm font-bold text-gray-700">Destination</th>
-                                        <th className="px-6 py-4 text-left text-sm font-bold text-gray-700">Duration</th>
-                                        <th className="px-6 py-4 text-left text-sm font-bold text-gray-700">Price</th>
-                                        <th className="px-6 py-4 text-left text-sm font-bold text-gray-700">Group Size</th>
-                                        <th className="px-6 py-4 text-right text-sm font-bold text-gray-700">Actions</th>
+                                        <th className="px-8 py-6">Tour Identity</th>
+                                        <th className="px-8 py-6 text-center">Duration</th>
+                                        <th className="px-8 py-6">Pricing</th>
+                                        <th className="px-8 py-6 text-right">Portfolio Options</th>
                                     </tr>
                                 </thead>
-                                <tbody className="divide-y divide-gray-200">
+                                <tbody className="divide-y divide-gray-100">
                                     {currentTours.map((tour) => (
-                                        <tr key={tour._id} className="hover:bg-gray-50 transition">
-                                            <td className="px-6 py-4 text-gray-800 font-medium">{tour.title}</td>
-                                            <td className="px-6 py-4 text-gray-600">{typeof tour.destination === 'object' ? (tour.destination?.title || tour.destination?.name || 'N/A') : (tour.destination || 'N/A')}</td>
-                                            <td className="px-6 py-4 text-gray-600">{tour.duration} days</td>
-                                            <td className="px-6 py-4 text-gray-800 font-semibold">NRS {tour.price}</td>
-                                            <td className="px-6 py-4 text-gray-600">{tour.groupSize || 'N/A'}</td>
-                                            <td className="px-6 py-4">
-                                                <div className="flex justify-end gap-2">
-                                                    <button className="p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition">
-                                                        <FaEye />
+                                        <tr key={tour._id} className="admin-table-row group">
+                                            <td className="px-8 py-6">
+                                                <div className="flex flex-col">
+                                                    <p className="text-sm font-black text-gray-900 group-hover:text-primary transition-colors">{tour.title}</p>
+                                                    <p className="text-[10px] text-gray-400 font-bold uppercase tracking-widest mt-1">
+                                                        {typeof tour.destination === 'object' ? (tour.destination?.title || tour.destination?.name || 'N/A') : (tour.destination || 'N/A')}
+                                                    </p>
+                                                </div>
+                                            </td>
+                                            <td className="px-8 py-6 text-center">
+                                                <span className="px-3 py-1 bg-gray-100 rounded-lg text-xs font-bold text-gray-600">
+                                                    {tour.duration} Days
+                                                </span>
+                                            </td>
+                                            <td className="px-8 py-6">
+                                                <div className="flex flex-col">
+                                                    <p className="text-sm font-black text-gray-900 tabular-nums">NRP {tour.price}</p>
+                                                    <p className="text-[10px] text-gray-400 font-bold uppercase tracking-widest">Per Person</p>
+                                                </div>
+                                            </td>
+                                            <td className="px-8 py-6">
+                                                <div className="flex justify-end gap-3 opacity-40 group-hover:opacity-100 transition-opacity">
+                                                    <button className="p-3 text-blue-500 bg-blue-50 rounded-xl hover:bg-blue-500 hover:text-white transition-all shadow-sm">
+                                                        <FaEye size={14} />
                                                     </button>
                                                     <Link href={`/admin/tours/edit/${tour._id}`}>
-                                                        <button className="p-2 text-green-600 hover:bg-green-50 rounded-lg transition">
-                                                            <FaEdit />
+                                                        <button className="p-3 text-green-500 bg-green-50 rounded-xl hover:bg-green-500 hover:text-white transition-all shadow-sm">
+                                                            <FaEdit size={14} />
                                                         </button>
                                                     </Link>
                                                     <button
-                                                        onClick={() => handleDelete(tour._id)}
-                                                        className="p-2 text-red-600 hover:bg-red-50 rounded-lg transition"
+                                                        onClick={() => handleDeleteClick(tour._id)}
+                                                        className="p-3 text-red-500 bg-red-50 rounded-xl hover:bg-red-500 hover:text-white transition-all shadow-sm"
                                                     >
-                                                        <FaTrash />
+                                                        <FaTrash size={14} />
                                                     </button>
                                                 </div>
                                             </td>
@@ -179,6 +207,17 @@ export default function ToursAdminPage() {
                         </button>
                     </div>
                 </Modal>
+
+                {/* Interaction Overhaul: Confirm Delete */}
+                <ConfirmModal
+                    isOpen={isDeleteModalOpen}
+                    onClose={() => setIsDeleteModalOpen(false)}
+                    onConfirm={confirmDelete}
+                    title="Delete Tour Package"
+                    message="Are you sure you want to remove this tour from the portfolio? This action is permanent."
+                    type="danger"
+                    confirmText="Archive Tour"
+                />
             </div>
         </div>
     );

@@ -7,6 +7,7 @@ import Pagination from '@/components/Pagination';
 import Image from 'next/image';
 import api from '@/lib/api';
 import Modal from '@/components/Modal';
+import ConfirmModal from '@/components/ConfirmModal';
 
 export default function DestinationsAdminPage() {
     const [destinations, setDestinations] = useState<any[]>([]);
@@ -15,6 +16,8 @@ export default function DestinationsAdminPage() {
     const [currentPage, setCurrentPage] = useState(1);
     const [loading, setLoading] = useState(true);
     const [isLimitModalOpen, setIsLimitModalOpen] = useState(false);
+    const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+    const [itemToDelete, setItemToDelete] = useState<string | null>(null);
     const itemsPerPage = 10;
 
     useEffect(() => {
@@ -43,16 +46,21 @@ export default function DestinationsAdminPage() {
         }
     };
 
-    const handleDelete = async (id: string) => {
-        if (confirm('Are you sure you want to delete this destination?')) {
-            try {
-                await api.delete(`/destinations/${id}`);
-                setDestinations(destinations.filter(d => d._id !== id));
-                alert('Destination deleted successfully');
-            } catch (error) {
-                console.error('Failed to delete:', error);
-                alert('Failed to delete destination');
-            }
+    const handleDeleteClick = (id: string) => {
+        setItemToDelete(id);
+        setIsDeleteModalOpen(true);
+    };
+
+    const confirmDelete = async () => {
+        if (!itemToDelete) return;
+        try {
+            await api.delete(`/destinations/${itemToDelete}`);
+            setDestinations(destinations.filter(d => d._id !== itemToDelete));
+        } catch (error) {
+            console.error('Failed to delete:', error);
+        } finally {
+            setItemToDelete(null);
+            setIsDeleteModalOpen(false);
         }
     };
 
@@ -61,97 +69,115 @@ export default function DestinationsAdminPage() {
     const currentDestinations = filteredDestinations.slice(startIndex, startIndex + itemsPerPage);
 
     return (
-        <div>
-            <div className="flex justify-between items-center mb-8">
+        <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-700">
+            <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
                 <div>
-                    <h1 className="text-3xl font-bold text-gray-800">Destinations Management</h1>
-                    <p className="text-gray-600 mt-2">Manage your travel destinations</p>
+                    <h1 className="text-4xl font-black text-gray-900 tracking-tight">
+                        Destinations <span className="text-primary">Management</span>
+                    </h1>
+                    <p className="text-gray-500 mt-2 font-medium">Create and oversee your travel locations</p>
                 </div>
                 <button
                     onClick={() => setIsLimitModalOpen(true)}
-                    className="px-6 py-3 bg-secondary text-white rounded-xl font-bold hover:bg-orange-600 transition shadow-lg flex items-center gap-2"
+                    className="admin-btn-secondary flex items-center gap-3"
                 >
-                    <FaPlus /> Add Destination
+                    <FaPlus size={14} /> <span>Add Destination</span>
                 </button>
             </div>
 
             {/* Search Bar */}
-            <div className="bg-white rounded-2xl shadow-card p-6 mb-6">
-                <div className="relative">
-                    <FaSearch className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" />
+            <div className="admin-card p-8">
+                <div className="relative group">
+                    <FaSearch className="absolute left-6 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-primary transition-colors" />
                     <input
                         type="text"
-                        placeholder="Search destinations..."
+                        placeholder="Search destinations by title or location..."
                         value={searchQuery}
                         onChange={(e) => setSearchQuery(e.target.value)}
-                        className="w-full pl-12 pr-4 py-3 border-2 border-gray-200 rounded-xl focus:outline-none focus:border-primary transition"
+                        className="admin-input-premium w-full pl-14 pr-6 py-4 border-2 border-gray-100 rounded-2xl focus:outline-none focus:border-primary/30 focus:bg-white bg-gray-50/50 transition-all duration-300 font-medium"
                     />
                 </div>
-                <p className="mt-3 text-sm text-gray-600">
-                    Showing {currentDestinations.length} of {filteredDestinations.length} destinations
-                </p>
+                <div className="mt-4 flex items-center justify-between">
+                    <p className="text-xs font-black uppercase tracking-widest text-gray-400">
+                        Results Found: <span className="text-primary">{filteredDestinations.length}</span>
+                    </p>
+                    <p className="text-[10px] font-bold text-gray-400 italic">Showing {currentDestinations.length} on this page</p>
+                </div>
             </div>
 
-            {/* Table */}
-            <div className="bg-white rounded-2xl shadow-card overflow-hidden">
+            {/* Table Section */}
+            <div className="admin-card overflow-hidden">
                 {loading ? (
-                    <div className="text-center py-20">
-                        <div className="inline-block animate-spin rounded-full h-16 w-16 border-t-4 border-b-4 border-primary"></div>
+                    <div className="flex flex-col items-center justify-center py-24 gap-4">
+                        <div className="inline-block animate-spin rounded-full h-12 w-12 border-t-4 border-b-4 border-primary shadow-lg shadow-primary/20"></div>
+                        <p className="text-xs font-black uppercase tracking-[0.2em] text-gray-400">Updating Base...</p>
                     </div>
                 ) : (
                     <>
                         <div className="overflow-x-auto">
-                            <table className="w-full">
-                                <thead className="bg-gray-50 border-b-2 border-gray-200">
+                            <table className="w-full text-left">
+                                <thead className="admin-table-header">
                                     <tr>
-                                        <th className="px-6 py-4 text-left text-sm font-bold text-gray-700">Image</th>
-                                        <th className="px-6 py-4 text-left text-sm font-bold text-gray-700">Title</th>
-                                        <th className="px-6 py-4 text-left text-sm font-bold text-gray-700">Location</th>
-                                        <th className="px-6 py-4 text-left text-sm font-bold text-gray-700">Best Time</th>
-                                        <th className="px-6 py-4 text-left text-sm font-bold text-gray-700">Featured</th>
-                                        <th className="px-6 py-4 text-right text-sm font-bold text-gray-700">Actions</th>
+                                        <th className="px-8 py-6">Identity</th>
+                                        <th className="px-8 py-6">Details</th>
+                                        <th className="px-8 py-6">Status</th>
+                                        <th className="px-8 py-6 text-right">Options</th>
                                     </tr>
                                 </thead>
-                                <tbody className="divide-y divide-gray-200">
+                                <tbody className="divide-y divide-gray-100">
                                     {currentDestinations.map((dest) => {
                                         const image0 = dest.images?.[0];
                                         const imageSrc = (typeof image0 === 'string' ? image0 : image0?.path || image0?.url) || dest.image || '/placeholder.jpg';
                                         return (
-                                            <tr key={dest._id} className="hover:bg-gray-50 transition">
-                                                <td className="px-6 py-4">
-                                                    <div className="relative w-16 h-16 rounded-lg overflow-hidden">
-                                                        <Image
-                                                            src={imageSrc}
-                                                            alt={dest.title}
-                                                            fill
-                                                            className="object-cover"
-                                                        />
+                                            <tr key={dest._id} className="admin-table-row group">
+                                                <td className="px-8 py-6">
+                                                    <div className="flex items-center gap-4">
+                                                        <div className="relative w-16 h-16 rounded-2xl overflow-hidden border border-gray-100 shadow-sm group-hover:scale-105 transition-transform duration-300">
+                                                            <Image
+                                                                src={imageSrc}
+                                                                alt={dest.title}
+                                                                fill
+                                                                className="object-cover"
+                                                                sizes="64px"
+                                                            />
+                                                        </div>
+                                                        <div>
+                                                            <p className="text-sm font-black text-gray-900 group-hover:text-primary transition-colors">{dest.title}</p>
+                                                            <p className="text-[10px] text-gray-400 font-bold uppercase tracking-widest mt-1">{dest.location || 'Unknown'}</p>
+                                                        </div>
                                                     </div>
                                                 </td>
-                                                <td className="px-6 py-4 text-gray-800 font-medium">{dest.title}</td>
-                                                <td className="px-6 py-4 text-gray-600">{dest.location || 'N/A'}</td>
-                                                <td className="px-6 py-4 text-gray-600">{dest.bestTimeToVisit || 'All Season'}</td>
-                                                <td className="px-6 py-4">
-                                                    <span className={`px-3 py-1 rounded-full text-sm font-semibold ${dest.featured ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-700'
+                                                <td className="px-8 py-6">
+                                                    <div className="flex flex-col gap-1">
+                                                        <span className="text-xs font-bold text-gray-600 flex items-center gap-2">
+                                                            <span className="w-1.5 h-1.5 rounded-full bg-primary/40" />
+                                                            {dest.bestTimeToVisit || 'All Season'}
+                                                        </span>
+                                                    </div>
+                                                </td>
+                                                <td className="px-8 py-6">
+                                                    <span className={`px-4 py-1.5 rounded-xl text-[10px] font-black uppercase tracking-widest ${dest.featured
+                                                        ? 'bg-green-500/10 text-green-600 border border-green-500/20'
+                                                        : 'bg-gray-100 text-gray-500 border border-gray-200'
                                                         }`}>
-                                                        {dest.featured ? 'Yes' : 'No'}
+                                                        {dest.featured ? 'Featured' : 'Standard'}
                                                     </span>
                                                 </td>
-                                                <td className="px-6 py-4">
-                                                    <div className="flex justify-end gap-2">
-                                                        <button className="p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition">
-                                                            <FaEye />
+                                                <td className="px-8 py-6">
+                                                    <div className="flex justify-end gap-3 opacity-60 group-hover:opacity-100 transition-opacity">
+                                                        <button className="p-3 text-blue-500 bg-blue-50 rounded-xl hover:bg-blue-500 hover:text-white transition-all shadow-sm">
+                                                            <FaEye size={14} />
                                                         </button>
                                                         <Link href={`/admin/destinations/edit/${dest._id}`}>
-                                                            <button className="p-2 text-green-600 hover:bg-green-50 rounded-lg transition">
-                                                                <FaEdit />
+                                                            <button className="p-3 text-green-500 bg-green-50 rounded-xl hover:bg-green-500 hover:text-white transition-all shadow-sm">
+                                                                <FaEdit size={14} />
                                                             </button>
                                                         </Link>
                                                         <button
-                                                            onClick={() => handleDelete(dest._id)}
-                                                            className="p-2 text-red-600 hover:bg-red-50 rounded-lg transition"
+                                                            onClick={() => handleDeleteClick(dest._id)}
+                                                            className="p-3 text-red-500 bg-red-50 rounded-xl hover:bg-red-500 hover:text-white transition-all shadow-sm"
                                                         >
-                                                            <FaTrash />
+                                                            <FaTrash size={14} />
                                                         </button>
                                                     </div>
                                                 </td>
@@ -195,6 +221,17 @@ export default function DestinationsAdminPage() {
                         </button>
                     </div>
                 </Modal>
+
+                {/* Interaction Overhaul: Confirm Delete */}
+                <ConfirmModal
+                    isOpen={isDeleteModalOpen}
+                    onClose={() => setIsDeleteModalOpen(false)}
+                    onConfirm={confirmDelete}
+                    title="Delete Destination"
+                    message="Are you sure you want to permanently remove this location? This action cannot be undone."
+                    type="danger"
+                    confirmText="Archive Location"
+                />
             </div>
         </div>
     );

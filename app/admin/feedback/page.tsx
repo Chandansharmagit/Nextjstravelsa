@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { FaSearch, FaTrash, FaStar, FaCheckCircle } from 'react-icons/fa';
 import Pagination from '@/components/Pagination';
 import api from '@/lib/api';
+import ConfirmModal from '@/components/ConfirmModal';
 
 export default function FeedbackAdminPage() {
     const [feedback, setFeedback] = useState<any[]>([]);
@@ -11,6 +12,8 @@ export default function FeedbackAdminPage() {
     const [searchQuery, setSearchQuery] = useState('');
     const [currentPage, setCurrentPage] = useState(1);
     const [loading, setLoading] = useState(true);
+    const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+    const [itemToDelete, setItemToDelete] = useState<string | null>(null);
     const itemsPerPage = 10;
 
     useEffect(() => {
@@ -44,16 +47,21 @@ export default function FeedbackAdminPage() {
         }
     };
 
-    const handleDelete = async (id: string) => {
-        if (confirm('Are you sure you want to delete this feedback?')) {
-            try {
-                await api.delete(`/feedback/${id}`);
-                setFeedback(feedback.filter(f => f._id !== id));
-                alert('Feedback deleted successfully');
-            } catch (error) {
-                console.error('Failed to delete:', error);
-                alert('Failed to delete feedback');
-            }
+    const handleDeleteClick = (id: string) => {
+        setItemToDelete(id);
+        setIsDeleteModalOpen(true);
+    };
+
+    const confirmDelete = async () => {
+        if (!itemToDelete) return;
+        try {
+            await api.delete(`/feedback/${itemToDelete}`);
+            setFeedback(feedback.filter(f => f._id !== itemToDelete));
+        } catch (error) {
+            console.error('Failed to delete:', error);
+        } finally {
+            setItemToDelete(null);
+            setIsDeleteModalOpen(false);
         }
     };
 
@@ -75,81 +83,96 @@ export default function FeedbackAdminPage() {
     const currentFeedback = filteredFeedback.slice(startIndex, startIndex + itemsPerPage);
 
     return (
-        <div>
-            <div className="flex justify-between items-center mb-8">
+        <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-700">
+            <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
                 <div>
-                    <h1 className="text-3xl font-bold text-gray-800">Feedback Management</h1>
-                    <p className="text-gray-600 mt-2">Manage customer reviews and feedback</p>
+                    <h1 className="text-4xl font-black text-gray-900 tracking-tight">
+                        Client <span className="text-primary">Sentiments</span>
+                    </h1>
+                    <p className="text-gray-500 mt-2 font-medium">Analyze and respond to traveler feedback</p>
                 </div>
             </div>
 
-            <div className="bg-white rounded-2xl shadow-card p-6 mb-6">
-                <div className="relative">
-                    <FaSearch className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" />
+            {/* Insight Module */}
+            <div className="admin-card p-8">
+                <div className="relative group">
+                    <FaSearch className="absolute left-6 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-primary transition-colors" />
                     <input
                         type="text"
-                        placeholder="Search feedback..."
+                        placeholder="Filter sentiments by customer, destination, or keyword..."
                         value={searchQuery}
                         onChange={(e) => setSearchQuery(e.target.value)}
-                        className="w-full pl-12 pr-4 py-3 border-2 border-gray-200 rounded-xl focus:outline-none focus:border-primary transition"
+                        className="admin-input-premium w-full pl-14 pr-6 py-4 border-2 border-gray-100 rounded-2xl focus:outline-none focus:border-primary/30 focus:bg-white bg-gray-50/50 transition-all duration-300 font-medium"
                     />
                 </div>
-                <p className="mt-3 text-sm text-gray-600">
-                    Showing {currentFeedback.length} of {filteredFeedback.length} feedback items
-                </p>
+                <div className="mt-4 flex items-center justify-between">
+                    <p className="text-xs font-black uppercase tracking-widest text-gray-400">
+                        Analysis Queue: <span className="text-primary">{filteredFeedback.length} Reviews</span>
+                    </p>
+                    <div className="flex items-center gap-2">
+                        <span className="text-[10px] font-bold text-gray-400 italic">Semantic Response: Enabled</span>
+                    </div>
+                </div>
             </div>
 
-            <div className="bg-white rounded-2xl shadow-card overflow-hidden">
+            {/* Ledger Section */}
+            <div className="admin-card overflow-hidden">
                 {loading ? (
-                    <div className="text-center py-20">
-                        <div className="inline-block animate-spin rounded-full h-16 w-16 border-t-4 border-b-4 border-primary"></div>
+                    <div className="flex flex-col items-center justify-center py-24 gap-4">
+                        <div className="inline-block animate-spin rounded-full h-12 w-12 border-t-4 border-b-4 border-primary shadow-lg shadow-primary/20"></div>
+                        <p className="text-xs font-black uppercase tracking-[0.2em] text-gray-400">Processing Sentiment Engine...</p>
                     </div>
                 ) : (
                     <>
                         <div className="overflow-x-auto">
-                            <table className="w-full">
-                                <thead className="bg-gray-50 border-b-2 border-gray-200">
+                            <table className="w-full text-left">
+                                <thead className="admin-table-header">
                                     <tr>
-                                        <th className="px-6 py-4 text-left text-sm font-bold text-gray-700">Customer</th>
-                                        <th className="px-6 py-4 text-left text-sm font-bold text-gray-700">Destination</th>
-                                        <th className="px-6 py-4 text-left text-sm font-bold text-gray-700">Rating</th>
-                                        <th className="px-6 py-4 text-left text-sm font-bold text-gray-700">Type</th>
-                                        <th className="px-6 py-4 text-left text-sm font-bold text-gray-700">Message</th>
-                                        <th className="px-6 py-4 text-right text-sm font-bold text-gray-700">Actions</th>
+                                        <th className="px-8 py-6">Traveler Profile</th>
+                                        <th className="px-8 py-6">Route Insight</th>
+                                        <th className="px-8 py-6">Sentiment Detail</th>
+                                        <th className="px-8 py-6 text-right">Moderation</th>
                                     </tr>
                                 </thead>
-                                <tbody className="divide-y divide-gray-200">
+                                <tbody className="divide-y divide-gray-100">
                                     {currentFeedback.map((item) => {
-                                        const customerName = item.name || `${item.firstname || ''} ${item.lastname || ''}`.trim() || 'Anonymous';
-                                        const message = item.message || item.text || '';
+                                        const customerName = item.name || `${item.firstname || ''} ${item.lastname || ''}`.trim() || 'Anonymous Traveler';
+                                        const message = item.message || item.text || 'Expression received without textual data.';
                                         return (
-                                            <tr key={item._id} className="hover:bg-gray-50 transition">
-                                                <td className="px-6 py-4">
-                                                    <div>
-                                                        <p className="text-gray-800 font-medium">{customerName}</p>
-                                                        <p className="text-sm text-gray-500">{item.email}</p>
+                                            <tr key={item._id} className="admin-table-row group">
+                                                <td className="px-8 py-6">
+                                                    <div className="flex items-center gap-4">
+                                                        <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-primary/10 to-secondary/10 flex items-center justify-center font-black text-primary text-sm shadow-sm">
+                                                            {customerName[0].toUpperCase()}
+                                                        </div>
+                                                        <div className="flex flex-col">
+                                                            <p className="text-sm font-black text-gray-900 group-hover:text-primary transition-colors">{customerName}</p>
+                                                            <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mt-1">{item.email}</p>
+                                                        </div>
                                                     </div>
                                                 </td>
-                                                <td className="px-6 py-4 text-gray-600">{item.tripDestination || 'N/A'}</td>
-                                                <td className="px-6 py-4">
-                                                    {item.rating ? renderStars(item.rating) : 'N/A'}
+                                                <td className="px-8 py-6">
+                                                    <div className="flex flex-col">
+                                                        <p className="text-[10px] font-black text-gray-600 uppercase tracking-widest">{item.tripDestination || 'General Experience'}</p>
+                                                        <p className="text-[10px] font-bold text-primary/60 mt-1 uppercase tracking-tighter italic">Source: {item.feedbackType || 'Public Review'}</p>
+                                                        <div className="mt-2">{item.rating ? renderStars(item.rating) : null}</div>
+                                                    </div>
                                                 </td>
-                                                <td className="px-6 py-4">
-                                                    <span className="px-3 py-1 bg-blue-100 text-blue-700 rounded-full text-sm font-semibold">
-                                                        {item.feedbackType || 'General'}
-                                                    </span>
+                                                <td className="px-8 py-6">
+                                                    <div className="flex flex-col max-w-sm">
+                                                        <p className="text-xs text-gray-600 line-clamp-2 italic leading-relaxed group-hover:text-gray-900 transition-colors">"{message}"</p>
+                                                    </div>
                                                 </td>
-                                                <td className="px-6 py-4 text-gray-600 max-w-md truncate">{message}</td>
-                                                <td className="px-6 py-4">
-                                                    <div className="flex justify-end gap-2">
-                                                        <button className="p-2 text-green-600 hover:bg-green-50 rounded-lg transition" title="Approve">
-                                                            <FaCheckCircle />
+                                                <td className="px-8 py-6 text-right">
+                                                    <div className="flex justify-end gap-3 opacity-40 group-hover:opacity-100 transition-opacity">
+                                                        <button className="p-3 text-green-500 bg-green-50 rounded-xl hover:bg-green-500 hover:text-white transition-all shadow-sm">
+                                                            <FaCheckCircle size={14} />
                                                         </button>
                                                         <button
-                                                            onClick={() => handleDelete(item._id)}
-                                                            className="p-2 text-red-600 hover:bg-red-50 rounded-lg transition"
+                                                            onClick={() => handleDeleteClick(item._id)}
+                                                            className="p-3 text-red-500 bg-red-50 rounded-xl hover:bg-red-500 hover:text-white transition-all shadow-sm"
                                                         >
-                                                            <FaTrash />
+                                                            <FaTrash size={14} />
                                                         </button>
                                                     </div>
                                                 </td>
@@ -172,6 +195,17 @@ export default function FeedbackAdminPage() {
                     </>
                 )}
             </div>
+
+            {/* Interaction Overhaul: Confirm Delete */}
+            <ConfirmModal
+                isOpen={isDeleteModalOpen}
+                onClose={() => setIsDeleteModalOpen(false)}
+                onConfirm={confirmDelete}
+                title="Discard Sentiment"
+                message="Are you sure you want to permanently remove this customer feedback? This action cannot be reversed."
+                type="danger"
+                confirmText="Discard Review"
+            />
         </div>
     );
 }
