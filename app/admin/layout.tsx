@@ -4,8 +4,9 @@ import { useAuth } from '@/context/AuthContext';
 import { useRouter, usePathname } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
-import { FaTachometerAlt, FaUsers, FaMapMarkedAlt, FaSuitcase, FaUserTie, FaComments, FaSignOutAlt, FaCalendarCheck, FaEnvelope, FaBars, FaTimes, FaChevronLeft, FaChevronRight, FaCog, FaChartLine, FaBriefcase, FaFileAlt } from 'react-icons/fa';
+import { FaTachometerAlt, FaUsers, FaMapMarkedAlt, FaSuitcase, FaUserTie, FaComments, FaSignOutAlt, FaCalendarCheck, FaEnvelope, FaBars, FaTimes, FaChevronLeft, FaChevronRight, FaCog, FaChartLine, FaBriefcase, FaFileAlt, FaPaperPlane } from 'react-icons/fa';
 import { motion, AnimatePresence } from 'framer-motion';
+import api from '@/lib/api';
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
     const { user, logout } = useAuth();
@@ -13,6 +14,24 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     const pathname = usePathname();
     const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+    const [stats, setStats] = useState<any>(null);
+
+    useEffect(() => {
+        const fetchStats = async () => {
+            try {
+                const { data } = await api.get('/admin/stats');
+                setStats(data);
+            } catch (error) {
+                console.error("Failed to fetch admin stats", error);
+            }
+        };
+
+        if (user?.role === 'admin') {
+            fetchStats();
+            const interval = setInterval(fetchStats, 30000); // Refresh every 30s
+            return () => clearInterval(interval);
+        }
+    }, [user]);
 
     useEffect(() => {
         if (!user) {
@@ -52,16 +71,17 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
 
     const menuItems = [
         { icon: <FaTachometerAlt />, label: 'Dashboard', path: '/admin' },
-        { icon: <FaCalendarCheck />, label: 'Bookings', path: '/admin/bookings' },
-        { icon: <FaEnvelope />, label: 'Messages', path: '/admin/messages' },
-        { icon: <FaUsers />, label: 'Customers', path: '/admin/customers' },
+        { icon: <FaCalendarCheck />, label: 'Bookings', path: '/admin/bookings', count: stats?.pendingBookingsCount },
+        { icon: <FaEnvelope />, label: 'Messages', path: '/admin/messages', count: stats?.unreadMessagesCount },
+        { icon: <FaUsers />, label: 'Customers', path: '/admin/customers', count: stats?.newCustomersCount },
         { icon: <FaMapMarkedAlt />, label: 'Destinations', path: '/admin/destinations' },
         { icon: <FaSuitcase />, label: 'Tours', path: '/admin/tours' },
         { icon: <FaBriefcase />, label: 'Jobs', path: '/admin/jobs' },
-        { icon: <FaFileAlt />, label: 'Applications', path: '/admin/applications' },
+        { icon: <FaFileAlt />, label: 'Applications', path: '/admin/applications', count: stats?.pendingApplicationsCount },
         { icon: <FaCog />, label: 'Services', path: '/admin/services' },
         { icon: <FaUserTie />, label: 'Team', path: '/admin/team' },
-        { icon: <FaComments />, label: 'Feedback', path: '/admin/feedback' },
+        { icon: <FaComments />, label: 'Feedback', path: '/admin/feedback', count: stats?.recentFeedbackCount },
+        { icon: <FaPaperPlane />, label: 'Newsletter', path: '/admin/newsletter' },
     ];
 
     return (
@@ -135,7 +155,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                                 <Link
                                     key={item.path}
                                     href={item.path}
-                                    className={`group flex items-center gap-3 rounded-xl transition-all duration-300 ${isSidebarCollapsed ? 'justify-center py-4' : 'px-4 py-3'} ${isActive
+                                    className={`group relative flex items-center gap-3 rounded-xl transition-all duration-300 ${isSidebarCollapsed ? 'justify-center py-4' : 'px-4 py-3'} ${isActive
                                         ? 'bg-secondary shadow-lg shadow-secondary/20 text-white'
                                         : 'text-white/50 hover:bg-white/5 hover:text-white'
                                         }`}
@@ -145,8 +165,22 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                                         {item.icon}
                                     </span>
                                     {!isSidebarCollapsed && (
-                                        <span className="font-semibold text-sm tracking-wide">{item.label}</span>
+                                        <>
+                                            <span className="font-semibold text-sm tracking-wide">{item.label}</span>
+                                            {/* Badge for expanded sidebar */}
+                                            {item.count ? (
+                                                <span className="ml-auto bg-red-500 text-white text-[10px] font-bold px-2 py-0.5 rounded-full shadow-md min-w-[20px] text-center">
+                                                    {item.count > 99 ? '99+' : item.count}
+                                                </span>
+                                            ) : null}
+                                        </>
                                     )}
+
+                                    {/* Small dot badge for collapsed sidebar */}
+                                    {isSidebarCollapsed && item.count ? (
+                                        <span className="absolute top-2 right-2 w-2.5 h-2.5 bg-red-500 rounded-full border-2 border-[#0f172a]" />
+                                    ) : null}
+
                                     {isActive && !isSidebarCollapsed && (
                                         <motion.div
                                             layoutId="activeIndicator"

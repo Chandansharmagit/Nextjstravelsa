@@ -3,6 +3,7 @@ import { Inter, Outfit, Playfair_Display } from 'next/font/google'; // Adding Pl
 import './globals.css';
 import LayoutWrapper from '@/components/LayoutWrapper';
 import { AuthProvider } from '@/context/AuthContext';
+import NewsletterPopup from '@/components/NewsletterPopup';
 
 // Load fonts
 const inter = Inter({ subsets: ['latin'], variable: '--font-inter' });
@@ -113,6 +114,7 @@ export default function RootLayout({
               }}
             />
             {children}
+            <NewsletterPopup />
           </LayoutWrapper>
         </AuthProvider>
       </body>
