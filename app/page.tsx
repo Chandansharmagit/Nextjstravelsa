@@ -13,6 +13,7 @@ import FeaturedGuides from '@/components/FeaturedGuides';
 import FeaturedServices from '@/components/FeaturedServices';
 import { TiltCard } from '@/components/TiltCard';
 import ApproachSection from '@/components/ApproachSection';
+import LeadCaptureForm from '@/components/LeadCaptureForm';
 export const dynamic = 'force-dynamic';
 
 // Use environment variable for API URL
@@ -200,6 +201,19 @@ export default async function Home() {
 
       {/* Featured Guides */}
       <FeaturedGuides />
+
+      {/* Lead Capture System */}
+      <section className="py-24 bg-gradient-to-b from-white to-gray-50 overflow-hidden">
+        <div className="max-w-7xl mx-auto px-4">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl md:text-5xl font-black text-gray-900 mb-4">Ready to Explore?</h2>
+            <p className="text-xl text-gray-600 max-w-2xl mx-auto">
+              Our travel specialists are ready to design your perfect getaway. Share your details and let's start planning.
+            </p>
+          </div>
+          <LeadCaptureForm />
+        </div>
+      </section>
 
       {/* FAQ */}
       <FAQ />

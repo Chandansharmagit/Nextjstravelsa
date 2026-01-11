@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { FaPhone, FaEnvelope, FaMapMarkerAlt, FaClock, FaFacebook, FaInstagram, FaTwitter, FaWhatsapp } from 'react-icons/fa';
 import api from '@/lib/api';
+import LeadCaptureForm from '@/components/LeadCaptureForm';
 
 const ContactPage = () => {
     const [formData, setFormData] = useState({
@@ -117,6 +118,17 @@ const ContactPage = () => {
                             <p className="text-sm text-gray-500">{info.subdetails}</p>
                         </motion.div>
                     ))}
+                </div>
+            </section>
+
+            {/* Travel Advisor Form */}
+            <section className="py-20 bg-gray-50">
+                <div className="max-w-7xl mx-auto px-4">
+                    <div className="text-center mb-16">
+                        <h2 className="text-4xl font-black text-gray-900 mb-4 italic">Prefer a Custom Trip?</h2>
+                        <p className="text-lg text-gray-600">Fill out our specialized planning form and we'll craft a unique itinerary just for you.</p>
+                    </div>
+                    <LeadCaptureForm />
                 </div>
             </section>
 

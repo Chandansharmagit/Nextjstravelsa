@@ -2,15 +2,33 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { FaSearch, FaMapMarkerAlt } from 'react-icons/fa';
+import { FaSearch, FaMapMarkerAlt, FaMagic } from 'react-icons/fa';
+import api from '@/lib/api';
 
 const Hero = () => {
     const [query, setQuery] = useState("");
+    const [isAiEnabled, setIsAiEnabled] = useState(false);
+    const [isLoading, setIsLoading] = useState(false);
     const router = useRouter();
 
-    const handleSearch = (e: React.FormEvent) => {
+    const handleSearch = async (e: React.FormEvent) => {
         e.preventDefault();
-        if (query.trim()) {
+        if (!query.trim()) return;
+
+        if (isAiEnabled) {
+            setIsLoading(true);
+            try {
+                // If using AI, we might want to pre-fetch and pass IDs, 
+                // but for simplicity, let's just forward the query to a search page 
+                // that handles the AI call, OR do it here and pass results.
+                // BETTER UX: Pass the 'smart=true' flag to the search page.
+                router.push(`/search?query=${encodeURIComponent(query)}&smart=true`);
+            } catch (error) {
+                console.error("Search failed", error);
+            } finally {
+                setIsLoading(false);
+            }
+        } else {
             router.push(`/search?query=${encodeURIComponent(query)}`);
         }
     };
@@ -37,14 +55,16 @@ const Hero = () => {
                 </p>
 
                 {/* Search Bar - "Dynamic Island" style inputs */}
-                <div className="w-full max-w-3xl bg-white rounded-full p-2 pl-6 shadow-2xl flex items-center gap-4 transition-all duration-300 transform hover:scale-[1.01]">
+                <div className={`w-full max-w-3xl bg-white rounded-full p-2 pl-6 shadow-2xl flex items-center gap-4 transition-all duration-300 transform hover:scale-[1.01] ${isAiEnabled ? 'ring-4 ring-purple-400 ring-opacity-50' : ''}`}>
                     <div className="flex-1 flex items-center gap-3 border-r border-gray-200 pr-4">
-                        <FaMapMarkerAlt className="text-secondary text-xl" />
+                        {isAiEnabled ? <FaMagic className="text-purple-500 text-xl animate-pulse" /> : <FaMapMarkerAlt className="text-secondary text-xl" />}
                         <div className="flex flex-col items-start w-full">
-                            <span className="text-xs font-bold text-gray-400 uppercase tracking-wider">Location</span>
+                            <span className="text-xs font-bold text-gray-400 uppercase tracking-wider">
+                                {isAiEnabled ? 'AI Smart Search' : 'Location'}
+                            </span>
                             <input
                                 type="text"
-                                placeholder="Where are you going?"
+                                placeholder={isAiEnabled ? "Describe your dream trip (e.g. 'romantic honeymoon in winter')" : "Where are you going?"}
                                 className="w-full bg-transparent outline-none text-gray-800 placeholder-gray-400 font-medium"
                                 value={query}
                                 onChange={(e) => setQuery(e.target.value)}
@@ -54,13 +74,19 @@ const Hero = () => {
                         </div>
                     </div>
 
-                    {/* Add Date/Guests inputs in future updates for full functionality, keeping it simple for now as requested */}
+                    <button
+                        onClick={() => setIsAiEnabled(!isAiEnabled)}
+                        className={`p-3 rounded-full transition-colors ${isAiEnabled ? 'bg-purple-100 text-purple-600' : 'bg-gray-100 text-gray-400 hover:bg-gray-200'}`}
+                        title="Toggle AI Smart Search"
+                    >
+                        <FaMagic />
+                    </button>
 
                     <button
                         onClick={handleSearch}
-                        className="bg-secondary text-white rounded-full p-4 px-8 font-bold text-lg hover:bg-orange-600 transition-all duration-300 shadow-lg flex items-center gap-2"
+                        className={`${isAiEnabled ? 'bg-purple-600 hover:bg-purple-700' : 'bg-secondary hover:bg-orange-600'} text-white rounded-full p-4 px-8 font-bold text-lg transition-all duration-300 shadow-lg flex items-center gap-2`}
                     >
-                        <FaSearch />
+                        {isLoading ? <span className="animate-spin">⌛</span> : <FaSearch />}
                         <span>Search</span>
                     </button>
                 </div>

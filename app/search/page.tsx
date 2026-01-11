@@ -21,18 +21,30 @@ function SearchContent() {
 
         const fetchDestinations = async () => {
             setLoading(true);
-            try {
-                const res = await api.get('/destinations');
-                const allDests = Array.isArray(res.data) ? res.data : res.data.destinations || [];
-                const lowerQuery = query.toLowerCase();
+            const isSmartVideo = searchParams.get("smart") === 'true';
 
-                const filtered = allDests.filter((d: any) => {
-                    const inTitle = d.title?.toLowerCase().includes(lowerQuery);
-                    const inLocation = d.location?.toLowerCase().includes(lowerQuery);
-                    const inDescription = d.description?.toLowerCase().includes(lowerQuery);
-                    return inTitle || inLocation || inDescription;
-                });
-                setDestinations(filtered);
+            try {
+                let initialData = [];
+
+                if (isSmartVideo) {
+                    // Smart AI Search
+                    const res = await api.post('/ai/search', { query });
+                    initialData = res.data || [];
+                } else {
+                    // Standard Local Search
+                    const res = await api.get('/destinations');
+                    const allDests = Array.isArray(res.data) ? res.data : res.data.destinations || [];
+                    const lowerQuery = query.toLowerCase();
+
+                    initialData = allDests.filter((d: any) => {
+                        const inTitle = d.title?.toLowerCase().includes(lowerQuery);
+                        const inLocation = d.location?.toLowerCase().includes(lowerQuery);
+                        const inDescription = d.description?.toLowerCase().includes(lowerQuery);
+                        return inTitle || inLocation || inDescription;
+                    });
+                }
+
+                setDestinations(initialData);
             } catch (error) {
                 console.error("Error fetching search results:", error);
             } finally {
@@ -58,7 +70,7 @@ function SearchContent() {
                             Discovery Search
                         </div>
                         <h1 className="text-5xl lg:text-7xl font-bold text-[#4A4036] leading-tight mb-4">
-                            Findings for <span className="italic font-normal text-[#8D7B68]">"{query}"</span>
+                            {searchParams.get("smart") === 'true' ? 'AI Findings for' : 'Findings for'} <span className="italic font-normal text-[#8D7B68]">"{query}"</span>
                         </h1>
                         <p className="text-[#8D7B68] text-lg font-medium leading-relaxed">
                             Exploring {destinations.length} curated sanctuaries that match your aesthetic preferences and travel aspirations.

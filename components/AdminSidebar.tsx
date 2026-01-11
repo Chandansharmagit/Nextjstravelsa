@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { FaHome, FaMapMarkedAlt, FaSuitcase, FaUsers, FaStar, FaSignOutAlt, FaTachometerAlt, FaBriefcase, FaFileAlt } from 'react-icons/fa';
+import { FaHome, FaMapMarkedAlt, FaSuitcase, FaUsers, FaStar, FaSignOutAlt, FaTachometerAlt, FaBriefcase, FaFileAlt, FaPaperPlane } from 'react-icons/fa';
 import { useAuth } from '@/context/AuthContext';
 
 export default function AdminSidebar() {
@@ -17,6 +17,7 @@ export default function AdminSidebar() {
         { name: 'Jobs', path: '/admin/jobs', icon: <FaBriefcase /> },
         { name: 'Applications', path: '/admin/applications', icon: <FaFileAlt /> },
         { name: 'Customers', path: '/admin/customers', icon: <FaUsers /> },
+        { name: 'Leads', path: '/admin/leads', icon: <FaPaperPlane /> },
         { name: 'Feedback', path: '/admin/feedback', icon: <FaStar /> },
     ];
 
