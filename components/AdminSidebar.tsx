@@ -17,7 +17,7 @@ export default function AdminSidebar() {
         { name: 'Jobs', path: '/admin/jobs', icon: <FaBriefcase /> },
         { name: 'Applications', path: '/admin/applications', icon: <FaFileAlt /> },
         { name: 'Customers', path: '/admin/customers', icon: <FaUsers /> },
-        { name: 'Leads', path: '/admin/leads', icon: <FaPaperPlane /> },
+        { name: 'Plan My Trip', path: '/admin/leads', icon: <FaPaperPlane /> },
         { name: 'Feedback', path: '/admin/feedback', icon: <FaStar /> },
     ];
 

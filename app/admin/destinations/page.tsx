@@ -15,7 +15,6 @@ export default function DestinationsAdminPage() {
     const [searchQuery, setSearchQuery] = useState('');
     const [currentPage, setCurrentPage] = useState(1);
     const [loading, setLoading] = useState(true);
-    const [isLimitModalOpen, setIsLimitModalOpen] = useState(false);
     const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
     const [itemToDelete, setItemToDelete] = useState<string | null>(null);
     const itemsPerPage = 10;
@@ -77,12 +76,12 @@ export default function DestinationsAdminPage() {
                     </h1>
                     <p className="text-gray-500 mt-2 font-medium">Create and oversee your travel locations</p>
                 </div>
-                <button
-                    onClick={() => setIsLimitModalOpen(true)}
+                <Link
+                    href="/admin/destinations/create"
                     className="admin-btn-secondary flex items-center gap-3"
                 >
                     <FaPlus size={14} /> <span>Add Destination</span>
-                </button>
+                </Link>
             </div>
 
             {/* Search Bar */}
@@ -199,28 +198,6 @@ export default function DestinationsAdminPage() {
                         )}
                     </>
                 )}
-                {/* Limit Warning Modal */}
-                <Modal
-                    isOpen={isLimitModalOpen}
-                    onClose={() => setIsLimitModalOpen(false)}
-                    title="Storage Limit Exceeded"
-                >
-                    <div className="text-center py-6">
-                        <div className="w-20 h-20 bg-orange-100 rounded-full flex items-center justify-center mx-auto mb-6 text-orange-600">
-                            <FaPlus className="text-4xl transform rotate-45" />
-                        </div>
-                        <p className="text-lg text-gray-700 leading-relaxed mb-8">
-                            Your package of Cloudinary image saved exceed limit.
-                            Please subscribe to another plan to enable uploading.
-                        </p>
-                        <button
-                            onClick={() => setIsLimitModalOpen(false)}
-                            className="w-full py-4 bg-primary text-white rounded-xl font-bold hover:bg-teal-700 transition shadow-lg"
-                        >
-                            Got it
-                        </button>
-                    </div>
-                </Modal>
 
                 {/* Interaction Overhaul: Confirm Delete */}
                 <ConfirmModal

@@ -81,6 +81,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
         { icon: <FaCog />, label: 'Services', path: '/admin/services' },
         { icon: <FaUserTie />, label: 'Team', path: '/admin/team' },
         { icon: <FaComments />, label: 'Feedback', path: '/admin/feedback', count: stats?.recentFeedbackCount },
+        { icon: <FaPaperPlane />, label: 'Plan My Trip', path: '/admin/leads', count: stats?.leadsInquiryCount },
         { icon: <FaPaperPlane />, label: 'Newsletter', path: '/admin/newsletter' },
     ];
 

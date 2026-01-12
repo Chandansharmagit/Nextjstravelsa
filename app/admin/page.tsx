@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import Link from 'next/link';
-import { FaUsers, FaMapMarkedAlt, FaSuitcase, FaStar, FaCalendarCheck, FaArrowUp } from 'react-icons/fa';
+import { FaUsers, FaMapMarkedAlt, FaSuitcase, FaStar, FaCalendarCheck, FaArrowUp, FaPaperPlane } from 'react-icons/fa';
 import { LineChart, Line, AreaChart, Area, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from 'recharts';
 import api from '@/lib/api';
 
@@ -13,6 +13,7 @@ interface Stats {
     tours: number;
     reviews: number;
     bookings: number;
+    leads: number;
 }
 
 interface RecentBooking {
@@ -29,7 +30,8 @@ export default function AdminDashboard() {
         destinations: 0,
         tours: 0,
         reviews: 0,
-        bookings: 0
+        bookings: 0,
+        leads: 0
     });
     const [loading, setLoading] = useState(true);
     const [recentBookings, setRecentBookings] = useState<RecentBooking[]>([]);
@@ -43,12 +45,13 @@ export default function AdminDashboard() {
     const fetchDashboardData = async () => {
         try {
             // Fetch all data in parallel
-            const [destRes, toursRes, feedbackRes, usersRes, bookingsRes] = await Promise.all([
+            const [destRes, toursRes, feedbackRes, usersRes, bookingsRes, leadsRes] = await Promise.all([
                 api.get('/destinations'),
                 api.get('/tours'),
                 api.get('/feedback'),
                 api.get('/users'),
-                api.get('/bookings')
+                api.get('/bookings'),
+                api.get('/leads')
             ]);
 
             const destinations = Array.isArray(destRes.data) ? destRes.data : destRes.data.destinations || [];
@@ -56,13 +59,15 @@ export default function AdminDashboard() {
             const feedback = Array.isArray(feedbackRes.data) ? feedbackRes.data : feedbackRes.data.data || [];
             const users = Array.isArray(usersRes.data) ? usersRes.data : usersRes.data.users || [];
             const bookings = Array.isArray(bookingsRes.data) ? bookingsRes.data : bookingsRes.data.bookings || [];
+            const leads = leadsRes.data.success ? leadsRes.data.data : (Array.isArray(leadsRes.data) ? leadsRes.data : []);
 
             setStats({
                 customers: users.length || 0,
                 destinations: destinations.length || 0,
                 tours: tours.length || 0,
                 reviews: feedback.length || 0,
-                bookings: bookings.length || 0
+                bookings: bookings.length || 0,
+                leads: leads.length || 0
             });
 
             // Process recent bookings (latest 5)
@@ -167,7 +172,14 @@ export default function AdminDashboard() {
             value: stats.reviews,
             color: 'bg-yellow-500',
             bgLight: 'bg-yellow-50',
-            trend: '+15%'
+        },
+        {
+            icon: <FaPaperPlane className="text-4xl" />,
+            label: 'Plan My Trip',
+            value: stats.leads,
+            color: 'bg-secondary',
+            bgLight: 'bg-orange-50',
+            trend: '+10%'
         }
     ];
 
@@ -209,7 +221,7 @@ export default function AdminDashboard() {
             ) : (
                 <>
                     {/* Stats Cards */}
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6">
                         {statsCards.map((card, index) => (
                             <motion.div
                                 key={index}
