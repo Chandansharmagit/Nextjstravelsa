@@ -73,6 +73,21 @@ export default function RootLayout({
           src="https://cdn-cookieyes.com/client_data/bb6fabec6e847069137c97e35351c79f/script.js"
           strategy="lazyOnload"
         />
+
+        {/* Google Analytics (gtag.js) */}
+        <Script
+          src="https://www.googletagmanager.com/gtag/js?id=G-LGTRJDSD9V"
+          strategy="afterInteractive"
+        />
+        <Script id="google-analytics" strategy="afterInteractive">
+          {`
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+
+            gtag('config', 'G-LGTRJDSD9V');
+          `}
+        </Script>
         <AuthProvider>
           <LayoutWrapper>
             <Toaster position="top-center" />
