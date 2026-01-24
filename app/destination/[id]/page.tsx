@@ -21,6 +21,13 @@ async function getDestination(id: string) {
     }
 }
 
+const ensureAbsoluteUrl = (url: string | undefined | null) => {
+    if (!url) return 'https://travelsansr.com/logo-new.png';
+    if (url.startsWith('http')) return url;
+    if (url.startsWith('/uploads')) return `https://backendtsa.travelsansr.com${url}`;
+    return `https://travelsansr.com${url.startsWith('/') ? '' : '/'}${url}`;
+};
+
 export async function generateMetadata({ params }: { params: Promise<{ id: string }> }): Promise<Metadata> {
     try {
         const { id } = await params;
@@ -29,17 +36,43 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
         if (!dest) return { title: 'Destination Not Found' };
 
         const image0 = dest.images?.[0];
-        const imageSrc = (typeof image0 === 'string' ? image0 : image0?.path || image0?.url) || dest.image || '/logo.png';
+        const rawImage = (typeof image0 === 'string' ? image0 : image0?.path || image0?.url) || dest.image;
+        const imageSrc = ensureAbsoluteUrl(rawImage);
+
+        const title = `${dest.title} - Travel Sansar`;
+        const description = dest.description?.substring(0, 160) || 'Discover amazing destinations with Travel Sansar.';
 
         return {
-            title: `${dest.title} - Travel Sansar`,
-            description: dest.description?.substring(0, 160),
+            title,
+            description,
             openGraph: {
+                title,
+                description,
+                images: [{
+                    url: imageSrc,
+                    width: 1200,
+                    height: 630,
+                    alt: dest.title
+                }],
+                type: 'website',
+                url: `https://travelsansr.com/destination/${id}`,
+                siteName: 'Travel Sansar'
+            },
+            twitter: {
+                card: 'summary_large_image',
+                title,
+                description,
                 images: [imageSrc],
             }
         };
     } catch (e) {
-        return { title: 'Travel Sansar' };
+        return {
+            title: 'Travel Sansar',
+            description: 'Best Travel Agency in Nepal',
+            openGraph: {
+                images: ['https://travelsansr.com/logo-new.png']
+            }
+        };
     }
 }
 

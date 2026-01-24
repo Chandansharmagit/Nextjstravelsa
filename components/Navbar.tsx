@@ -47,7 +47,7 @@ const Navbar = () => {
 
                         {/* LEFT: Logo */}
                         <div className="flex items-center">
-                            <Link href="/" className="relative h-8 w-32 block">
+                            <Link href="/" className="relative h-[60px] w-40 block">
                                 <Image
                                     src="/logo-new.png"
                                     alt="Travel Sansar"
@@ -106,7 +106,9 @@ const Navbar = () => {
                                     <FaInstagram size={16} />
                                 </a>
                                 <a
-                                    href="#"
+                                    href="https://www.facebook.com/share/v/1BMuExj5x5/"
+                                    target="_blank"
+                                    rel="noopener noreferrer"
                                     className="w-9 h-9 flex items-center justify-center rounded-full text-slate-600 hover:text-blue-600 hover:bg-blue-50 transition-all"
                                     aria-label="Facebook"
                                 >
@@ -275,7 +277,7 @@ const Navbar = () => {
                         >
                             {/* Menu Header */}
                             <div className="flex items-center justify-between p-6 border-b border-slate-200">
-                                <div className="relative h-7 w-28">
+                                <div className="relative h-10 w-36">
                                     <Image
                                         src="/logo-new.png"
                                         alt="Travel Sansar"
@@ -358,7 +360,7 @@ const Navbar = () => {
                                         <a href="#" className="text-slate-400 hover:text-pink-600 transition-colors">
                                             <FaInstagram size={20} />
                                         </a>
-                                        <a href="#" className="text-slate-400 hover:text-blue-600 transition-colors">
+                                        <a href="https://www.facebook.com/share/v/1BMuExj5x5/" target="_blank" rel="noopener noreferrer" className="text-slate-400 hover:text-blue-600 transition-colors">
                                             <FaFacebookF size={20} />
                                         </a>
                                     </div>

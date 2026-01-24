@@ -58,7 +58,9 @@ const Footer = () => {
                 <div>
                     <h3 className="text-xl font-bold mb-4">Connect With Us</h3>
                     <div className="flex gap-4 mb-6">
-                        <FaFacebook className="text-2xl cursor-pointer hover:text-secondary transition" />
+                        <a href="https://www.facebook.com/share/v/1BMuExj5x5/" target="_blank" rel="noopener noreferrer">
+                            <FaFacebook className="text-2xl cursor-pointer hover:text-secondary transition" />
+                        </a>
                         <FaTwitter className="text-2xl cursor-pointer hover:text-secondary transition" />
                         <FaInstagram className="text-2xl cursor-pointer hover:text-secondary transition" />
                         <FaLinkedin className="text-2xl cursor-pointer hover:text-secondary transition" />

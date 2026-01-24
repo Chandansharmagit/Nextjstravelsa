@@ -12,14 +12,14 @@ export default function DestinationView({ destination }: { destination: any }) {
     const shareUrl = typeof window !== 'undefined' ? `${window.location.origin}/destination/${destination._id}` : '';
 
     return (
-        <main className="bg-[#f8fafc] min-h-screen pb-32 pt-40 relative font-sans">
+        <section className="bg-[#f8fafc] min-h-screen pb-32 pt-12 relative font-sans">
             {/* Ambient Background Elements */}
             <div className="absolute inset-0 z-0 pointer-events-none">
                 <div className="absolute top-[10%] left-[5%] w-[40%] h-[40%] bg-blue-400/5 rounded-full blur-[120px] animate-pulse" />
                 <div className="absolute bottom-[20%] right-[10%] w-[40%] h-[40%] bg-indigo-400/5 rounded-full blur-[120px] animate-pulse" style={{ animationDelay: '2s' }} />
             </div>
 
-            <div className="container mx-auto px-4 xl:px-20 relative z-10">
+            <div className="container mx-auto px-4 xl:px-20 relative">
                 {/* Header Section */}
                 <motion.div
                     initial={{ opacity: 0, y: 20 }}
@@ -193,6 +193,6 @@ export default function DestinationView({ destination }: { destination: any }) {
                 .scrollbar-hide::-webkit-scrollbar { display: none; }
                 .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
             `}</style>
-        </main>
+        </section>
     );
 }

@@ -31,42 +31,67 @@ async function getTour(id: string) {
     }
 }
 
+const ensureAbsoluteUrl = (url: string | undefined | null) => {
+    if (!url) return 'https://travelsansr.com/logo-new.png';
+    if (url.startsWith('http')) return url;
+    if (url.startsWith('/uploads')) return `https://backendtsa.travelsansr.com${url}`;
+    return `https://travelsansr.com${url.startsWith('/') ? '' : '/'}${url}`;
+};
+
 // Exporting dynamic metadata for SEO
 export async function generateMetadata({ params }: { params: Promise<{ id: string }> }): Promise<Metadata> {
-    const { id } = await params;
-    const tour = await getTour(id);
+    try {
+        const { id } = await params;
+        const tour = await getTour(id);
 
-    if (!tour) {
+        if (!tour) {
+            return {
+                title: 'Tour Not Found | Travel Sansar',
+                openGraph: {
+                    images: ['https://travelsansr.com/logo-new.png']
+                }
+            };
+        }
+
+        const rawImage = tour.images?.[0]?.url || tour.images?.[0] || tour.image;
+        const imageSrc = ensureAbsoluteUrl(typeof rawImage === 'string' ? rawImage : rawImage?.path || rawImage?.url);
+        const title = `${tour.title || tour.name} - Travel Sansar`;
+        const description = tour.description?.substring(0, 160) || `Experience ${tour.title || tour.name} with Travel Sansar.`;
+
         return {
-            title: 'Tour Not Found | Travel Sansar',
+            title,
+            description,
+            openGraph: {
+                title,
+                description,
+                images: [
+                    {
+                        url: imageSrc,
+                        width: 1200,
+                        height: 630,
+                        alt: tour.title || tour.name,
+                    },
+                ],
+                type: 'website',
+                url: `https://travelsansr.com/tours/${id}`,
+                siteName: 'Travel Sansar'
+            },
+            twitter: {
+                card: 'summary_large_image',
+                title,
+                description,
+                images: [imageSrc],
+            },
+        };
+    } catch (e) {
+        return {
+            title: 'Travel Sansar',
+            description: 'Best Travel Agency in Nepal',
+            openGraph: {
+                images: ['https://travelsansr.com/logo-new.png']
+            }
         };
     }
-
-    const imageSrc = tour.images?.[0]?.url || tour.image || 'https://backendtsa.travelsansr.com/uploads/logo.png';
-
-    return {
-        title: `${tour.title || tour.name} - Travel Sansar`,
-        description: tour.description?.substring(0, 160) || `Experience ${tour.title} with Travel Sansar.`,
-        openGraph: {
-            title: tour.title || tour.name,
-            description: tour.description?.substring(0, 160),
-            images: [
-                {
-                    url: imageSrc,
-                    width: 1200,
-                    height: 630,
-                    alt: tour.title || tour.name,
-                },
-            ],
-            type: 'website',
-        },
-        twitter: {
-            card: 'summary_large_image',
-            title: tour.title || tour.name,
-            description: tour.description?.substring(0, 160),
-            images: [imageSrc],
-        },
-    };
 }
 
 export default async function TourDetails({ params }: { params: Promise<{ id: string }> }) {
