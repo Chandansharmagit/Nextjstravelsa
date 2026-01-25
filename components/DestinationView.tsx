@@ -8,8 +8,10 @@ import SimilarTrips from '@/components/SimilarTrips';
 import { motion, AnimatePresence } from 'framer-motion';
 import { FaMapMarkerAlt, FaClock, FaArrowLeft, FaCheck } from 'react-icons/fa';
 
-export default function DestinationView({ destination }: { destination: any }) {
-    const shareUrl = typeof window !== 'undefined' ? `${window.location.origin}/destination/${destination._id}` : '';
+export default function DestinationView({ destination, shareUrl }: { destination: any; shareUrl: string }) {
+
+
+    const cleanDescription = destination.description ? destination.description.replace(/<[^>]*>?/gm, '') : '';
 
     return (
         <section className="bg-[#f8fafc] min-h-screen pb-32 pt-12 relative font-sans">
@@ -58,7 +60,7 @@ export default function DestinationView({ destination }: { destination: any }) {
                             <SocialShare
                                 url={shareUrl}
                                 title={destination.title}
-                                description={destination.description}
+                                description={cleanDescription}
                             />
                         </div>
                     </div>

@@ -28,6 +28,11 @@ const ensureAbsoluteUrl = (url: string | undefined | null) => {
     return `https://travelsansr.com${url.startsWith('/') ? '' : '/'}${url}`;
 };
 
+const stripHtml = (html: string) => {
+    if (!html) return '';
+    return html.replace(/<[^>]*>?/gm, '');
+};
+
 export async function generateMetadata({ params }: { params: Promise<{ id: string }> }): Promise<Metadata> {
     try {
         const { id } = await params;
@@ -40,7 +45,8 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
         const imageSrc = ensureAbsoluteUrl(rawImage);
 
         const title = `${dest.title} - Travel Sansar`;
-        const description = dest.description?.substring(0, 160) || 'Discover amazing destinations with Travel Sansar.';
+        const cleanDesc = dest.description ? stripHtml(dest.description) : '';
+        const description = cleanDesc.substring(0, 160) || 'Discover amazing destinations with Travel Sansar.';
 
         return {
             title,
@@ -93,5 +99,7 @@ export default async function DestinationPage({ params }: { params: Promise<{ id
         );
     }
 
-    return <DestinationView destination={destination} />;
+    const shareUrl = `https://travelsansr.com/destination/${id}`;
+
+    return <DestinationView destination={destination} shareUrl={shareUrl} />;
 }
