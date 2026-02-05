@@ -55,17 +55,17 @@ const Hero = () => {
                 </p>
 
                 {/* Search Bar - "Dynamic Island" style inputs */}
-                <div className={`w-full max-w-3xl bg-white rounded-full p-2 pl-6 shadow-2xl flex items-center gap-4 transition-all duration-300 transform hover:scale-[1.01] ${isAiEnabled ? 'ring-4 ring-purple-400 ring-opacity-50' : ''}`}>
-                    <div className="flex-1 flex items-center gap-3 border-r border-gray-200 pr-4">
+                <div className={`w-full max-w-3xl bg-white rounded-3xl md:rounded-full p-2 md:pl-6 shadow-2xl flex flex-col md:flex-row items-center gap-3 md:gap-4 transition-all duration-300 transform hover:scale-[1.01] ${isAiEnabled ? 'ring-4 ring-purple-400 ring-opacity-50' : ''}`}>
+                    <div className="w-full flex-1 flex items-center gap-3 md:border-r border-gray-200 px-4 md:px-0 md:pr-4 py-2 md:py-0">
                         {isAiEnabled ? <FaMagic className="text-purple-500 text-xl animate-pulse" /> : <FaMapMarkerAlt className="text-secondary text-xl" />}
                         <div className="flex flex-col items-start w-full">
-                            <span className="text-xs font-bold text-gray-400 uppercase tracking-wider">
+                            <span className="text-[10px] md:text-xs font-bold text-gray-400 uppercase tracking-wider">
                                 {isAiEnabled ? 'AI Smart Search' : 'Location'}
                             </span>
                             <input
                                 type="text"
-                                placeholder={isAiEnabled ? "Describe your dream trip (e.g. 'romantic honeymoon in winter')" : "Where are you going?"}
-                                className="w-full bg-transparent outline-none text-gray-800 placeholder-gray-400 font-medium"
+                                placeholder={isAiEnabled ? "Describe your dream trip..." : "Where are you going?"}
+                                className="w-full bg-transparent outline-none text-gray-800 placeholder-gray-400 font-medium text-sm md:text-base"
                                 value={query}
                                 onChange={(e) => setQuery(e.target.value)}
                                 onKeyDown={(e) => e.key === 'Enter' && handleSearch(e as any)}
@@ -74,26 +74,28 @@ const Hero = () => {
                         </div>
                     </div>
 
-                    <button
-                        onClick={() => setIsAiEnabled(!isAiEnabled)}
-                        className={`p-3 rounded-full transition-colors ${isAiEnabled ? 'bg-purple-100 text-purple-600' : 'bg-gray-100 text-gray-400 hover:bg-gray-200'}`}
-                        title="Toggle AI Smart Search"
-                    >
-                        <FaMagic />
-                    </button>
+                    <div className="flex w-full md:w-auto items-center gap-2 px-2 pb-2 md:pb-0">
+                        <button
+                            onClick={() => setIsAiEnabled(!isAiEnabled)}
+                            className={`p-3 rounded-full transition-colors flex-shrink-0 ${isAiEnabled ? 'bg-purple-100 text-purple-600' : 'bg-gray-100 text-gray-400 hover:bg-gray-200'}`}
+                            title="Toggle AI Smart Search"
+                        >
+                            <FaMagic />
+                        </button>
 
-                    <button
-                        onClick={handleSearch}
-                        className={`${isAiEnabled ? 'bg-purple-600 hover:bg-purple-700' : 'bg-secondary hover:bg-orange-600'} text-white rounded-full p-4 px-8 font-bold text-lg transition-all duration-300 shadow-lg flex items-center gap-2`}
-                    >
-                        {isLoading ? <span className="animate-spin">⌛</span> : <FaSearch />}
-                        <span>Search</span>
-                    </button>
+                        <button
+                            onClick={handleSearch}
+                            className={`flex-1 md:flex-none ${isAiEnabled ? 'bg-purple-600 hover:bg-purple-700' : 'bg-secondary hover:bg-orange-600'} text-white rounded-full p-3 md:p-4 md:px-8 font-bold text-base md:text-lg transition-all duration-300 shadow-lg flex items-center justify-center gap-2`}
+                        >
+                            {isLoading ? <span className="animate-spin">⌛</span> : <FaSearch />}
+                            <span>Search</span>
+                        </button>
+                    </div>
                 </div>
 
                 {/* Popular Tags */}
-                <div className="mt-8 flex gap-4 text-sm text-white/80 font-medium">
-                    <span>Popular:</span>
+                <div className="mt-8 flex flex-wrap justify-center gap-3 md:gap-4 text-xs md:text-sm text-white/80 font-medium px-4">
+                    <span className="w-full md:w-auto text-center md:text-left mb-1 md:mb-0">Popular:</span>
                     <button onClick={() => router.push('/search?query=Pokhara')} className="hover:text-secondary underline decoration-secondary decoration-2 underline-offset-4 transition">Pokhara</button>
                     <button onClick={() => router.push('/search?query=Mustang')} className="hover:text-secondary underline decoration-secondary decoration-2 underline-offset-4 transition">Mustang</button>
                     <button onClick={() => router.push('/search?query=Chitwan')} className="hover:text-secondary underline decoration-secondary decoration-2 underline-offset-4 transition">Chitwan</button>

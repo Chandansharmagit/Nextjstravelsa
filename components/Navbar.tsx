@@ -23,6 +23,7 @@ const Navbar = () => {
     const menuItems = [
         { name: "Destinations", path: "/destinations" },
         { name: "Tours", path: "/tours" },
+        { name: "Expedition Planner", path: "/expedition-planner" },
         { name: "Experiences", path: "/experiences" },
         { name: "FAQ", path: "/faq" },
         { name: "Contact", path: "/contact" },
@@ -73,7 +74,15 @@ const Navbar = () => {
                                         }
                                     `}
                                 >
-                                    {item.name}
+                                    <span className="flex items-center gap-2">
+                                        {item.name}
+                                        {item.name === "Expedition Planner" && (
+                                            <span className="relative flex h-2 w-2">
+                                                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-secondary opacity-75"></span>
+                                                <span className="relative inline-flex rounded-full h-2 w-2 bg-secondary"></span>
+                                            </span>
+                                        )}
+                                    </span>
                                     {isActive(item.path) && (
                                         <motion.div
                                             layoutId="activeNavItem"
@@ -310,7 +319,12 @@ const Navbar = () => {
                                                 }
                                             `}
                                         >
-                                            {item.name}
+                                            <span className="flex items-center justify-between w-full">
+                                                {item.name}
+                                                {item.name === "Expedition Planner" && (
+                                                    <span className="px-2 py-0.5 bg-secondary text-[8px] text-white rounded-full animate-pulse">NEW</span>
+                                                )}
+                                            </span>
                                         </Link>
                                     ))}
                                 </div>
