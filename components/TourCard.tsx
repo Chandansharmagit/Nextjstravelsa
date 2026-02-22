@@ -85,7 +85,7 @@ const TourCard = ({ tour, featured = false }: TourProps) => {
                 initial={{ opacity: 0, scale: 0.95 }}
                 whileInView={{ opacity: 1, scale: 1 }}
                 viewport={{ once: true }}
-                className={`group relative overflow-hidden rounded-[40px] cursor-pointer ${featured ? 'h-[500px]' : 'h-[420px]'} shadow-2xl hover:shadow-[0_64px_120px_-20px_rgba(0,0,0,0.3)] transition-shadow duration-500`}
+                className={`group relative overflow-hidden rounded-[30px] cursor-pointer ${featured ? 'h-[500px]' : 'h-[420px]'} shadow-2xl hover:shadow-[0_64px_120px_-20px_rgba(0,0,0,0.3)] transition-all duration-700`}
             >
                 {/* Background Image */}
                 <div
@@ -133,47 +133,54 @@ const TourCard = ({ tour, featured = false }: TourProps) => {
                 </div>
 
                 {/* Content */}
-                <div className="absolute inset-0 flex flex-col justify-end p-8" style={{ transform: "translateZ(50px)" }}>
-                    {/* Info Pills */}
-                    <div className="flex flex-wrap gap-2 mb-4 opacity-0 group-hover:opacity-100 transform translate-y-4 group-hover:translate-y-0 transition-all duration-500">
-                        <div className="px-3 py-1.5 bg-white/10 backdrop-blur-md border border-white/20 rounded-full flex items-center gap-2 text-white text-[10px] font-black uppercase tracking-widest h-font">
-                            <FaClock className="text-blue-400" />
-                            {tour.duration}
+                <div className="absolute inset-0 p-8 flex flex-col justify-end" style={{ transform: "translateZ(30px)" }}>
+                    {/* Interactive Content Wrapper */}
+                    <div className="relative w-full transition-all duration-700 transform group-hover:-translate-y-[15%]">
+                        {/* Title Section - slides to center on hover */}
+                        <div className="space-y-4 transition-all duration-700 group-hover:mb-8">
+                            {tour.destination && (
+                                <div className="flex items-center gap-2 text-blue-400 text-[10px] font-black uppercase tracking-[0.3em] h-font">
+                                    <span className="w-1.5 h-1.5 bg-blue-500 rounded-full" />
+                                    {typeof tour.destination === 'string' ? tour.destination : tour.destination.title || 'Nepal'}
+                                </div>
+                            )}
+                            <h3 className={`text-white font-black tracking-tighter leading-[0.9] h-font transition-all duration-700 ${featured ? 'text-4xl md:text-5xl' : 'text-2xl md:text-3xl'} group-hover:scale-110 origin-left`}>
+                                {title}
+                            </h3>
                         </div>
-                        {tour.groupSize && (
-                            <div className="px-3 py-1.5 bg-white/10 backdrop-blur-md border border-white/20 rounded-full flex items-center gap-2 text-white text-[10px] font-black uppercase tracking-widest h-font">
-                                <FaUsers className="text-blue-400" />
-                                {tour.groupSize}
+
+                        {/* Hidden Content - Revealed on Hover */}
+                        <div className="overflow-hidden max-h-0 group-hover:max-h-[300px] transition-all duration-700 ease-in-out">
+                            {/* Info Pills */}
+                            <div className="flex flex-wrap gap-2 mb-6 pt-4 opacity-0 group-hover:opacity-100 transition-opacity duration-700 delay-100">
+                                <div className="px-3 py-1.5 bg-white/10 backdrop-blur-md border border-white/20 rounded-full flex items-center gap-2 text-white text-[10px] font-black uppercase tracking-widest h-font">
+                                    <FaClock className="text-blue-400" />
+                                    {tour.duration}
+                                </div>
+                                {tour.groupSize && (
+                                    <div className="px-3 py-1.5 bg-white/10 backdrop-blur-md border border-white/20 rounded-full flex items-center gap-2 text-white text-[10px] font-black uppercase tracking-widest h-font">
+                                        <FaUsers className="text-blue-400" />
+                                        {tour.groupSize}
+                                    </div>
+                                )}
+                                <div className="px-3 py-1.5 bg-white/10 backdrop-blur-md border border-white/20 rounded-full flex items-center gap-2 text-white text-[10px] font-black uppercase tracking-widest h-font">
+                                    <FaStar className="text-amber-400" />
+                                    4.8
+                                </div>
                             </div>
-                        )}
-                        <div className="px-3 py-1.5 bg-white/10 backdrop-blur-md border border-white/20 rounded-full flex items-center gap-2 text-white text-[10px] font-black uppercase tracking-widest h-font">
-                            <FaStar className="text-amber-400" />
-                            4.8
-                        </div>
-                    </div>
 
-                    <div className="space-y-2">
-                        <h3 className={`text-white font-black tracking-tighter leading-none h-font line-clamp-2 ${featured ? 'text-3xl md:text-4xl' : 'text-xl md:text-2xl'} group-hover:text-blue-400 transition-colors duration-500`}>
-                            {title}
-                        </h3>
-                        {tour.destination && (
-                            <p className="text-white/60 text-[10px] font-black uppercase tracking-widest h-font flex items-center gap-2">
-                                <span className="w-1.5 h-1.5 bg-blue-500 rounded-full" />
-                                {typeof tour.destination === 'string' ? tour.destination : tour.destination.title || 'Nepal'}
-                            </p>
-                        )}
-                    </div>
-
-                    <div className="flex items-center justify-between pt-6 mt-6 border-t border-white/10 opacity-0 group-hover:opacity-100 transition-all duration-500 transform translate-y-4 group-hover:translate-y-0">
-                        <span className="text-[10px] font-black text-white uppercase tracking-[0.2em] h-font">Examine Details</span>
-                        <div className="w-10 h-10 rounded-full bg-white flex items-center justify-center text-slate-900 group-hover:bg-blue-600 group-hover:text-white transition-all duration-500 shadow-xl">
-                            <FaArrowRight />
+                            <div className="flex items-center justify-between pt-6 border-t border-white/10 opacity-0 group-hover:opacity-100 transition-all duration-700 delay-200">
+                                <span className="text-[10px] font-black text-white uppercase tracking-[0.2em] h-font">Examine Journey</span>
+                                <div className="w-10 h-10 rounded-[12px] bg-white flex items-center justify-center text-slate-900 group-hover:bg-blue-600 group-hover:text-white transition-all duration-500 shadow-xl">
+                                    <FaArrowRight />
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
 
                 {/* Border Glow */}
-                <div className="absolute inset-0 border border-white/20 rounded-[40px] pointer-events-none" />
+                <div className="absolute inset-0 border border-white/20 rounded-[30px] pointer-events-none" />
             </motion.div>
 
             <style jsx global>{`

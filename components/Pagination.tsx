@@ -39,40 +39,42 @@ const Pagination = ({ currentPage, totalPages, onPageChange }: PaginationProps) 
     };
 
     return (
-        <div className="flex items-center justify-center gap-2 mt-12">
+        <div className="flex items-center justify-center gap-4 mt-20">
             <button
                 onClick={() => onPageChange(currentPage - 1)}
                 disabled={currentPage === 1}
-                className="px-4 py-2 rounded-lg border-2 border-gray-200 hover:border-primary hover:bg-primary hover:text-white transition disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-transparent disabled:hover:text-gray-700 disabled:hover:border-gray-200 flex items-center gap-2"
+                className="px-6 py-3 rounded-[30px] border border-slate-200 bg-white shadow-sm hover:shadow-md hover:border-blue-600 hover:text-blue-600 transition-all duration-300 disabled:opacity-30 disabled:cursor-not-allowed flex items-center gap-3 font-black uppercase tracking-widest text-[10px] h-font"
             >
-                <FaChevronLeft /> Previous
+                <FaChevronLeft className="text-[8px]" /> Previous
             </button>
 
-            {getPageNumbers().map((page, index) => (
-                page === '...' ? (
-                    <span key={`ellipsis-${index}`} className="px-3 py-2 text-gray-500">
-                        ...
-                    </span>
-                ) : (
-                    <button
-                        key={page}
-                        onClick={() => onPageChange(page as number)}
-                        className={`px-4 py-2 rounded-lg border-2 transition ${currentPage === page
-                                ? 'bg-primary text-white border-primary'
-                                : 'border-gray-200 hover:border-primary hover:bg-primary hover:text-white'
-                            }`}
-                    >
-                        {page}
-                    </button>
-                )
-            ))}
+            <div className="flex items-center gap-2 px-4 py-2 bg-slate-100/50 backdrop-blur-md rounded-[30px] border border-slate-200/50 shadow-inner">
+                {getPageNumbers().map((page, index) => (
+                    page === '...' ? (
+                        <span key={`ellipsis-${index}`} className="px-3 py-2 text-slate-400 font-bold">
+                            ...
+                        </span>
+                    ) : (
+                        <button
+                            key={page}
+                            onClick={() => onPageChange(page as number)}
+                            className={`w-10 h-10 rounded-[15px] transition-all duration-300 font-black text-[10px] tracking-widest h-font flex items-center justify-center ${currentPage === page
+                                ? 'bg-blue-600 text-white shadow-lg shadow-blue-600/30'
+                                : 'text-slate-500 hover:bg-white hover:text-blue-600'
+                                }`}
+                        >
+                            {page}
+                        </button>
+                    )
+                ))}
+            </div>
 
             <button
                 onClick={() => onPageChange(currentPage + 1)}
                 disabled={currentPage === totalPages}
-                className="px-4 py-2 rounded-lg border-2 border-gray-200 hover:border-primary hover:bg-primary hover:text-white transition disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-transparent disabled:hover:text-gray-700 disabled:hover:border-gray-200 flex items-center gap-2"
+                className="px-6 py-3 rounded-[30px] border border-slate-200 bg-white shadow-sm hover:shadow-md hover:border-blue-600 hover:text-blue-600 transition-all duration-300 disabled:opacity-30 disabled:cursor-not-allowed flex items-center gap-3 font-black uppercase tracking-widest text-[10px] h-font"
             >
-                Next <FaChevronRight />
+                Next <FaChevronRight className="text-[8px]" />
             </button>
         </div>
     );

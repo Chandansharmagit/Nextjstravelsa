@@ -21,11 +21,13 @@ interface SimilarTripsProps {
     currentLocation?: string;
 }
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || 'https://backendtsa.travelsansr.com/api';
+import { CONFIG } from '../lib/config';
+import { getImageUrl } from '@/lib/utils/image';
 
 export default function SimilarTrips({ currentDestinationId, currentLocation }: SimilarTripsProps) {
     const [destinations, setDestinations] = useState<Destination[]>([]);
     const [loading, setLoading] = useState(true);
+    const API_URL = CONFIG.API_BASE_URL;
 
     useEffect(() => {
         const fetchSimilarDestinations = async () => {

@@ -1,8 +1,8 @@
 import axios from 'axios';
+import { CONFIG } from './config';
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || 'https://backendtsa.travelsansr.com/api';
 const api = axios.create({
-    baseURL: API_URL,
+    baseURL: CONFIG.API_BASE_URL,
     withCredentials: true,
     headers: {
         'Content-Type': 'application/json',

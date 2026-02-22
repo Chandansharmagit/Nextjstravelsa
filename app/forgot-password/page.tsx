@@ -2,6 +2,10 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { FaEnvelope, FaArrowLeft, FaShieldAlt } from 'react-icons/fa';
+import { CONFIG } from '@/lib/config';
+
+const API_URL = CONFIG.API_BASE_URL;
 import axios from 'axios';
 
 export default function ForgotPasswordPage() {
@@ -19,7 +23,7 @@ export default function ForgotPasswordPage() {
 
         try {
             const response = await axios.post(
-                `${process.env.NEXT_PUBLIC_API_URL || 'https://backendtsa.travelsansr.com/api'}/auth/forgot-password`,
+                `${API_URL}/auth/forgot-password`,
                 { email }
             );
 

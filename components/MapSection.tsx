@@ -42,6 +42,9 @@ interface SearchResultInfo {
     url?: string;
 }
 
+import { CONFIG } from '@/lib/config';
+import { getImageUrl } from '@/lib/utils/image';
+
 const MapSection = () => {
     const [destinations, setDestinations] = useState<Destination[]>([]);
     const [plannedPins, setPlannedPins] = useState<Pin[]>([]);
@@ -103,7 +106,7 @@ const MapSection = () => {
                     setSelectedPlaceInfo({
                         name: matchedDest.title,
                         description: matchedDest.description || "A verified Travel Sansar destination in the Himalayas.",
-                        image: matchedDest.image ? (matchedDest.image.startsWith('http') ? matchedDest.image : `https://backendtsa.travelsansr.com${matchedDest.image}`) : "",
+                        image: getImageUrl(matchedDest.image),
                         lat: cleanLat,
                         lng: cleanLon,
                         source: 'internal'
@@ -133,7 +136,7 @@ const MapSection = () => {
     useEffect(() => {
         const fetchDestinations = async () => {
             try {
-                const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'https://backendtsa.travelsansr.com/api'}/destinations`);
+                const res = await fetch(`${CONFIG.API_BASE_URL}/destinations`);
                 if (res.ok) {
                     const data = await res.json();
                     const dests = Array.isArray(data) ? data : data.data || data.destinations || [];

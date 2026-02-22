@@ -12,11 +12,12 @@ import TrustedPartners from '@/components/TrustedPartners';
 import FeaturedGuides from '@/components/FeaturedGuides';
 import FeaturedServices from '@/components/FeaturedServices';
 import { TiltCard } from '@/components/TiltCard';
+import { CONFIG } from '@/lib/config';
 import LeadCaptureForm from '@/components/LeadCaptureForm';
 export const dynamic = 'force-dynamic';
 
 // Use environment variable for API URL
-const API_URL = process.env.NEXT_PUBLIC_API_URL || 'https://backendtsa.travelsansr.com/api';
+const API_URL = CONFIG.API_BASE_URL;
 
 // Fetch Featured Destinations
 // Fetch Featured Destinations

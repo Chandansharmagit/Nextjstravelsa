@@ -7,6 +7,8 @@ import { motion, useMotionValue, useSpring, useTransform, AnimatePresence } from
 import api from '@/lib/api';
 import { FaUser, FaEnvelope, FaPhone, FaMapMarkerAlt, FaEdit, FaLock, FaHeart, FaHistory, FaCog, FaArrowRight, FaEye, FaEyeSlash } from 'react-icons/fa';
 import Image from 'next/image';
+import { getImageUrl } from '@/lib/utils/image';
+import { CONFIG } from '@/lib/config';
 
 export default function ProfilePage() {
     const { user, logout } = useAuth();
@@ -134,11 +136,7 @@ export default function ProfilePage() {
                             <div className="w-40 h-40 rounded-[40px] overflow-hidden bg-gradient-to-br from-blue-600 to-indigo-600 flex items-center justify-center text-white text-6xl font-black border-8 border-white shadow-2xl transition-transform duration-500 group-hover:scale-105">
                                 {(formData.image || user.image) ? (
                                     <img
-                                        src={
-                                            (formData.image || user.image || '').startsWith('http')
-                                                ? (formData.image || user.image)
-                                                : `https://backendtsa.travelsansr.com${formData.image || user.image}`
-                                        }
+                                        src={getImageUrl(formData.image || user.image)}
                                         alt={user.name}
                                         className="w-full h-full object-cover"
                                     />
@@ -382,7 +380,7 @@ export default function ProfilePage() {
                                                         <div className="w-full md:w-36 h-28 bg-slate-100 rounded-2xl overflow-hidden shrink-0">
                                                             {(booking.tour?.image || booking.destination?.image) && (
                                                                 <img
-                                                                    src={booking.tour?.image || booking.destination?.image}
+                                                                    src={getImageUrl(booking.tour?.image || booking.destination?.image)}
                                                                     alt="trip"
                                                                     className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
                                                                 />

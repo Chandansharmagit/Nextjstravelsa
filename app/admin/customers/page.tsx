@@ -5,9 +5,10 @@ import { FaSearch, FaEdit, FaTrash, FaEye } from 'react-icons/fa';
 import Pagination from '@/components/Pagination';
 import Link from 'next/link';
 import ConfirmModal from '@/components/ConfirmModal';
+import Sidebar from '@/components/AdminSidebar';
+import { CONFIG } from '@/lib/config';
 
-// Use environment variable for API URL
-const API_URL = process.env.NEXT_PUBLIC_API_URL || 'https://backendtsa.travelsansr.com/api';
+const API_URL = CONFIG.API_BASE_URL;
 
 export default function CustomersPage() {
     const [customers, setCustomers] = useState<any[]>([]);
@@ -64,7 +65,7 @@ export default function CustomersPage() {
     const confirmDelete = async () => {
         if (!itemToDelete) return;
         try {
-            const response = await fetch(`https://backendtsa.travelsansr.com/api/users/${itemToDelete}`, {
+            const response = await fetch(`${API_URL}/users/${itemToDelete}`, {
                 method: 'DELETE',
                 credentials: 'include'
             });

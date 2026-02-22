@@ -1,5 +1,6 @@
 "use client";
 
+import { getImageUrl } from '@/lib/utils/image';
 import { useEffect, useState, memo } from 'react';
 import { MapContainer, TileLayer, Marker, Popup, useMapEvents, useMap } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
@@ -205,7 +206,7 @@ const InteractiveMap = ({ destinations, plannedPins, onAddPin, onRemovePin, sear
                                 <div className="p-1 max-w-[200px]">
                                     {dest.image && (
                                         <img
-                                            src={dest.image.startsWith('http') ? dest.image : `https://backendtsa.travelsansr.com${dest.image}`}
+                                            src={getImageUrl(dest.image)}
                                             alt={dest.title}
                                             className="w-full h-24 object-cover rounded-lg mb-2"
                                         />

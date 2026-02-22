@@ -6,6 +6,10 @@ import { FaMapMarkerAlt, FaTimes, FaPaperPlane, FaPlus, FaSearch, FaArrowLeft, F
 import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
 import toast, { Toaster } from 'react-hot-toast';
+import { CONFIG } from '@/lib/config';
+import { getImageUrl } from '@/lib/utils/image';
+
+const API_URL = CONFIG.API_BASE_URL;
 
 // Dynamically import the map to avoid SSR issues
 const InteractiveMap = dynamic(() => import('@/components/InteractiveMap'), {
@@ -119,8 +123,8 @@ export default function ExpeditionPlanner() {
                 if (matchedDest) {
                     setSelectedPlaceInfo({
                         name: matchedDest.title,
-                        description: matchedDest.description || "A verified Travel Sansar hub in the Himalayas.",
-                        image: matchedDest.image ? (matchedDest.image.startsWith('http') ? matchedDest.image : `https://backendtsa.travelsansr.com${matchedDest.image}`) : "",
+                        description: matchedDest.description || "A verified Travel Sansar destination in the Himalayas.",
+                        image: getImageUrl(matchedDest.image),
                         lat: cleanLat,
                         lng: cleanLon,
                         source: 'internal'
@@ -150,7 +154,7 @@ export default function ExpeditionPlanner() {
     useEffect(() => {
         const fetchDestinations = async () => {
             try {
-                const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'https://backendtsa.travelsansr.com/api'}/destinations`);
+                const res = await fetch(`${API_URL}/destinations`);
                 if (res.ok) {
                     const data = await res.json();
                     const dests = Array.isArray(data) ? data : data.data || data.destinations || [];
@@ -184,7 +188,7 @@ export default function ExpeditionPlanner() {
 
         setIsSubmitting(true);
         try {
-            const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'https://backendtsa.travelsansr.com/api'}/expedition-plans`, {
+            const response = await fetch(`${API_URL}/expedition-plans`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

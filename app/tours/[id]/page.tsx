@@ -3,8 +3,11 @@ import TourView from '@/components/TourView';
 import { Metadata } from 'next';
 import Link from 'next/link';
 
+import { CONFIG } from '@/lib/config';
+import { getImageUrl } from '@/lib/utils/image';
+
 // Use environment variable for API URL
-const API_URL = process.env.NEXT_PUBLIC_API_URL || 'https://backendtsa.travelsansr.com/api';
+const API_URL = CONFIG.API_BASE_URL;
 
 async function getTour(id: string) {
     try {
@@ -31,12 +34,7 @@ async function getTour(id: string) {
     }
 }
 
-const ensureAbsoluteUrl = (url: string | undefined | null) => {
-    if (!url) return 'https://travelsansr.com/logo-new.png';
-    if (url.startsWith('http')) return url;
-    if (url.startsWith('/uploads')) return `https://backendtsa.travelsansr.com${url}`;
-    return `https://travelsansr.com${url.startsWith('/') ? '' : '/'}${url}`;
-};
+const ensureAbsoluteUrl = (url: string | undefined | null) => getImageUrl(url || CONFIG.LOGO_URL);
 
 // Exporting dynamic metadata for SEO
 export async function generateMetadata({ params }: { params: Promise<{ id: string }> }): Promise<Metadata> {
@@ -48,7 +46,7 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
             return {
                 title: 'Tour Not Found | Travel Sansar',
                 openGraph: {
-                    images: ['https://travelsansr.com/logo-new.png']
+                    images: [CONFIG.LOGO_URL]
                 }
             };
         }
@@ -73,7 +71,7 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
                     },
                 ],
                 type: 'website',
-                url: `https://travelsansr.com/tours/${id}`,
+                url: `${CONFIG.SITE_URL}/tours/${id}`,
                 siteName: 'Travel Sansar'
             },
             twitter: {
@@ -88,7 +86,7 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
             title: 'Travel Sansar',
             description: 'Best Travel Agency in Nepal',
             openGraph: {
-                images: ['https://travelsansr.com/logo-new.png']
+                images: [CONFIG.LOGO_URL]
             }
         };
     }

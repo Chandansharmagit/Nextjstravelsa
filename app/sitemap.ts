@@ -1,7 +1,8 @@
 import { MetadataRoute } from 'next';
+import { CONFIG } from '../lib/config';
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || 'https://backendtsa.travelsansr.com/api';
-const BASE_URL = 'https://travelsansr.com';
+const API_URL = CONFIG.API_BASE_URL;
+const BASE_URL = CONFIG.SITE_URL;
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     // Static routes

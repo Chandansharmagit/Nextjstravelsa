@@ -4,6 +4,7 @@ import './globals.css';
 import LayoutWrapper from '@/components/LayoutWrapper';
 import { AuthProvider } from '@/context/AuthContext';
 import NewsletterPopup from '@/components/NewsletterPopup';
+import HoliCelebration from '@/components/HoliCelebration';
 
 // Load fonts
 const inter = Inter({ subsets: ['latin'], variable: '--font-inter' });
@@ -15,26 +16,35 @@ const playfair = Playfair_Display({
   style: ['normal', 'italic']
 });
 
+import { CONFIG } from '../lib/config';
+
 export const metadata: Metadata = {
+  metadataBase: new URL(CONFIG.SITE_URL),
   title: 'Travel Sansar - Best Travel Agency in Nepal | Fly Now',
   description: 'Experience the world with Travel Sansar. Discover handpicked destinations, adventure tours, and cultural experiences in Nepal, Bhutan, and Tibet.',
   keywords: ['travel agency Nepal', 'tours in Nepal', 'trekking in Nepal', 'Bhutan tours', 'Tibet tours', 'Travel Sansar', 'adventure travel'],
-  authors: [{ name: 'Travel Sansar', url: 'https://travelsansr.com' }],
+  authors: [{ name: 'Travel Sansar', url: CONFIG.SITE_URL }],
+  creator: 'Travel Sansar',
+  publisher: 'Travel Sansar',
+  formatDetection: {
+    email: false,
+    address: false,
+    telephone: false,
+  },
   viewport: 'width=device-width, initial-scale=1',
-  robots: 'index, follow',
   alternates: {
-    canonical: 'https://travelsansr.com',
+    canonical: CONFIG.SITE_URL,
   },
   openGraph: {
     title: 'Travel Sansar - Best Travel Agency in Nepal',
     description: 'Experience the world with Travel Sansar. Best destinations, tours and experiences.',
-    url: 'https://travelsansr.com',
+    url: CONFIG.SITE_URL,
     siteName: 'Travel Sansar',
     images: [
       {
-        url: 'https://travelsansr.com/logo-new.png',
-        width: 800,
-        height: 600,
+        url: CONFIG.LOGO_URL,
+        width: 1200,
+        height: 630,
         alt: 'Travel Sansar Logo',
       },
     ],
@@ -45,7 +55,11 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     title: 'Travel Sansar - Best Travel Agency in Nepal',
     description: 'Experience the world with Travel Sansar. Best destinations, tours and experiences.',
-    images: ['https://travelsansr.com/logo-new.png'],
+    images: [CONFIG.LOGO_URL],
+  },
+  robots: {
+    index: true,
+    follow: true,
   },
   icons: {
     icon: '/logo-new.png',
@@ -98,18 +112,14 @@ export default function RootLayout({
                   "@context": "https://schema.org",
                   "@type": "Organization",
                   "name": "Travel Sansar",
-                  "url": "https://travelsansr.com",
-                  "logo": "https://travelsansr.com/logo-new.png",
+                  "url": CONFIG.SITE_URL,
+                  "logo": CONFIG.LOGO_URL,
                   "sameAs": [
                     "https://www.facebook.com/TravelSansar",
-                    "https://www.instagram.com/travel_sansar"
-                  ],
-                  "contactPoint": {
-                    "@type": "ContactPoint",
-                    "telephone": "+977-9855051795",
-                    "contactType": "customer service"
-                  }
-                })
+                    "https://www.instagram.com/travel_sansar",
+                    "https://twitter.com/travel_sansar"
+                  ]
+                }),
               }}
             />
             <script
@@ -119,17 +129,18 @@ export default function RootLayout({
                   "@context": "https://schema.org",
                   "@type": "WebSite",
                   "name": "Travel Sansar",
-                  "url": "https://travelsansr.com",
+                  "url": CONFIG.SITE_URL,
                   "potentialAction": {
                     "@type": "SearchAction",
-                    "target": "https://travelsansr.com/search?query={search_term_string}",
+                    "target": `${CONFIG.SITE_URL}/search?query={search_term_string}`,
                     "query-input": "required name=search_term_string"
                   }
-                })
+                }),
               }}
             />
             {children}
             <NewsletterPopup />
+            <HoliCelebration />
           </LayoutWrapper>
         </AuthProvider>
       </body>

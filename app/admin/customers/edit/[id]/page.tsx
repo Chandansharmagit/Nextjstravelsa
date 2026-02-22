@@ -4,8 +4,10 @@ import { useState, useEffect } from 'react';
 import { useRouter, useParams } from 'next/navigation';
 import { useAuth } from '@/context/AuthContext';
 
-// Use environment variable for API URL
-const API_URL = process.env.NEXT_PUBLIC_API_URL || 'https://backendtsa.travelsansr.com/api';
+import Sidebar from '@/components/AdminSidebar';
+import { CONFIG } from '@/lib/config';
+
+const API_URL = CONFIG.API_BASE_URL;
 
 export default function EditCustomerPage() {
     const params = useParams();
@@ -66,7 +68,7 @@ export default function EditCustomerPage() {
         setSubmitting(true);
 
         try {
-            const res = await fetch(`https://backendtsa.travelsansr.com/api/users/${id}`, {
+            const res = await fetch(`${API_URL}/users/${id}`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',

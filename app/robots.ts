@@ -1,12 +1,13 @@
 import { MetadataRoute } from 'next';
+import { CONFIG } from '../lib/config';
 
 export default function robots(): MetadataRoute.Robots {
     return {
         rules: {
             userAgent: '*',
             allow: '/',
-            disallow: ['/admin/', '/api/', '/login', '/register'],
+            disallow: '/private/',
         },
-        sitemap: 'https://travelsansr.com/sitemap.xml',
+        sitemap: `${CONFIG.SITE_URL}/sitemap.xml`,
     };
 }

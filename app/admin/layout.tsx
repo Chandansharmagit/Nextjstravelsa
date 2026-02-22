@@ -116,7 +116,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                     x: isMobileMenuOpen ? 0 : typeof window !== 'undefined' && window.innerWidth < 1024 ? -300 : 0
                 }}
                 transition={{ type: "spring", stiffness: 300, damping: 30 }}
-                className={`bg-[#0f172a] text-white h-screen fixed left-0 top-0 z-[60] flex flex-col shadow-2xl overflow-hidden border-r border-white/5 ${isMobileMenuOpen ? 'translate-x-0' : 'lg:translate-x-0 -translate-x-full'
+                className={`bg-[#0f172a] text-white h-[calc(100vh-24px)] fixed left-[12px] top-[12px] z-[60] flex flex-col shadow-2xl overflow-hidden border border-white/5 rounded-[12px] ${isMobileMenuOpen ? 'translate-x-0' : 'lg:translate-x-0 -translate-x-full'
                     }`}
             >
                 {/* Glassmorphic Background Effect */}
@@ -207,7 +207,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
 
                 {/* User Profile */}
                 {!isSidebarCollapsed && (
-                    <div className="p-6 m-4 mt-auto rounded-2xl bg-white/5 border border-white/5 backdrop-blur-md flex-shrink-0">
+                    <div className="p-6 m-4 mt-auto rounded-xl bg-white/5 border border-white/5 backdrop-blur-md flex-shrink-0">
                         <div className="flex items-center gap-4">
                             <div className="relative">
                                 <div className="w-12 h-12 rounded-full border-2 border-secondary/50 p-0.5">
@@ -239,13 +239,13 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
             <motion.div
                 initial={false}
                 animate={{
-                    marginLeft: typeof window !== 'undefined' && window.innerWidth >= 1024 ? (isSidebarCollapsed ? '88px' : '280px') : '0px'
+                    marginLeft: typeof window !== 'undefined' && window.innerWidth >= 1024 ? (isSidebarCollapsed ? '100px' : '292px') : '0px'
                 }}
                 transition={{ type: "spring", stiffness: 300, damping: 30 }}
-                className="flex-1 w-full flex flex-col min-h-screen"
+                className="flex-1 w-full flex flex-col h-screen overflow-hidden"
             >
                 {/* Top Glass Header */}
-                <header className="sticky top-0 z-[40] w-full px-8 h-20 flex items-center justify-between border-b border-gray-200 bg-white/70 backdrop-blur-xl">
+                <header className="flex-shrink-0 mt-[12px] mx-[12px] w-[calc(100%-24px)] px-8 h-20 flex items-center justify-between border border-gray-200 bg-white/70 backdrop-blur-xl rounded-[12px] z-[40]">
                     <div>
                         <h2 className="text-sm font-semibold text-gray-500 uppercase tracking-widest">
                             Overview / <span className="text-primary">{pathname.split('/').pop() || 'Dashboard'}</span>
@@ -266,8 +266,12 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                     </div>
                 </header>
 
-                <main className="flex-1 p-8 lg:p-12">
-                    {children}
+                <main className="flex-1 flex flex-col px-[12px] pb-[12px] mt-[12px] overflow-hidden">
+                    <div className="flex-1 bg-white/70 backdrop-blur-xl rounded-[12px] border border-gray-200 shadow-sm overflow-hidden flex flex-col">
+                        <div className="flex-1 overflow-y-auto p-8 lg:p-12 custom-scrollbar">
+                            {children}
+                        </div>
+                    </div>
                 </main>
             </motion.div>
         </div>

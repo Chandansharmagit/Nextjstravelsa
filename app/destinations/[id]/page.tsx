@@ -1,8 +1,10 @@
 import Image from 'next/image';
 import Link from 'next/link';
+import { CONFIG } from '@/lib/config';
+import { getImageUrl } from '@/lib/utils/image';
 
 // Use environment variable for API URL
-const API_URL = process.env.NEXT_PUBLIC_API_URL || 'https://backendtsa.travelsansr.com/api';
+const API_URL = CONFIG.API_BASE_URL;
 
 async function getDestination(id: string) {
     try {
@@ -47,7 +49,7 @@ export async function generateMetadata({ params }: { params: { id: string } }): 
     }
 
     if (imageSrc && !imageSrc.startsWith('http')) {
-        const baseUrl = 'https://backendtsa.travelsansr.com';
+        const baseUrl = CONFIG.BACKEND_URL;
         const cleanPath = imageSrc.startsWith('/') ? imageSrc : `/${imageSrc}`;
         imageSrc = `${baseUrl}${cleanPath}`;
     }
@@ -58,8 +60,8 @@ export async function generateMetadata({ params }: { params: { id: string } }): 
         openGraph: {
             title: destination.title,
             description: destination.description?.substring(0, 160),
-            url: `https://www.travelsansr.com/destinations/${params.id}`,
-            images: imageSrc ? [{ url: imageSrc, width: 1200, height: 630, alt: destination.title }] : [],
+            url: `${CONFIG.SITE_URL}/destinations/${params.id}`,
+            images: imageSrc ? [{ url: getImageUrl(imageSrc), width: 1200, height: 630, alt: destination.title }] : [],
             type: 'website',
         },
     };
@@ -73,8 +75,8 @@ export default async function DestinationDetails({ params }: { params: { id: str
     }
 
     const image0 = destination.images?.[0];
-    const imageSrc = (typeof image0 === 'string' ? image0 : image0?.path || image0?.url) || destination.image || '/placeholder.jpg';
-    const shareUrl = `https://www.travelsansr.com/destinations/${params.id}`;
+    const imageSrc = getImageUrl((typeof image0 === 'string' ? image0 : image0?.path || image0?.url) || destination.image);
+    const shareUrl = `${CONFIG.SITE_URL}/destinations/${params.id}`;
 
     return (
         <section className="min-h-screen pt-32 pb-20 px-4 xl:px-20 bg-[#FDFCFB]">

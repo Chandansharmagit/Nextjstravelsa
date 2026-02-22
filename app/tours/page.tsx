@@ -2,6 +2,7 @@
 
 import { useState, useEffect, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
+import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
 import Masonry from 'react-masonry-css';
 import TourCard from '@/components/TourCard';
@@ -96,128 +97,134 @@ function ToursContent() {
         640: 1
     };
 
-    const inputClasses = "w-full pl-12 pr-4 py-4 bg-white/50 backdrop-blur-md border border-slate-200 rounded-2xl focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500 transition-all outline-none font-bold text-slate-700 placeholder:text-slate-400 placeholder:font-medium";
+    const inputClasses = "w-full pl-12 pr-4 py-4 bg-white/50 backdrop-blur-md border border-slate-200 rounded-[30px] focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500 transition-all outline-none font-bold text-slate-700 placeholder:text-slate-400 placeholder:font-medium";
 
     return (
-        <main className="bg-[#f8fafc] min-h-screen pb-32 pt-20 overflow-x-hidden relative font-sans">
-            {/* Ambient Background Elements */}
-            <div className="absolute inset-0 z-0 pointer-events-none">
-                <div className="absolute top-[10%] left-[5%] w-[45%] h-[40%] bg-blue-400/5 rounded-full blur-[120px] animate-pulse" />
-                <div className="absolute bottom-[20%] right-[10%] w-[40%] h-[40%] bg-indigo-400/5 rounded-full blur-[120px] animate-pulse" style={{ animationDelay: '3s' }} />
-            </div>
+        <main className="bg-white min-h-screen pb-32 overflow-x-hidden relative font-sans">
+            {/* Premium Hero Section */}
+            <div className="relative h-[75vh] min-h-[600px] w-full flex flex-col items-center justify-center overflow-hidden">
+                {/* Background Image - High-Res Himalayas */}
+                <div className="absolute inset-0 z-0">
+                    <img
+                        src="https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&q=80&w=2000"
+                        alt="Tours Hero"
+                        className="absolute inset-0 w-full h-full object-cover"
+                    />
+                    <div className="absolute inset-0 bg-black/10" />
+                    <div className="absolute inset-0 bg-gradient-to-t from-white via-white/40 to-transparent" />
+                </div>
 
-            <div className="container mx-auto px-4 xl:px-20 relative z-10">
-                {/* Header Section */}
-                <div className="pt-20 pb-16 text-center max-w-4xl mx-auto">
+                {/* Hero Content */}
+                <div className="relative z-10 text-center px-4 pt-10 w-full max-w-6xl">
+                    <motion.h1
+                        initial={{ opacity: 0, y: -60 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 1.2, ease: [0.22, 1, 0.36, 1] }}
+                        className="text-white text-6xl md:text-8xl lg:text-9xl font-black tracking-tighter uppercase mb-8 drop-shadow-[0_20px_60px_rgba(0,0,0,0.6)] h-font leading-[0.85]"
+                    >
+                        Epic <br className="hidden md:block" /> Adventures
+                    </motion.h1>
+
+                    {/* Integrated Search & Filter System */}
                     <motion.div
                         initial={{ opacity: 0, scale: 0.9 }}
                         animate={{ opacity: 1, scale: 1 }}
-                        className="inline-flex items-center gap-2 px-4 py-2 bg-blue-50 rounded-full text-blue-600 text-[10px] font-black uppercase tracking-[0.2em] mb-6 h-font"
+                        transition={{ delay: 0.6, duration: 0.8 }}
+                        className="max-w-5xl mx-auto"
                     >
-                        <FaCompass className="text-xs" />
-                        Next-Gen Journeys
-                    </motion.div>
+                        {/* Compact Breadcrumb label */}
+                        <div className="flex items-center justify-center gap-2 mb-4 text-white/60 font-black text-[10px] tracking-[0.4em] uppercase">
+                            <Link href="/" className="hover:text-amber-400 transition-all">Home</Link>
+                            <span>/</span>
+                            <span className="text-white/90">Expedition List</span>
+                        </div>
 
-                    <motion.h1
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ delay: 0.1 }}
-                        className="text-5xl md:text-8xl font-black text-slate-900 tracking-tighter mb-8 leading-none p-font"
-                    >
-                        {categoryFilter !== 'all' ? (
-                            <><span className="text-blue-600">{categoryFilter}</span> <br /> Expeditions</>
-                        ) : (
-                            <>Epic <br /> <span className="text-blue-600">Adventures</span></>
-                        )}
-                    </motion.h1>
-
-                    <motion.p
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ delay: 0.2 }}
-                        className="text-slate-500 font-bold text-lg md:text-xl leading-relaxed max-w-2xl mx-auto"
-                    >
-                        Beyond the horizon lies your next story. Choose from our expertly crafted tours designed for the modern explorer.
-                    </motion.p>
-                </div>
-
-                {/* Filter section */}
-                <motion.div
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0.3 }}
-                    className="mb-16 max-w-6xl mx-auto"
-                >
-                    <div className="bg-white/70 backdrop-blur-3xl p-6 rounded-[40px] shadow-[0_32px_80px_-16px_rgba(0,0,0,0.08)] border border-white/60">
-                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 items-center">
-                            <div className="relative group lg:col-span-1">
-                                <FaSearch className="absolute left-5 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-blue-500 transition-colors" />
+                        {/* Glassmorphic Multi-Filter Bar */}
+                        <div className="bg-white/10 backdrop-blur-3xl rounded-[30px] md:rounded-full border border-white/20 shadow-2xl p-2 flex flex-col md:flex-row items-center gap-2">
+                            {/* Search */}
+                            <div className="flex-1 flex items-center pl-6 pr-4 w-full">
+                                <FaSearch className="text-white/40" />
                                 <input
                                     type="text"
                                     placeholder="Quest for..."
                                     value={searchQuery}
                                     onChange={(e) => setSearchQuery(e.target.value)}
-                                    className={inputClasses}
+                                    className="w-full bg-transparent border-none outline-none pl-4 py-3 text-white placeholder:text-white/30 font-bold text-sm h-font"
                                 />
                             </div>
 
-                            <div className="relative group">
-                                <FaClock className="absolute left-5 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-blue-500 transition-colors" />
+                            <div className="hidden md:block w-px h-8 bg-white/10" />
+
+                            {/* Duration */}
+                            <div className="relative flex items-center px-4 w-full md:w-auto">
+                                <FaClock className="absolute left-6 pointer-events-none text-white/40" />
                                 <select
                                     value={durationFilter}
                                     onChange={(e) => setDurationFilter(e.target.value)}
-                                    className={`${inputClasses} appearance-none pr-10`}
+                                    className="w-full bg-transparent border-none outline-none pl-8 py-3 text-white font-bold text-sm h-font appearance-none cursor-pointer hover:text-amber-400 transition-all"
                                 >
-                                    <option value="all">Any Duration</option>
-                                    <option value="short">Swift (1-3 days)</option>
-                                    <option value="medium">Classic (4-7 days)</option>
-                                    <option value="long">Grand (8+ days)</option>
+                                    <option value="all" className="text-slate-900">Any Duration</option>
+                                    <option value="short" className="text-slate-900">Swift (1-3 days)</option>
+                                    <option value="medium" className="text-slate-900">Classic (4-7 days)</option>
+                                    <option value="long" className="text-slate-900">Grand (8+ days)</option>
                                 </select>
                             </div>
 
-                            <div className="relative group">
-                                <FaTag className="absolute left-5 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-blue-500 transition-colors" />
+                            <div className="hidden md:block w-px h-8 bg-white/10" />
+
+                            {/* Price */}
+                            <div className="relative flex items-center px-4 w-full md:w-auto">
+                                <FaTag className="absolute left-6 pointer-events-none text-white/40" />
                                 <select
                                     value={priceFilter}
                                     onChange={(e) => setPriceFilter(e.target.value)}
-                                    className={`${inputClasses} appearance-none pr-10`}
+                                    className="w-full bg-transparent border-none outline-none pl-8 py-3 text-white font-bold text-sm h-font appearance-none cursor-pointer hover:text-amber-400 transition-all"
                                 >
-                                    <option value="all">Any Value</option>
-                                    <option value="budget">Essential (&lt;500)</option>
-                                    <option value="moderate">Premium (500-1500)</option>
-                                    <option value="luxury">Luxury (&gt;1500)</option>
+                                    <option value="all" className="text-slate-900">Any Value</option>
+                                    <option value="budget" className="text-slate-900">Essential (&lt;500)</option>
+                                    <option value="moderate" className="text-slate-900">Premium (500-1500)</option>
+                                    <option value="luxury" className="text-slate-900">Luxury (&gt;1500)</option>
                                 </select>
                             </div>
 
-                            <div className="relative group">
-                                <FaCompass className="absolute left-5 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-blue-500 transition-colors" />
+                            <div className="hidden md:block w-px h-8 bg-white/10" />
+
+                            {/* Category */}
+                            <div className="relative flex items-center pl-4 pr-8 w-full md:w-auto">
+                                <FaCompass className="absolute left-6 pointer-events-none text-white/40" />
                                 <select
                                     value={categoryFilter}
                                     onChange={(e) => setCategoryFilter(e.target.value)}
-                                    className={`${inputClasses} appearance-none pr-10`}
+                                    className="w-full bg-transparent border-none outline-none pl-8 py-3 text-white font-bold text-sm h-font appearance-none cursor-pointer hover:text-amber-400 transition-all"
                                 >
-                                    <option value="all">All Realms</option>
-                                    <option value="trekking">Trekking</option>
-                                    <option value="adventure">High Octane</option>
-                                    <option value="culture">Ancestral</option>
-                                    <option value="nature">Wilderness</option>
+                                    <option value="all" className="text-slate-900">All Realms</option>
+                                    <option value="trekking" className="text-slate-900">Trekking</option>
+                                    <option value="adventure" className="text-slate-900">High Octane</option>
+                                    <option value="culture" className="text-slate-900">Ancestral</option>
+                                    <option value="nature" className="text-slate-900">Wilderness</option>
                                 </select>
                             </div>
                         </div>
-                    </div>
 
-                    <div className="mt-6 flex justify-center gap-4">
-                        <span className="px-5 py-2 bg-slate-900 text-white text-[10px] font-black uppercase tracking-widest rounded-full shadow-xl shadow-slate-900/10 h-font">
-                            {filteredTours.length} Experiences Found
-                        </span>
-                    </div>
-                </motion.div>
+                        {/* Result Counter */}
+                        <div className="mt-8 flex justify-center">
+                            <div className="px-6 py-2 bg-white/5 backdrop-blur-md border border-white/10 rounded-full">
+                                <span className="text-white/80 text-[10px] font-black uppercase tracking-[0.3em] h-font">
+                                    {filteredTours.length} Experiences Found
+                                </span>
+                            </div>
+                        </div>
+                    </motion.div>
+                </div>
+            </div>
+
+            <div className="container mx-auto px-4 xl:px-20 relative z-10 pt-24">
 
                 {/* Tour Grid */}
                 {loading ? (
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 pt-12">
                         {[...Array(6)].map((_, i) => (
-                            <div key={i} className={`${i % 2 === 0 ? 'h-[500px]' : 'h-[420px]'} rounded-[40px] bg-slate-200 animate-pulse`} />
+                            <div key={i} className={`${i % 2 === 0 ? 'h-[500px]' : 'h-[420px]'} rounded-[30px] bg-slate-200 animate-pulse`} />
                         ))}
                     </div>
                 ) : currentTours.length > 0 ? (
@@ -253,7 +260,7 @@ function ToursContent() {
                     <motion.div
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
-                        className="text-center py-40 bg-white/40 backdrop-blur-md rounded-[48px] border border-white/60"
+                        className="text-center py-40 bg-white/40 backdrop-blur-md rounded-[30px] border border-white/60"
                     >
                         <div className="text-8xl mb-8 grayscale group-hover:grayscale-0 transition-all duration-500">🔭</div>
                         <h3 className="text-3xl font-black text-slate-900 tracking-tighter mb-4 h-font">No Adventures Discovered</h3>

@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { FaFilePdf, FaEnvelope, FaPhone, FaCheck, FaTimes, FaSearch } from 'react-icons/fa';
 import { getApplications, updateApplicationStatus, Application } from '@/lib/api-applications';
 import { toast } from 'react-hot-toast';
+import { CONFIG } from '@/lib/config';
 
 export default function AdminApplicationsPage() {
     const [applications, setApplications] = useState<Application[]>([]);
@@ -46,8 +47,8 @@ export default function AdminApplicationsPage() {
         : applications.filter(app => app.status === filterStatus);
 
     // API URL for full resume path
-    const API_URL = process.env.NEXT_PUBLIC_API_URL || 'https://backendtsa.travelsansr.com/api';
-    const BASE_URL = API_URL.replace('/api', '');
+    const API_URL = CONFIG.API_BASE_URL;
+    const BASE_URL = CONFIG.BACKEND_URL;
 
     if (loading) return <div className="p-8">Loading...</div>;
 

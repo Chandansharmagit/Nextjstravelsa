@@ -31,26 +31,47 @@ body {
   .text-balance {
     text-wrap: balance;
   }
+
+  .animate-spin-slow {
+    animation: spin 12s linear infinite;
+  }
+
+  @keyframes spin {
+    from {
+      transform: rotate(0deg);
+    }
+
+    to {
+      transform: rotate(360deg);
+    }
+  }
+
+  .p-font {
+    font-family: 'Playfair Display', serif;
+  }
+
+  .h-font {
+    font-family: 'Outfit', sans-serif;
+  }
 }
 
 /* Custom Scrollbar */
 ::-webkit-scrollbar {
-  width: 6px;
+  width: 8px;
 }
 
 ::-webkit-scrollbar-track {
-  background: transparent;
+  background: #f8fafc;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #ffffff;
+  background: #e2e8f0;
   border-radius: 100px;
-  border: 1px solid rgba(0, 0, 0, 0.05);
-  /* Subtle outline so it's visible on white */
+  border: 4px solid #f8fafc;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #f3f4f6;
+  background: #cbd5e1;
 }
 
 

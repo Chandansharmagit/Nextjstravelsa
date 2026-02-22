@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import { FaCloudUploadAlt, FaTimes } from 'react-icons/fa';
 import api from '@/lib/api';
+import { CONFIG } from '@/lib/config';
 
 interface ImageUploadProps {
     value: any | any[];
@@ -109,7 +110,7 @@ export default function ImageUpload({ value, onChange, label = "Upload Image", m
                 let imagePayload = data.image;
 
                 if (typeof imagePayload === 'string') {
-                    const url = imagePayload.startsWith('http') ? imagePayload : `https://backendtsa.travelsansr.com${imagePayload}`;
+                    const url = imagePayload.startsWith('http') ? imagePayload : `${CONFIG.BACKEND_URL}${imagePayload}`;
                     imagePayload = { path: url };
                 }
 

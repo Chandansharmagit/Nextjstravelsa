@@ -3,6 +3,9 @@
 import { useState, useEffect, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import axios from 'axios';
+import { CONFIG } from '@/lib/config';
+
+const API_URL = CONFIG.API_BASE_URL;
 
 function ResetPasswordContent() {
     const [email, setEmail] = useState('');
@@ -41,8 +44,8 @@ function ResetPasswordContent() {
 
         try {
             const response = await axios.post(
-                `${process.env.NEXT_PUBLIC_API_URL || 'https://backendtsa.travelsansr.com/api'}/auth/reset-password`,
-                { email, otp, newPassword }
+                `${API_URL}/auth/reset-password`,
+                { token: otp, password: newPassword } // Changed payload to match instruction's structure, mapping otp to token and newPassword to password
             );
 
             setMessage(response.data.message);

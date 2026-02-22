@@ -1,6 +1,7 @@
 "use client";
 
-import { FaPhone, FaEnvelope } from "react-icons/fa";
+import { FaPhone, FaEnvelope, FaFacebook, FaInstagram, FaTwitter, FaLinkedin } from 'react-icons/fa';
+import { HiOutlineMail } from 'react-icons/hi';
 
 const TopBar = () => {
     return (
@@ -17,11 +18,11 @@ const TopBar = () => {
                             <span>+977-9855051795</span>
                         </a>
                         <a
-                            href="mailto:info@travelsansr.com"
-                            className="flex items-center gap-2 hover:text-amber-400 transition-colors"
+                            href="mailto:info@travelsansar.com"
+                            className="flex items-center gap-2 hover:text-white transition-colors"
                         >
-                            <FaEnvelope size={10} />
-                            <span>info@travelsansr.com</span>
+                            <HiOutlineMail className="text-blue-400" />
+                            <span>info@travelsansar.com</span>
                         </a>
                     </div>
 

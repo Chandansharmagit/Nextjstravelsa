@@ -6,6 +6,7 @@ import { FaArrowLeft, FaImage, FaPlus, FaTimes } from 'react-icons/fa';
 import Link from 'next/link';
 import ImageUpload from '@/components/ImageUpload';
 import api from '@/lib/api';
+import { CONFIG } from '@/lib/config';
 
 export default function CreateDestinationPage() {
     const router = useRouter();
@@ -51,7 +52,7 @@ export default function CreateDestinationPage() {
 
                         let uploadedData = response.data.image;
                         if (typeof uploadedData === 'string') {
-                            const url = uploadedData.startsWith('http') ? uploadedData : `https://backendtsa.travelsansr.com${uploadedData}`;
+                            const url = uploadedData.startsWith('http') ? uploadedData : `${CONFIG.BACKEND_URL}${uploadedData}`;
                             uploadedData = { path: url };
                         }
                         processedImages.push(uploadedData);
