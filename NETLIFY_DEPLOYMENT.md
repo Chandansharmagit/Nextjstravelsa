@@ -35,7 +35,7 @@ npm install @netlify/plugin-nextjs --save-dev
 
 2. **Environment Variables**:
    - Add `NEXT_PUBLIC_API_URL` with your production backend URL
-   - Example: `https://backendtsa.travelsansar.com/api`
+   - Example: `https://backendtsa.travelsansr.com/api`
 
 3. **Deploy Settings**:
    - Enable automatic deployments from your main branch

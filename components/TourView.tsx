@@ -16,7 +16,7 @@ interface TourViewProps {
 export default function TourView({ tour, id, bookingSection }: TourViewProps) {
     const [activeTab, setActiveTab] = useState('overview');
     const title = tour.title || tour.name || "Untitled Tour";
-    const shareUrl = `https://www.travelsansar.com/tours/${id}`;
+    const shareUrl = `https://www.travelsansr.com/tours/${id}`;
 
     const infoCards = [
         { icon: <FaClock />, label: "Duration", value: `${tour.duration} Days` },

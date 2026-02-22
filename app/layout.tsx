@@ -20,12 +20,12 @@ import { CONFIG } from '../lib/config';
 
 export const metadata: Metadata = {
   metadataBase: new URL(CONFIG.SITE_URL),
-  title: 'Travel Sansar - Best Travel Agency in Nepal | Fly Now',
-  description: 'Experience the world with Travel Sansar. Discover handpicked destinations, adventure tours, and cultural experiences in Nepal, Bhutan, and Tibet.',
-  keywords: ['travel agency Nepal', 'tours in Nepal', 'trekking in Nepal', 'Bhutan tours', 'Tibet tours', 'Travel Sansar', 'adventure travel'],
-  authors: [{ name: 'Travel Sansar', url: CONFIG.SITE_URL }],
-  creator: 'Travel Sansar',
-  publisher: 'Travel Sansar',
+  title: 'Travel Sansr - Best Travel Agency in Nepal | Fly Now',
+  description: 'Experience the world with Travel Sansr. Discover handpicked destinations, adventure tours, and cultural experiences in Nepal, Bhutan, and Tibet.',
+  keywords: ['travel agency Nepal', 'tours in Nepal', 'trekking in Nepal', 'Bhutan tours', 'Tibet tours', 'Travel Sansr', 'adventure travel'],
+  authors: [{ name: 'Travel Sansr', url: CONFIG.SITE_URL }],
+  creator: 'Travel Sansr',
+  publisher: 'Travel Sansr',
   formatDetection: {
     email: false,
     address: false,
@@ -36,16 +36,16 @@ export const metadata: Metadata = {
     canonical: CONFIG.SITE_URL,
   },
   openGraph: {
-    title: 'Travel Sansar - Best Travel Agency in Nepal',
-    description: 'Experience the world with Travel Sansar. Best destinations, tours and experiences.',
+    title: 'Travel Sansr - Best Travel Agency in Nepal',
+    description: 'Experience the world with Travel Sansr. Best destinations, tours and experiences.',
     url: CONFIG.SITE_URL,
-    siteName: 'Travel Sansar',
+    siteName: 'Travel Sansr',
     images: [
       {
         url: CONFIG.LOGO_URL,
         width: 1200,
         height: 630,
-        alt: 'Travel Sansar Logo',
+        alt: 'Travel Sansr Logo',
       },
     ],
     locale: 'en_US',
@@ -53,8 +53,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Travel Sansar - Best Travel Agency in Nepal',
-    description: 'Experience the world with Travel Sansar. Best destinations, tours and experiences.',
+    title: 'Travel Sansr - Best Travel Agency in Nepal',
+    description: 'Experience the world with Travel Sansr. Best destinations, tours and experiences.',
     images: [CONFIG.LOGO_URL],
   },
   robots: {
@@ -108,34 +108,67 @@ export default function RootLayout({
             <script
               type="application/ld+json"
               dangerouslySetInnerHTML={{
-                __html: JSON.stringify({
-                  "@context": "https://schema.org",
-                  "@type": "Organization",
-                  "name": "Travel Sansar",
-                  "url": CONFIG.SITE_URL,
-                  "logo": CONFIG.LOGO_URL,
-                  "sameAs": [
-                    "https://www.facebook.com/TravelSansar",
-                    "https://www.instagram.com/travel_sansar",
-                    "https://twitter.com/travel_sansar"
-                  ]
-                }),
-              }}
-            />
-            <script
-              type="application/ld+json"
-              dangerouslySetInnerHTML={{
-                __html: JSON.stringify({
-                  "@context": "https://schema.org",
-                  "@type": "WebSite",
-                  "name": "Travel Sansar",
-                  "url": CONFIG.SITE_URL,
-                  "potentialAction": {
-                    "@type": "SearchAction",
-                    "target": `${CONFIG.SITE_URL}/search?query={search_term_string}`,
-                    "query-input": "required name=search_term_string"
+                __html: JSON.stringify([
+                  {
+                    "@context": "https://schema.org",
+                    "@type": "Organization",
+                    "name": "Travel Sansar",
+                    "url": CONFIG.SITE_URL,
+                    "logo": CONFIG.LOGO_URL,
+                    "sameAs": [
+                      "https://www.facebook.com/TravelSansr",
+                      "https://www.instagram.com/travel_sansr",
+                      "https://twitter.com/travel_sansr"
+                    ]
+                  },
+                  {
+                    "@context": "https://schema.org",
+                    "@type": "WebSite",
+                    "alternateName": ["TravelSansr", "TSR Nepal"],
+                    "url": CONFIG.SITE_URL,
+                    "potentialAction": {
+                      "@type": "SearchAction",
+                      "target": `${CONFIG.SITE_URL}/search?query={search_term_string}`,
+                      "query-input": "required name=search_term_string"
+                    }
+                  },
+                  {
+                    "@context": "https://schema.org",
+                    "@type": "ItemList",
+                    "itemListElement": [
+                      {
+                        "@type": "SiteNavigationElement",
+                        "position": 1,
+                        "name": "Explore Destinations",
+                        "url": `${CONFIG.SITE_URL}/destinations`
+                      },
+                      {
+                        "@type": "SiteNavigationElement",
+                        "position": 2,
+                        "name": "Adventure Tours",
+                        "url": `${CONFIG.SITE_URL}/tours`
+                      },
+                      {
+                        "@type": "SiteNavigationElement",
+                        "position": 3,
+                        "name": "Expedition Planner",
+                        "url": `${CONFIG.SITE_URL}/expedition-planner`
+                      },
+                      {
+                        "@type": "SiteNavigationElement",
+                        "position": 4,
+                        "name": "Our Services",
+                        "url": `${CONFIG.SITE_URL}/services`
+                      },
+                      {
+                        "@type": "SiteNavigationElement",
+                        "position": 5,
+                        "name": "Contact Us",
+                        "url": `${CONFIG.SITE_URL}/contact`
+                      }
+                    ]
                   }
-                }),
+                ]),
               }}
             />
             {children}

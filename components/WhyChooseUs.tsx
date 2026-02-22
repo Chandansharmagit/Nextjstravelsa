@@ -52,7 +52,7 @@ const WhyChooseUs = () => {
                     viewport={{ once: true }}
                     className="text-4xl md:text-5xl font-bold text-primary mb-4"
                 >
-                    Why Choose Travel Sansar?
+                    Why Choose Travel Sansr?
                 </motion.h2>
                 <motion.p
                     initial={{ opacity: 0, y: 20 }}

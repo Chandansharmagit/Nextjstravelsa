@@ -44,7 +44,7 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
 
         if (!tour) {
             return {
-                title: 'Tour Not Found | Travel Sansar',
+                title: 'Tour Not Found | Travel Sansr',
                 openGraph: {
                     images: [CONFIG.LOGO_URL]
                 }
@@ -53,8 +53,8 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
 
         const rawImage = tour.images?.[0]?.url || tour.images?.[0] || tour.image;
         const imageSrc = ensureAbsoluteUrl(typeof rawImage === 'string' ? rawImage : rawImage?.path || rawImage?.url);
-        const title = `${tour.title || tour.name} - Travel Sansar`;
-        const description = tour.description?.substring(0, 160) || `Experience ${tour.title || tour.name} with Travel Sansar.`;
+        const title = `${tour.title || tour.name} - Travel Sansr`;
+        const description = tour.description?.substring(0, 160) || `Experience ${tour.title || tour.name} with Travel Sansr.`;
 
         return {
             title,
@@ -72,7 +72,7 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
                 ],
                 type: 'website',
                 url: `${CONFIG.SITE_URL}/tours/${id}`,
-                siteName: 'Travel Sansar'
+                siteName: 'Travel Sansr'
             },
             twitter: {
                 card: 'summary_large_image',
@@ -83,7 +83,7 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
         };
     } catch (e) {
         return {
-            title: 'Travel Sansar',
+            title: 'Travel Sansr',
             description: 'Best Travel Agency in Nepal',
             openGraph: {
                 images: [CONFIG.LOGO_URL]

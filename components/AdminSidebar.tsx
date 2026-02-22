@@ -28,7 +28,7 @@ export default function AdminSidebar() {
             <div className="p-6 border-b border-gray-800 flex-shrink-0">
                 <Link href="/admin">
                     <h1 className="text-2xl font-bold tracking-wider">
-                        TRAVEL<span className="text-secondary">SANSAR</span>
+                        TRAVEL<span className="text-secondary">SANSR</span>
                     </h1>
                     <p className="text-xs text-gray-500 mt-1 uppercase tracking-widest">Admin Panel</p>
                 </Link>

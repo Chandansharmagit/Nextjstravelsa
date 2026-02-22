@@ -9,7 +9,7 @@ const Footer = () => {
                 {/* Brand */}
                 <div>
                     <h2 className="text-3xl font-bold tracking-wider mb-4">
-                        TRAVEL<span className="text-secondary">SANSAR</span>
+                        TRAVEL<span className="text-secondary">SANSR</span>
                     </h2>
                     <p className="text-gray-300 text-sm leading-relaxed mb-6">
                         Your trusted partner for unforgettable journeys. Explore the world with confidence and comfort.
@@ -25,7 +25,7 @@ const Footer = () => {
                         </li>
                         <li className="flex items-center gap-3 text-gray-400">
                             <FaEnvelope className="flex-shrink-0 text-secondary" />
-                            <span>info@travelsansar.com</span>
+                            <span>info@travelsansr.com</span>
                         </li>
                     </ul>
                 </div>
@@ -76,12 +76,12 @@ const Footer = () => {
             {/* Large Footer Typography */}
             <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-full text-center pointer-events-none select-none overflow-hidden leading-none z-0">
                 <h1 className="text-[12vw] md:text-[150px] font-black text-white/10 tracking-[10px] md:tracking-[20px] whitespace-nowrap uppercase italic ml-[10px] md:ml-[20px]">
-                    TRAVEL SANSAR
+                    TRAVEL SANSR
                 </h1>
             </div>
 
             <div className="border-t border-white/10 pt-8 pb-8 text-center text-gray-400 text-sm relative z-10 glass-effect-light">
-                <p>&copy; {new Date().getFullYear()} Travel Sansar. All rights reserved.</p>
+                <p>&copy; {new Date().getFullYear()} Travel Sansr. All rights reserved.</p>
                 <div className="flex items-center justify-center gap-4 mt-4 text-xs font-mono text-gray-500">
                     <span className="flex items-center gap-2">
                         Designed & Developed by <span className="text-secondary font-bold">Chandan Sharma</span>

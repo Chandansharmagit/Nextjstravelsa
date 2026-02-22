@@ -41,7 +41,7 @@ const ContactPage = () => {
         {
             icon: <FaEnvelope className="text-3xl" />,
             title: "Email",
-            details: "info@travelsansar.com",
+            details: "info@travelsansr.com",
             subdetails: "We reply within 24 hours",
             color: "bg-red-500"
         },

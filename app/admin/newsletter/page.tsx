@@ -315,7 +315,7 @@ export default function NewsletterAdmin() {
                                 <div className="bg-black/50 p-4 rounded-xl font-mono text-xs md:text-sm overflow-x-auto">
                                     <p className="text-gray-500 mb-2"># Get all subscribers (Authentication required)</p>
                                     <p className="break-all">
-                                        curl -X GET https://travelsansar.com/api/newsletter \<br />
+                                        curl -X GET https://travelsansr.com/api/newsletter \\\u003cbr /\u003e
                                         &nbsp;&nbsp;-H "x-api-key: YOUR_API_KEY"
                                     </p>
                                 </div>

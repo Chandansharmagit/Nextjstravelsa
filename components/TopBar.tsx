@@ -18,11 +18,11 @@ const TopBar = () => {
                             <span>+977-9855051795</span>
                         </a>
                         <a
-                            href="mailto:info@travelsansar.com"
-                            className="flex items-center gap-2 hover:text-white transition-colors"
+                            href="mailto:info@travelsansr.com"
+                            className="flex items-center gap-2"
                         >
-                            <HiOutlineMail className="text-blue-400" />
-                            <span>info@travelsansar.com</span>
+                            <HiOutlineMail className="text-secondary text-lg" />
+                            <span>info@travelsansr.com</span>
                         </a>
                     </div>
 

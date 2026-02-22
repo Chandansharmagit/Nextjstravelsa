@@ -140,7 +140,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                                 animate={{ opacity: 1 }}
                                 className="text-2xl font-black tracking-tighter"
                             >
-                                TRAVEL<span className="text-secondary group-hover:text-orange-400 transition-colors">SANSAR</span>
+                                TRAVEL<span className="text-secondary group-hover:text-orange-400 transition-colors">SANSR</span>
                             </motion.h1>
                             <p className="text-[10px] uppercase tracking-[0.2em] text-white/40 mt-1 font-bold">Professional Admin</p>
                         </Link>
