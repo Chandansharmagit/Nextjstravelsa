@@ -1,4 +1,4 @@
-import Hero from '@/components/Hero';
+import HeroSlider from '@/components/HeroSlider';
 import DestinationCard from '@/components/DestinationCard';
 import TourCard from '@/components/TourCard';
 import HowItWorks from '@/components/HowItWorks';
@@ -12,9 +12,7 @@ import TrustedPartners from '@/components/TrustedPartners';
 import FeaturedGuides from '@/components/FeaturedGuides';
 import FeaturedServices from '@/components/FeaturedServices';
 import { TiltCard } from '@/components/TiltCard';
-import ApproachSection from '@/components/ApproachSection';
 import LeadCaptureForm from '@/components/LeadCaptureForm';
-import MapSection from '@/components/MapSection';
 export const dynamic = 'force-dynamic';
 
 // Use environment variable for API URL
@@ -105,7 +103,7 @@ export default async function Home() {
 
   return (
     <main>
-      <Hero />
+      <HeroSlider />
 
       {/* Trusted Partners */}
       <TrustedPartners />
@@ -154,12 +152,6 @@ export default async function Home() {
 
       {/* How It Works */}
       <HowItWorks />
-
-      {/* Our Approach */}
-      <ApproachSection />
-
-      {/* Interactive Map Trip Planner */}
-      <MapSection />
 
       {/* Popular Tours */}
       <section className="py-20 px-4 xl:px-20 bg-light">
