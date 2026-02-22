@@ -181,42 +181,42 @@ const HoliCelebration = () => {
                             animate={{ scale: 1, opacity: 1, y: 0 }}
                             exit={{ scale: 0.8, opacity: 0, y: 50 }}
                             transition={{ type: "spring", damping: 25, stiffness: 200 }}
-                            className="relative w-full max-w-7xl h-[85vh] bg-white rounded-[50px] shadow-[0_50px_100px_-20px_rgba(0,0,0,0.5)] overflow-hidden flex flex-col md:flex-row shadow-[0_0_80px_rgba(37,99,235,0.1)]"
+                            className="relative w-full max-w-7xl h-auto max-h-[90vh] bg-white rounded-[30px] md:rounded-[50px] shadow-[0_50px_100px_-20px_rgba(0,0,0,0.5)] overflow-hidden flex flex-col md:flex-row shadow-[0_0_80px_rgba(37,99,235,0.1)]"
                         >
                             <button
                                 onClick={() => setShowModal(false)}
-                                className="absolute top-8 right-8 text-slate-300 hover:text-slate-900 transition-colors z-30"
+                                className="absolute top-4 right-4 md:top-8 md:right-8 text-slate-400 hover:text-slate-900 transition-colors z-[100]"
                             >
-                                <IoCloseCircleOutline size={48} />
+                                <IoCloseCircleOutline size={32} className="md:w-12 md:h-12" />
                             </button>
 
                             {/* Left Side: Happy Holi & Offer */}
-                            <div className="flex-1 p-8 md:p-12 flex flex-col bg-gradient-to-br from-white to-slate-50 relative overflow-hidden">
+                            <div className="flex-1 p-6 md:p-12 flex flex-col bg-gradient-to-br from-white to-slate-50 relative overflow-hidden min-h-[400px] md:min-h-[auto] overflow-y-auto">
                                 <div className="absolute -left-20 -top-20 w-64 h-64 bg-pink-100/30 rounded-full blur-3xl" />
 
                                 <div className="relative z-10 flex flex-col h-full overflow-y-auto custom-scrollbar pr-2">
                                     <div className="flex-1 flex flex-col justify-center py-4">
                                         <div className="flex items-center justify-center md:justify-start gap-3 text-amber-600 font-black text-[10px] md:text-xs uppercase tracking-[0.2em] mb-4">
                                             <span className="w-6 h-px bg-amber-600/30"></span>
-                                            Team Travel Sansar Wishes You
+                                            Team Travel Sansr Wishes You
                                             <span className="w-6 h-px bg-amber-600/30"></span>
                                         </div>
 
-                                        <div className="mb-4 inline-block text-center md:text-left">
+                                        <div className="mb-2 inline-block text-center md:text-left">
                                             <motion.div
                                                 animate={{
                                                     rotate: [0, 15, -15, 0],
                                                     scale: [1, 1.1, 1],
                                                 }}
                                                 transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
-                                                className="text-6xl md:text-8xl"
+                                                className="text-4xl md:text-8xl"
                                             >
                                                 🎨
                                             </motion.div>
                                         </div>
 
                                         <motion.h2
-                                            className="text-6xl md:text-8xl font-black tracking-tighter text-slate-900 mb-4 h-font leading-[0.8] text-center md:text-left"
+                                            className="text-4xl md:text-8xl font-black tracking-tighter text-slate-900 mb-2 md:mb-4 h-font leading-[0.8] text-center md:text-left"
                                             initial={{ x: -20, opacity: 0 }}
                                             animate={{ x: 0, opacity: 1 }}
                                             transition={{ delay: 0.2 }}
@@ -230,7 +230,7 @@ const HoliCelebration = () => {
                                             transition={{ delay: 0.3 }}
                                             className="space-y-4 text-center md:text-left"
                                         >
-                                            <p className="text-slate-500 font-bold text-lg md:text-xl p-font italic max-w-xl">
+                                            <p className="text-slate-500 font-bold text-base md:text-xl p-font italic max-w-xl">
                                                 May your life be as colorful and joyful as the festival of colors.
                                             </p>
                                         </motion.div>
@@ -261,7 +261,7 @@ const HoliCelebration = () => {
                             </div>
 
                             {/* Right Side: Political Support */}
-                            <div className="flex-1 bg-blue-600 p-12 md:p-16 flex flex-col justify-center text-white relative overflow-hidden">
+                            <div className="flex-1 bg-blue-600 p-8 md:p-16 flex flex-col justify-center text-white relative overflow-hidden overflow-y-auto">
                                 {/* Decorative elements */}
                                 <div className="absolute -right-20 -bottom-20 w-[600px] h-[600px] bg-blue-500 rounded-full blur-[120px] opacity-50" />
 
@@ -281,10 +281,10 @@ const HoliCelebration = () => {
 
                                     <div className="space-y-8">
                                         <div className="space-y-4">
-                                            <p className="text-blue-100 font-black text-2xl md:text-3xl uppercase tracking-tighter h-font">
+                                            <p className="text-blue-100 font-black text-xl md:text-3xl uppercase tracking-tighter h-font">
                                                 Building a New Nepal
                                             </p>
-                                            <h4 className="text-5xl md:text-7xl font-black tracking-tighter h-font leading-tight italic">
+                                            <h4 className="text-4xl md:text-7xl font-black tracking-tighter h-font leading-tight italic">
                                                 Change is <br /> Possible
                                             </h4>
 
@@ -295,8 +295,8 @@ const HoliCelebration = () => {
 
                                         <div className="group/btn relative inline-block">
                                             <div className="absolute -inset-1 bg-white rounded-[25px] blur opacity-25 group-hover/btn:opacity-50 transition duration-1000 group-hover/btn:duration-200"></div>
-                                            <div className="relative inline-block px-12 py-6 bg-white rounded-[25px] shadow-[0_20px_50px_rgba(0,0,0,0.2)] transform hover:scale-105 transition-all duration-500">
-                                                <p className="text-blue-600 font-black text-3xl md:text-4xl tracking-[0.2em] uppercase h-font flex items-center justify-center gap-4">
+                                            <div className="relative inline-block px-8 py-4 md:px-12 md:py-6 bg-white rounded-[20px] md:rounded-[25px] shadow-[0_20px_50px_rgba(0,0,0,0.2)] transform hover:scale-105 transition-all duration-500">
+                                                <p className="text-blue-600 font-black text-xl md:text-4xl tracking-[0.2em] uppercase h-font flex items-center justify-center gap-4">
                                                     RSP - Ghanti
                                                 </p>
                                             </div>
