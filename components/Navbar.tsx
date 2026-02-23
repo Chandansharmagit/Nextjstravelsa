@@ -36,7 +36,7 @@ const Navbar = () => {
         <>
             {/* Fixed Navbar */}
             <header className={`
-                fixed top-10 left-0 right-0 z-40
+                fixed top-10 left-0 right-0 z-[2001]
                 bg-white/95 backdrop-blur-sm
                 border-b border-slate-200
                 transition-all duration-300

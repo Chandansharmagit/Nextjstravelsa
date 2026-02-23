@@ -5,7 +5,7 @@ import { HiOutlineMail } from 'react-icons/hi';
 
 const TopBar = () => {
     return (
-        <div className="fixed top-0 left-0 right-0 z-50 bg-slate-900 text-white">
+        <div className="fixed top-0 left-0 right-0 z-[2000] bg-slate-900 text-white">
             <div className="max-w-[1800px] mx-auto px-6 lg:px-12">
                 <div className="flex items-center justify-between h-10 text-xs">
                     {/* Left: Contact Info */}

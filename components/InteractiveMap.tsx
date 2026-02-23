@@ -125,7 +125,7 @@ const InteractiveMap = ({ destinations, plannedPins, onAddPin, onRemovePin, sear
     return (
         <div className="relative h-full w-full overflow-hidden">
             {/* Custom Layer Toggle - Premium Floating UI */}
-            <div className="absolute top-4 right-4 z-[1000] flex flex-col gap-2">
+            <div className="absolute top-4 right-4 z-[40] flex flex-col gap-2">
                 <button
                     onClick={() => setMapMode('standard')}
                     className={`p-3 rounded-2xl shadow-2xl transition-all border-2 ${mapMode === 'standard' ? 'bg-slate-900 text-white border-white' : 'bg-white text-slate-500 border-transparent hover:bg-slate-50'}`}

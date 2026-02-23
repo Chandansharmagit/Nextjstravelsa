@@ -101,122 +101,76 @@ function ToursContent() {
 
     return (
         <main className="bg-white min-h-screen pb-32 overflow-x-hidden relative font-sans">
-            {/* Premium Hero Section */}
-            <div className="relative h-[75vh] min-h-[600px] w-full flex flex-col items-center justify-center overflow-hidden">
-                {/* Background Image - High-Res Himalayas */}
-                <div className="absolute inset-0 z-0">
+            {/* Premium Hero Section with Layered Animation */}
+            <div className="relative h-[85vh] min-h-[700px] w-full flex flex-col items-center justify-center overflow-hidden bg-slate-900 group/hero">
+                {/* Layer 1: Background Mountains (Deep) */}
+                <div className="absolute inset-0 z-0 scale-105">
                     <img
                         src="https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&q=80&w=2000"
-                        alt="Tours Hero"
-                        className="absolute inset-0 w-full h-full object-cover"
+                        alt="Tours Hero Background"
+                        className="absolute inset-0 w-full h-full object-cover opacity-60"
                     />
-                    <div className="absolute inset-0 bg-black/10" />
-                    <div className="absolute inset-0 bg-gradient-to-t from-white via-white/40 to-transparent" />
+                    <div className="absolute inset-0 bg-gradient-to-b from-blue-900/40 via-transparent to-white" />
                 </div>
 
-                {/* Hero Content */}
-                <div className="relative z-10 text-center px-4 pt-10 w-full max-w-6xl">
-                    <motion.h1
-                        initial={{ opacity: 0, y: -60 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ duration: 1.2, ease: [0.22, 1, 0.36, 1] }}
-                        className="text-white text-6xl md:text-8xl lg:text-9xl font-black tracking-tighter uppercase mb-8 drop-shadow-[0_20px_60px_rgba(0,0,0,0.6)] h-font leading-[0.85]"
-                    >
-                        Epic <br className="hidden md:block" /> Adventures
-                    </motion.h1>
-
-                    {/* Integrated Search & Filter System */}
+                {/* Layer 2: Animated Text (Middle) */}
+                <div className="relative z-10 w-full max-w-7xl px-4 flex flex-col items-center">
                     <motion.div
-                        initial={{ opacity: 0, scale: 0.9 }}
-                        animate={{ opacity: 1, scale: 1 }}
-                        transition={{ delay: 0.6, duration: 0.8 }}
-                        className="max-w-5xl mx-auto"
+                        initial={{ opacity: 0, y: 100 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        whileHover={{ y: -20, scale: 1.02 }}
+                        transition={{
+                            duration: 1.2,
+                            ease: [0.22, 1, 0.36, 1]
+                        }}
+                        className="relative cursor-default select-none transition-transform duration-700 ease-out group-hover/hero:-translate-y-10"
                     >
-                        {/* Compact Breadcrumb label */}
-                        <div className="flex items-center justify-center gap-2 mb-4 text-white/60 font-black text-[10px] tracking-[0.4em] uppercase">
-                            <Link href="/" className="hover:text-amber-400 transition-all">Home</Link>
-                            <span>/</span>
-                            <span className="text-white/90">Expedition List</span>
-                        </div>
+                        <h1 className="text-white text-[15vw] md:text-[12vw] lg:text-[10vw] font-black tracking-tighter uppercase leading-[0.8] drop-shadow-[0_20px_60px_rgba(0,0,0,0.8)] h-font text-center">
+                            Epic <br className="hidden md:block" /> Adventures
+                        </h1>
 
-                        {/* Glassmorphic Multi-Filter Bar */}
-                        <div className="bg-white/10 backdrop-blur-3xl rounded-[30px] md:rounded-full border border-white/20 shadow-2xl p-2 flex flex-col md:flex-row items-center gap-2">
-                            {/* Search */}
-                            <div className="flex-1 flex items-center pl-6 pr-4 w-full">
-                                <FaSearch className="text-white/40" />
-                                <input
-                                    type="text"
-                                    placeholder="Quest for..."
-                                    value={searchQuery}
-                                    onChange={(e) => setSearchQuery(e.target.value)}
-                                    className="w-full bg-transparent border-none outline-none pl-4 py-3 text-white placeholder:text-white/30 font-bold text-sm h-font"
-                                />
-                            </div>
+                        {/* Glowing Atmosphere behind text */}
+                        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[80%] h-[40%] bg-blue-500/20 blur-[120px] rounded-full -z-10 animate-pulse" />
+                    </motion.div>
+                </div>
 
-                            <div className="hidden md:block w-px h-8 bg-white/10" />
+                {/* Layer 3: Foreground Mountains (Over the text) */}
+                <div className="absolute inset-0 z-20 pointer-events-none">
+                    <img
+                        src="https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&q=80&w=2000"
+                        alt="Tours Hero Foreground"
+                        className="absolute inset-0 w-full h-full object-cover"
+                        style={{
+                            maskImage: 'linear-gradient(to top, black 40%, transparent 85%)',
+                            WebkitMaskImage: 'linear-gradient(to top, black 40%, transparent 85%)',
+                        }}
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-white via-transparent to-transparent opacity-80" />
+                </div>
 
-                            {/* Duration */}
-                            <div className="relative flex items-center px-4 w-full md:w-auto">
-                                <FaClock className="absolute left-6 pointer-events-none text-white/40" />
-                                <select
-                                    value={durationFilter}
-                                    onChange={(e) => setDurationFilter(e.target.value)}
-                                    className="w-full bg-transparent border-none outline-none pl-8 py-3 text-white font-bold text-sm h-font appearance-none cursor-pointer hover:text-amber-400 transition-all"
-                                >
-                                    <option value="all" className="text-slate-900">Any Duration</option>
-                                    <option value="short" className="text-slate-900">Swift (1-3 days)</option>
-                                    <option value="medium" className="text-slate-900">Classic (4-7 days)</option>
-                                    <option value="long" className="text-slate-900">Grand (8+ days)</option>
-                                </select>
-                            </div>
+                {/* Bottom Fade to 0 Opacity */}
+                <div className="absolute inset-x-0 bottom-0 h-40 bg-gradient-to-t from-white to-transparent z-40" />
 
-                            <div className="hidden md:block w-px h-8 bg-white/10" />
-
-                            {/* Price */}
-                            <div className="relative flex items-center px-4 w-full md:w-auto">
-                                <FaTag className="absolute left-6 pointer-events-none text-white/40" />
-                                <select
-                                    value={priceFilter}
-                                    onChange={(e) => setPriceFilter(e.target.value)}
-                                    className="w-full bg-transparent border-none outline-none pl-8 py-3 text-white font-bold text-sm h-font appearance-none cursor-pointer hover:text-amber-400 transition-all"
-                                >
-                                    <option value="all" className="text-slate-900">Any Value</option>
-                                    <option value="budget" className="text-slate-900">Essential (&lt;500)</option>
-                                    <option value="moderate" className="text-slate-900">Premium (500-1500)</option>
-                                    <option value="luxury" className="text-slate-900">Luxury (&gt;1500)</option>
-                                </select>
-                            </div>
-
-                            <div className="hidden md:block w-px h-8 bg-white/10" />
-
-                            {/* Category */}
-                            <div className="relative flex items-center pl-4 pr-8 w-full md:w-auto">
-                                <FaCompass className="absolute left-6 pointer-events-none text-white/40" />
-                                <select
-                                    value={categoryFilter}
-                                    onChange={(e) => setCategoryFilter(e.target.value)}
-                                    className="w-full bg-transparent border-none outline-none pl-8 py-3 text-white font-bold text-sm h-font appearance-none cursor-pointer hover:text-amber-400 transition-all"
-                                >
-                                    <option value="all" className="text-slate-900">All Realms</option>
-                                    <option value="trekking" className="text-slate-900">Trekking</option>
-                                    <option value="adventure" className="text-slate-900">High Octane</option>
-                                    <option value="culture" className="text-slate-900">Ancestral</option>
-                                    <option value="nature" className="text-slate-900">Wilderness</option>
-                                </select>
-                            </div>
-                        </div>
-
-                        {/* Result Counter */}
-                        <div className="mt-8 flex justify-center">
-                            <div className="px-6 py-2 bg-white/5 backdrop-blur-md border border-white/10 rounded-full">
-                                <span className="text-white/80 text-[10px] font-black uppercase tracking-[0.3em] h-font">
-                                    {filteredTours.length} Experiences Found
-                                </span>
-                            </div>
+                {/* Result Counter (Positioned at the bottom to avoid header overlap) */}
+                <div className="absolute bottom-20 left-0 right-0 z-30 flex justify-center pointer-events-none">
+                    <motion.div
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: 1.2 }}
+                        className="pointer-events-auto"
+                    >
+                        <div className="px-8 py-2.5 bg-white/5 backdrop-blur-xl border border-white/10 rounded-full">
+                            <span className="text-white/60 text-[10px] font-black uppercase tracking-[0.4em] h-font">
+                                {filteredTours.length} Experiences Found
+                            </span>
                         </div>
                     </motion.div>
                 </div>
             </div>
+
+
+
+
 
             <div className="container mx-auto px-4 xl:px-20 relative z-10 pt-24">
 
