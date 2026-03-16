@@ -20,7 +20,7 @@ const slides = [
     },
     {
         id: 2,
-        image: 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?auto=format&fit=crop&w=2000&q=90',
+        image: 'https://images.unsplash.com/photo-1611516491426-03025e6043c8?q=80&w=1933&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
         tag: 'Cultural Immersion',
         headline: 'Where Ancient',
         headlineAccent: 'Meets Alive.',
@@ -42,7 +42,18 @@ const slides = [
     },
     {
         id: 4,
-        image: 'https://images.unsplash.com/photo-1516483638261-f4dbaf036963?auto=format&fit=crop&w=2000&q=90',
+        image: 'https://images.unsplash.com/photo-1511215579272-6192432f83bc?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+        tag: 'Wildlife Safaris',
+        headline: 'Into the Heart',
+        headlineAccent: 'of the Wild.',
+        sub: 'Encounter one-horned rhinos and Bengal tigers in Chitwan National Park.',
+        cta: 'Book a Safari',
+        ctaLink: '/tours',
+        badge: '🐅  Home of the Royal Bengal Tiger',
+    },
+    {
+        id: 5,
+        image: 'https://plus.unsplash.com/premium_photo-1771517088930-37cc4fda6447?q=80&w=1228&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
         tag: 'Wildlife Safaris',
         headline: 'Into the Heart',
         headlineAccent: 'of the Wild.',
@@ -163,7 +174,7 @@ export default function HeroSlider() {
                             initial={{ opacity: 0, y: 30 }}
                             animate={{ opacity: 1, y: 0 }}
                             transition={{ delay: 0.25, duration: 0.75 }}
-                            className="text-4xl md:text-5xl xl:text-6xl font-black text-white leading-tight tracking-tight mb-1"
+                            className="text-5xl md:text-7xl xl:text-8xl font-black text-white leading-tight tracking-tight mb-1"
                             style={{ fontFamily: 'var(--font-playfair), serif' }}
                         >
                             {slide.headline}
@@ -172,7 +183,7 @@ export default function HeroSlider() {
                             initial={{ opacity: 0, y: 30 }}
                             animate={{ opacity: 1, y: 0 }}
                             transition={{ delay: 0.35, duration: 0.75 }}
-                            className="text-4xl md:text-5xl xl:text-6xl font-black leading-tight tracking-tight mb-5"
+                            className="text-5xl md:text-7xl xl:text-8xl font-black leading-tight tracking-tight mb-5"
                             style={{
                                 fontFamily: 'var(--font-playfair), serif',
                                 background: 'linear-gradient(135deg, #f97316 0%, #fb923c 50%, #fbbf24 100%)',
@@ -188,7 +199,7 @@ export default function HeroSlider() {
                             initial={{ opacity: 0, y: 20 }}
                             animate={{ opacity: 1, y: 0 }}
                             transition={{ delay: 0.45, duration: 0.65 }}
-                            className="text-base md:text-lg text-white/75 font-medium max-w-xl mx-auto leading-relaxed mb-3"
+                            className="text-lg md:text-2xl text-white/90 font-medium max-w-2xl mx-auto leading-relaxed mb-3 drop-shadow-lg"
                         >
                             {slide.sub}
                         </motion.p>

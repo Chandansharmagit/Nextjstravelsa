@@ -29,7 +29,7 @@ const TopBar = () => {
                     {/* Center: Announcement */}
                     <div className="flex-1 md:flex-none text-center">
                         <span className="font-semibold">
-                            🎄 Special Holiday Offers Available! Book Your Dream Trip Now
+                            ☀️ Spring/Summer Adventures Are Here! Book Now & Save Up to 30% on Your Next Trip!
                         </span>
                     </div>
 

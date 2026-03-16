@@ -4,7 +4,7 @@ import './globals.css';
 import LayoutWrapper from '@/components/LayoutWrapper';
 import { AuthProvider } from '@/context/AuthContext';
 import NewsletterPopup from '@/components/NewsletterPopup';
-import HoliCelebration from '@/components/HoliCelebration';
+import SeasonalOffer from '@/components/SeasonalOffer';
 
 // Load fonts
 const inter = Inter({ subsets: ['latin'], variable: '--font-inter' });
@@ -20,12 +20,12 @@ import { CONFIG } from '../lib/config';
 
 export const metadata: Metadata = {
   metadataBase: new URL(CONFIG.SITE_URL),
-  title: 'Travel Sansr - Best Travel Agency in Nepal | Fly Now',
+  title: 'Travel Sansar - Best Travel Agency in Nepal | Fly Now',
   description: 'Experience the world with Travel Sansr. Discover handpicked destinations, adventure tours, and cultural experiences in Nepal, Bhutan, and Tibet.',
   keywords: ['travel agency Nepal', 'tours in Nepal', 'trekking in Nepal', 'Bhutan tours', 'Tibet tours', 'Travel Sansr', 'adventure travel'],
-  authors: [{ name: 'Travel Sansr', url: CONFIG.SITE_URL }],
-  creator: 'Travel Sansr',
-  publisher: 'Travel Sansr',
+  authors: [{ name: 'Travel Sansar', url: CONFIG.SITE_URL }],
+  creator: 'Travel Sansar',
+  publisher: 'Travel Sansar',
   formatDetection: {
     email: false,
     address: false,
@@ -36,16 +36,16 @@ export const metadata: Metadata = {
     canonical: CONFIG.SITE_URL,
   },
   openGraph: {
-    title: 'Travel Sansr - Best Travel Agency in Nepal',
-    description: 'Experience the world with Travel Sansr. Best destinations, tours and experiences.',
+    title: 'Travel Sansar - Best Travel Agency in Nepal',
+    description: 'Experience the world with Travel Sansar. Best destinations, tours and experiences.',
     url: CONFIG.SITE_URL,
-    siteName: 'Travel Sansr',
+    siteName: 'Travel Sansar',
     images: [
       {
         url: CONFIG.LOGO_URL,
         width: 1200,
         height: 630,
-        alt: 'Travel Sansr Logo',
+        alt: 'Travel Sansar Logo',
       },
     ],
     locale: 'en_US',
@@ -53,8 +53,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Travel Sansr - Best Travel Agency in Nepal',
-    description: 'Experience the world with Travel Sansr. Best destinations, tours and experiences.',
+    title: 'Travel Sansar - Best Travel Agency in Nepal',
+    description: 'Experience the world with Travel Sansar. Best destinations, tours and experiences.',
     images: [CONFIG.LOGO_URL],
   },
   robots: {
@@ -68,6 +68,10 @@ export const metadata: Metadata = {
   verification: {
     google: 'GNquOv-LsT90SUtmNbAoy9vkdt3I1mBnnbLZYppMaf4',
   },
+  other: {
+    'apple-mobile-web-app-title': 'Travel Sansar',
+    'application-name': 'Travel Sansar',
+  }
 };
 
 import { Toaster } from 'react-hot-toast';
@@ -112,23 +116,43 @@ export default function RootLayout({
                   {
                     "@context": "https://schema.org",
                     "@type": "Organization",
+                    "@id": `${CONFIG.SITE_URL}/#organization`,
                     "name": "Travel Sansar",
+                    "alternateName": "Travel Sansar Nepal",
                     "url": CONFIG.SITE_URL,
-                    "logo": CONFIG.LOGO_URL,
+                    "logo": {
+                      "@type": "ImageObject",
+                      "url": CONFIG.LOGO_URL,
+                      "width": 190,
+                      "height": 60
+                    },
                     "sameAs": [
                       "https://www.facebook.com/TravelSansr",
                       "https://www.instagram.com/travel_sansr",
-                      "https://twitter.com/travel_sansr"
-                    ]
+                      "https://twitter.com/travel_sansr",
+                      "https://www.facebook.com/share/v/1BMuExj5x5/"
+                    ],
+                    "contactPoint": {
+                      "@type": "ContactPoint",
+                      "telephone": "+977-9855051795",
+                      "contactType": "customer service",
+                      "areaServed": "NP",
+                      "availableLanguage": ["en", "ne"]
+                    }
                   },
                   {
                     "@context": "https://schema.org",
                     "@type": "WebSite",
-                    "alternateName": ["TravelSansr", "TSR Nepal"],
+                    "@id": `${CONFIG.SITE_URL}/#website`,
+                    "name": "Travel Sansar",
                     "url": CONFIG.SITE_URL,
+                    "description": "Best Travel Agency in Nepal | Fly Now",
                     "potentialAction": {
                       "@type": "SearchAction",
-                      "target": `${CONFIG.SITE_URL}/search?query={search_term_string}`,
+                      "target": {
+                        "@type": "EntryPoint",
+                        "urlTemplate": `${CONFIG.SITE_URL}/search?query={search_term_string}`
+                      },
                       "query-input": "required name=search_term_string"
                     }
                   },
@@ -139,31 +163,25 @@ export default function RootLayout({
                       {
                         "@type": "SiteNavigationElement",
                         "position": 1,
-                        "name": "Explore Destinations",
+                        "name": "Nepal Destinations",
                         "url": `${CONFIG.SITE_URL}/destinations`
                       },
                       {
                         "@type": "SiteNavigationElement",
                         "position": 2,
-                        "name": "Adventure Tours",
+                        "name": "Adventure Trekking & Tours",
                         "url": `${CONFIG.SITE_URL}/tours`
                       },
                       {
                         "@type": "SiteNavigationElement",
                         "position": 3,
-                        "name": "Expedition Planner",
+                        "name": "Expedition & Trip Planner",
                         "url": `${CONFIG.SITE_URL}/expedition-planner`
                       },
                       {
                         "@type": "SiteNavigationElement",
                         "position": 4,
-                        "name": "Our Services",
-                        "url": `${CONFIG.SITE_URL}/services`
-                      },
-                      {
-                        "@type": "SiteNavigationElement",
-                        "position": 5,
-                        "name": "Contact Us",
+                        "name": "Contact Travel Experts",
                         "url": `${CONFIG.SITE_URL}/contact`
                       }
                     ]
@@ -173,7 +191,7 @@ export default function RootLayout({
             />
             {children}
             <NewsletterPopup />
-            <HoliCelebration />
+            <SeasonalOffer />
           </LayoutWrapper>
         </AuthProvider>
       </body>
