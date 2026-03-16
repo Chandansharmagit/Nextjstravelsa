@@ -21,8 +21,8 @@ import { CONFIG } from '../lib/config';
 export const metadata: Metadata = {
   metadataBase: new URL(CONFIG.SITE_URL),
   title: 'Travel Sansar - Best Travel Agency in Nepal | Fly Now',
-  description: 'Experience the world with Travel Sansr. Discover handpicked destinations, adventure tours, and cultural experiences in Nepal, Bhutan, and Tibet.',
-  keywords: ['travel agency Nepal', 'tours in Nepal', 'trekking in Nepal', 'Bhutan tours', 'Tibet tours', 'Travel Sansr', 'adventure travel'],
+  description: 'Experience the world with Travel Sansar. Discover handpicked destinations, adventure tours, and cultural experiences in Nepal, Bhutan, and Tibet.',
+  keywords: ['travel agency Nepal', 'tours in Nepal', 'trekking in Nepal', 'Bhutan tours', 'Tibet tours', 'Travel Sansar', 'adventure travel'],
   authors: [{ name: 'Travel Sansar', url: CONFIG.SITE_URL }],
   creator: 'Travel Sansar',
   publisher: 'Travel Sansar',
