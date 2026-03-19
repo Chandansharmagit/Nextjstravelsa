@@ -4,10 +4,10 @@ import Image from 'next/image';
 import { motion } from 'framer-motion';
 
 const partners = [
-    { name: 'Airbnb', logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/6/69/Airbnb_Logo_B%C3%A9lo.svg/2560px-Airbnb_Logo_B%C3%A9lo.svg.png' },
-    { name: 'TripAdvisor', logo: 'https://static.tacdn.com/img2/brand_refresh/Tripadvisor_lockup_horizontal_secondary.svg' },
-    { name: 'Expedia', logo: 'https://www.expedia.com/_dms/header/logo.svg?locale=en_US&siteid=1' },
-    { name: 'Booking.com', logo: 'https://upload.wikimedia.org/wikipedia/commons/b/be/Booking.com_logo.svg' }
+    { name: 'Airbnb', logo: 'https://www.vectorlogo.zone/logos/airbnb/airbnb-ar21.svg' },
+    { name: 'TripAdvisor', logo: 'https://www.vectorlogo.zone/logos/tripadvisor/tripadvisor-ar21.svg' },
+    { name: 'Expedia', logo: 'https://www.vectorlogo.zone/logos/expedia/expedia-ar21.svg' },
+    { name: 'Booking.com', logo: 'https://www.vectorlogo.zone/logos/booking/booking-ar21.svg' }
 ];
 
 export default function TrustedPartners() {

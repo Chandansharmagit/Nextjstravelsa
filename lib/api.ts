@@ -13,7 +13,14 @@ const api = axios.create({
 api.interceptors.response.use(
     (response) => response,
     (error) => {
-        console.error('API Error:', error.response?.data || error.message);
+        const data = error.response?.data;
+        const status = error.response?.status;
+        const message = data?.message || data?.error || (typeof data === 'string' ? data : error.message);
+
+        // Silence 401 as it's often an expected state when checking initial auth
+        if (status !== 401) {
+            console.error('API Error:', message);
+        }
         return Promise.reject(error);
     }
 );

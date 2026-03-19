@@ -4,8 +4,8 @@ import { CONFIG } from '../config';
  * Resolves an image path to a full URL if it's a relative path from the backend,
  * or returns the path as-is if it's already a full URL or a relative path from the frontend.
  */
-export const getImageUrl = (path: string | undefined | null): string => {
-    if (!path) return CONFIG.LOGO_URL;
+export const getImageUrl = (path: any): string => {
+    if (!path || typeof path !== 'string') return CONFIG.LOGO_URL;
 
     // If it's already a full URL (http/https), return it
     if (path.startsWith('http')) {

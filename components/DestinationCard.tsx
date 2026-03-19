@@ -1,10 +1,10 @@
 "use client";
 
+import { useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { useRef } from 'react';
-import { motion, useMotionValue, useSpring, useTransform } from 'framer-motion';
-import { FaMapMarkerAlt, FaMountain, FaUmbrellaBeach, FaCity, FaLandmark, FaArrowRight } from 'react-icons/fa';
+import { motion, AnimatePresence } from 'framer-motion';
+import { FaArrowRight, FaMapMarkerAlt, FaCompass, FaStar } from 'react-icons/fa';
 import { getImageUrl } from '@/lib/utils/image';
 
 interface DestinationProps {
@@ -22,153 +22,102 @@ interface DestinationProps {
     className?: string;
 }
 
-const DestinationCard = ({ destination, featured = false, className }: DestinationProps) => {
-    const ref = useRef<HTMLDivElement>(null);
-    const x = useMotionValue(0);
-    const y = useMotionValue(0);
-
-    const mouseXSpring = useSpring(x);
-    const mouseYSpring = useSpring(y);
-
-    const rotateX = useTransform(mouseYSpring, [-0.5, 0.5], ["7deg", "-7deg"]);
-    const rotateY = useTransform(mouseXSpring, [-0.5, 0.5], ["-7deg", "7deg"]);
-
+const DestinationCard = ({ destination, className }: DestinationProps) => {
     const image0 = destination.images?.[0];
     const imagePath = (typeof image0 === 'string' ? image0 : image0?.path || image0?.url) || destination.image;
     const imageSrc = getImageUrl(imagePath);
-
-    const getCategoryIcon = () => {
-        const category = destination.category?.toLowerCase();
-        if (category?.includes('mountain')) return <FaMountain className="text-sm" />;
-        if (category?.includes('beach')) return <FaUmbrellaBeach className="text-sm" />;
-        if (category?.includes('city')) return <FaCity className="text-sm" />;
-        if (category?.includes('cultural')) return <FaLandmark className="text-sm" />;
-        return <FaMapMarkerAlt className="text-sm" />;
-    };
+    const [isHoveringImage, setIsHoveringImage] = useState(false);
 
     const getTagline = () => {
         const firstSentence = destination.description?.split('.')[0] || destination.description;
-        return firstSentence?.substring(0, 80) + (firstSentence?.length > 80 ? '...' : '');
+        return firstSentence?.substring(0, 100) + (firstSentence?.length > 100 ? '...' : '');
     };
-
-    const handleMouseMove = (e: React.MouseEvent) => {
-        if (!ref.current) return;
-        const rect = ref.current.getBoundingClientRect();
-        const width = rect.width;
-        const height = rect.height;
-        const mouseX = e.clientX - rect.left;
-        const mouseY = e.clientY - rect.top;
-        const xPct = mouseX / width - 0.5;
-        const yPct = mouseY / height - 0.5;
-        x.set(xPct);
-        y.set(yPct);
-    };
-
-    const handleMouseLeave = () => {
-        x.set(0);
-        y.set(0);
-    };
-
-    const defaultHeight = featured ? 'h-[500px]' : 'h-[400px]';
 
     return (
-        <Link href={`/destination/${destination._id}`}>
+        <Link href={`/destination/${destination._id}`} className="block w-full">
             <motion.div
-                ref={ref}
-                onMouseMove={handleMouseMove}
-                onMouseLeave={handleMouseLeave}
-                style={{
-                    rotateX,
-                    rotateY,
-                    transformStyle: "preserve-3d",
-                }}
-                initial={{ opacity: 0, scale: 0.95 }}
-                whileInView={{ opacity: 1, scale: 1 }}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
-                transition={{ duration: 0.5 }}
-                className={`group relative overflow-hidden rounded-[30px] cursor-pointer shadow-xl hover:shadow-[0_40px_80px_-20px_rgba(0,0,0,0.3)] transition-all duration-700 ${className || defaultHeight}`}
+                transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
+                whileHover={{ y: -8 }}
+                className={`group bg-white rounded-[32px] overflow-hidden border border-slate-100 shadow-sm hover:shadow-2xl hover:shadow-blue-900/5 transition-all duration-500 relative ${className}`}
             >
-                {/* Full Image Background */}
-                <div
-                    className="absolute inset-0 transition-transform duration-1000 group-hover:scale-105"
-                    style={{ transform: "translateZ(-10px)" }}
-                >
-                    <Image
+                {/* Image Section - Controlled Height for Unsplash Feel */}
+                <div className="relative overflow-hidden aspect-[3/2]">
+                    <img
                         src={imageSrc}
                         alt={destination.title}
-                        fill
-                        className="object-cover"
-                        priority={featured}
+                        onMouseEnter={() => setIsHoveringImage(true)}
+                        onMouseLeave={() => setIsHoveringImage(false)}
+                        className="w-full h-full object-cover transition-transform duration-[1.5s] ease-out group-hover:scale-110 cursor-zoom-in"
                     />
-                </div>
-
-                {/* Cinematic Overlays */}
-                <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent opacity-80 transition-opacity duration-700" />
-                <div className="absolute inset-0 bg-blue-600/5 group-hover:bg-blue-600/0 transition-colors duration-700" />
-
-                <div className="absolute inset-0 p-8 flex flex-col justify-end" style={{ transform: "translateZ(30px)" }}>
-                    {/* Tags Container - top left */}
-                    <div className="absolute top-6 left-6 flex items-center gap-3 opacity-0 group-hover:opacity-100 transition-all duration-700 transform -translate-y-4 group-hover:translate-y-0">
-                        {destination.category && (
-                            <div className="px-3 py-1.5 bg-blue-600/90 backdrop-blur-xl rounded-[6px] border border-blue-400/40 shadow-lg">
-                                <span className="text-white text-[9px] font-black uppercase tracking-[0.2em] flex items-center gap-2 h-font">
-                                    {getCategoryIcon()}
-                                    {destination.category}
-                                </span>
-                            </div>
-                        )}
-                        {destination.featured && (
-                            <div className="px-3 py-1.5 bg-white/10 backdrop-blur-xl border border-white/20 rounded-[6px] shadow-lg">
-                                <span className="text-white text-[9px] font-black uppercase tracking-[0.2em] h-font">
-                                    ★ Curated
-                                </span>
-                            </div>
-                        )}
+                    
+                    {/* Floating Status Badge */}
+                    <div className="absolute top-2 left-2 z-20">
+                        <div className="px-1.5 py-0.5 bg-white/20 backdrop-blur-md rounded-md border border-white/20 flex items-center gap-1">
+                            <div className="w-1 h-1 rounded-full bg-emerald-400 shadow-[0_0_10px_rgba(52,211,153,0.5)]" />
+                            <span className="text-[6px] font-black text-white uppercase tracking-[0.2em]">Live</span>
+                        </div>
                     </div>
 
-                    {/* Interactive Content Wrapper */}
-                    <div className="relative w-full transition-all duration-700 transform group-hover:-translate-y-[15%]">
-                        {/* Title & Location Section - This moves to center-ish on hover */}
-                        <div className="space-y-4 transition-all duration-700 group-hover:mb-8">
-                            {destination.location && (
-                                <div className="flex items-center gap-2 text-blue-400 text-[9px] font-black uppercase tracking-[0.3em] h-font">
-                                    <FaMapMarkerAlt />
-                                    {destination.location}
-                                </div>
-                            )}
-                            <h3 className={`text-white font-black tracking-tighter leading-[0.9] h-font transition-all duration-700 ${featured ? 'text-4xl md:text-5xl' : 'text-2xl md:text-3xl'} group-hover:scale-110 origin-left`}>
-                                {destination.title}
-                            </h3>
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
+                </div>
+
+                {/* Content Section */}
+                <div className="p-4">
+                    <div className="flex items-center gap-2 mb-1">
+                        <span className="text-[7px] font-black uppercase tracking-[0.1em] text-blue-600 font-outfit">{destination.category || 'Destinations'}</span>
+                        <div className="w-0.5 h-0.5 rounded-full bg-slate-200" />
+                        <span className="text-[7px] font-black uppercase tracking-[0.1em] text-slate-400 font-outfit line-clamp-1">{destination.location}</span>
+                    </div>
+
+                    <h3 className="text-sm font-black text-slate-900 tracking-tighter mb-1 font-outfit group-hover:text-blue-600 transition-colors uppercase line-clamp-1">
+                        {destination.title}
+                    </h3>
+                    
+                    <p className="text-slate-500 text-[10px] font-medium leading-relaxed mb-3 line-clamp-1 opacity-70">
+                        {getTagline()}
+                    </p>
+
+                    <div className="flex items-center justify-between pt-3 border-t border-slate-50">
+                        <div className="flex -space-x-1">
+                             {[1,2,3].map(i => (
+                                 <div key={i} className="w-5 h-5 rounded-full border border-white bg-slate-100 overflow-hidden">
+                                     <img src={`https://i.pravatar.cc/100?img=${i+10}`} alt="Explorer" className="w-full h-full object-cover" />
+                                 </div>
+                             ))}
                         </div>
-
-                        {/* Hidden Content - Revealed on Hover */}
-                        <div className="overflow-hidden max-h-0 group-hover:max-h-[300px] transition-all duration-700 ease-in-out">
-                            <motion.p
-                                initial={false}
-                                className="text-white/70 text-base font-bold leading-relaxed line-clamp-3 p-font italic mb-6 opacity-0 group-hover:opacity-100 transition-opacity duration-700 delay-100"
-                            >
-                                {getTagline()}
-                            </motion.p>
-
-                            <div className="flex items-center justify-between pt-6 border-t border-white/10 opacity-0 group-hover:opacity-100 transition-all duration-700 delay-200">
-                                <span className="text-[9px] font-black text-white uppercase tracking-[0.3em] h-font">Discover Experience</span>
-                                <div className="w-10 h-10 rounded-[10px] bg-white flex items-center justify-center text-slate-900 group-hover:bg-blue-600 group-hover:text-white transition-all duration-500 shadow-xl">
-                                    <FaArrowRight size={14} />
-                                </div>
-                            </div>
+                        <div className="w-6 h-6 rounded-lg bg-slate-50 text-slate-900 flex items-center justify-center group-hover:bg-blue-600 group-hover:text-white transition-all duration-300">
+                            <FaArrowRight size={10} />
                         </div>
                     </div>
                 </div>
 
-                {/* Premium Border Aura */}
-                <div className="absolute inset-0 border border-white/10 rounded-[30px] pointer-events-none transition-all duration-700 group-hover:border-white/20 group-hover:inset-1" />
+                {/* VISUAL PREVIEW LIGHTBOX - FIXED POSITION */}
+                <AnimatePresence>
+                    {isHoveringImage && (
+                        <motion.div
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            exit={{ opacity: 0 }}
+                            className="fixed inset-0 z-[1000] flex items-center justify-center p-6 md:p-20 pointer-events-none"
+                        >
+                            <div className="absolute inset-0 bg-slate-950/40 backdrop-blur-3xl" />
+                            <div className="relative w-full max-w-4xl aspect-video rounded-[32px] overflow-hidden shadow-2xl border-4 border-white/10">
+                                <img src={imageSrc} alt="" className="w-full h-full object-cover" />
+                                <div className="absolute bottom-8 left-8 text-white">
+                                    <h4 className="text-3xl font-black font-outfit tracking-tighter italic mb-2">{destination.title}</h4>
+                                    <p className="text-sm font-medium opacity-80">{destination.location}</p>
+                                </div>
+                            </div>
+                        </motion.div>
+                    )}
+                </AnimatePresence>
             </motion.div>
-
-            <style jsx global>{`
-                .h-font { font-family: 'Outfit', sans-serif; }
-            `}</style>
         </Link>
     );
 };
 
 export default DestinationCard;
+

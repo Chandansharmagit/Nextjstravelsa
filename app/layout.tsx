@@ -18,6 +18,11 @@ const playfair = Playfair_Display({
 
 import { CONFIG } from '../lib/config';
 
+export const viewport = {
+  width: 'device-width',
+  initialScale: 1,
+};
+
 export const metadata: Metadata = {
   metadataBase: new URL(CONFIG.SITE_URL),
   title: 'Travel Sansar - Best Travel Agency in Nepal | Fly Now',
@@ -31,7 +36,6 @@ export const metadata: Metadata = {
     address: false,
     telephone: false,
   },
-  viewport: 'width=device-width, initial-scale=1',
   alternates: {
     canonical: CONFIG.SITE_URL,
   },
@@ -83,7 +87,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <body className={`${inter.variable} ${outfit.variable} ${playfair.variable} font-sans`}>
         {/* CookieYes Banner */}
         <Script

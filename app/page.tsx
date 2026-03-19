@@ -119,18 +119,12 @@ export default async function Home() {
           <p className="text-gray-600">Discover places that everyone is talking about</p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 auto-rows-[minmax(400px,auto)]">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
           {destinations && destinations.length > 0 ? (
-            destinations.map((dest: any, index: number) => {
-              // First item is featured (large) if we have enough items to make a grid
-              const isFirst = index === 0;
-              const cardClass = isFirst ? "md:col-span-2 md:row-span-2 h-full" : "h-full";
-
+            destinations.map((dest: any) => {
               return (
-                <TiltCard key={dest._id} className={cardClass}>
-                  <div className="h-full">
-                    <DestinationCard destination={dest} featured={isFirst} className="h-full" />
-                  </div>
+                <TiltCard key={dest._id}>
+                  <DestinationCard destination={dest} />
                 </TiltCard>
               );
             })

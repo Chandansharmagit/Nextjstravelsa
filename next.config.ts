@@ -41,6 +41,27 @@ const nextConfig: NextConfig = {
       {
         protocol: 'https',
         hostname: 'www.expedia.com',
+      },
+      {
+        protocol: 'https',
+        hostname: 'www.travelsansr.com',
+      },
+      {
+        protocol: 'https',
+        hostname: 'backendtsa.travelsansr.com',
+      },
+      {
+        protocol: 'http',
+        hostname: 'localhost',
+        port: '5000',
+      },
+      {
+        protocol: 'https',
+        hostname: 'i.pravatar.cc',
+      },
+      {
+        protocol: 'https',
+        hostname: 'www.vectorlogo.zone',
       }
     ],
   },
