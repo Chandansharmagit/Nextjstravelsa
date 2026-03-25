@@ -37,7 +37,7 @@ export default function LayoutWrapper({ children }: { children: React.ReactNode 
             <TopBar />
             <Navbar />
             <LoginPopup />
-            <main className="min-h-screen pt-[115px]">
+            <main className="min-h-screen">
                 {children}
             </main>
 

@@ -26,94 +26,76 @@ const DestinationCard = ({ destination, className }: DestinationProps) => {
     const image0 = destination.images?.[0];
     const imagePath = (typeof image0 === 'string' ? image0 : image0?.path || image0?.url) || destination.image;
     const imageSrc = getImageUrl(imagePath);
-    const [isHoveringImage, setIsHoveringImage] = useState(false);
-
-    const getTagline = () => {
-        const firstSentence = destination.description?.split('.')[0] || destination.description;
-        return firstSentence?.substring(0, 100) + (firstSentence?.length > 100 ? '...' : '');
-    };
 
     return (
         <Link href={`/destination/${destination._id}`} className="block w-full">
             <motion.div
-                initial={{ opacity: 0, y: 20 }}
+                initial={{ opacity: 0, y: 30 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
-                whileHover={{ y: -8 }}
-                className={`group bg-white rounded-[32px] overflow-hidden border border-slate-100 shadow-sm hover:shadow-2xl hover:shadow-blue-900/5 transition-all duration-500 relative ${className}`}
+                whileHover={{ y: -10 }}
+                className={`group relative aspect-[4/5] bg-slate-100 rounded-[20px] overflow-hidden shadow-[0_10px_30px_-10px_rgba(0,0,0,0.1)] hover:shadow-[0_40px_80px_-20px_rgba(0,0,0,0.25)] transition-all duration-700 ${className}`}
             >
-                {/* Image Section - Controlled Height for Unsplash Feel */}
-                <div className="relative overflow-hidden aspect-[3/2]">
+                {/* Full-Bleed Background Photo */}
+                <div className="absolute inset-0 z-0">
                     <img
                         src={imageSrc}
                         alt={destination.title}
-                        onMouseEnter={() => setIsHoveringImage(true)}
-                        onMouseLeave={() => setIsHoveringImage(false)}
-                        className="w-full h-full object-cover transition-transform duration-[1.5s] ease-out group-hover:scale-110 cursor-zoom-in"
+                        className="w-full h-full object-cover transition-transform duration-[2.5s] ease-out group-hover:scale-110"
                     />
-                    
-                    {/* Floating Status Badge */}
-                    <div className="absolute top-2 left-2 z-20">
-                        <div className="px-1.5 py-0.5 bg-white/20 backdrop-blur-md rounded-md border border-white/20 flex items-center gap-1">
-                            <div className="w-1 h-1 rounded-full bg-emerald-400 shadow-[0_0_10px_rgba(52,211,153,0.5)]" />
-                            <span className="text-[6px] font-black text-white uppercase tracking-[0.2em]">Live</span>
-                        </div>
-                    </div>
-
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
+                    {/* Immersive Gradient Overlay */}
+                    <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/20 to-transparent opacity-80 group-hover:opacity-90 transition-opacity duration-700" />
                 </div>
 
-                {/* Content Section */}
-                <div className="p-4">
-                    <div className="flex items-center gap-2 mb-1">
-                        <span className="text-[7px] font-black uppercase tracking-[0.1em] text-blue-600 font-outfit">{destination.category || 'Destinations'}</span>
-                        <div className="w-0.5 h-0.5 rounded-full bg-slate-200" />
-                        <span className="text-[7px] font-black uppercase tracking-[0.1em] text-slate-400 font-outfit line-clamp-1">{destination.location}</span>
+                {/* Glassmorphism Category Badge */}
+                <div className="absolute top-5 left-5 z-20">
+                    <div className="px-4 py-2 bg-white/10 backdrop-blur-xl rounded-full border border-white/20 shadow-xl">
+                        <span className="text-[10px] font-bold text-white uppercase tracking-[0.2em]">{destination.category || 'Adventure'}</span>
+                    </div>
+                </div>
+
+                {/* Rating Badge */}
+                <div className="absolute top-5 right-5 z-20">
+                    <div className="flex items-center gap-1.5 px-3 py-2 bg-black/20 backdrop-blur-md rounded-full border border-white/10">
+                        <FaStar className="text-amber-400" size={12} />
+                        <span className="text-[11px] font-black text-white">4.9 <span className="opacity-60 text-[9px] font-medium">(2.4k)</span></span>
+                    </div>
+                </div>
+
+                {/* Content Overlay */}
+                <div className="absolute inset-x-0 bottom-0 p-8 z-20 flex flex-col justify-end min-h-[50%] transition-transform duration-700 group-hover:translate-y-[-8px]">
+                    <div className="flex items-center gap-2 text-blue-400 mb-3 opacity-0 group-hover:opacity-100 transition-all duration-700 transform translate-y-4 group-hover:translate-y-0">
+                        <FaMapMarkerAlt size={12} />
+                        <span className="text-[10px] font-black uppercase tracking-[0.3em]">{destination.location}</span>
                     </div>
 
-                    <h3 className="text-sm font-black text-slate-900 tracking-tighter mb-1 font-outfit group-hover:text-blue-600 transition-colors uppercase line-clamp-1">
+                    <h3 className="text-3xl md:text-4xl font-black text-white tracking-tighter leading-[0.9] h-font uppercase mb-6 group-hover:mb-8 transition-all duration-700">
                         {destination.title}
                     </h3>
-                    
-                    <p className="text-slate-500 text-[10px] font-medium leading-relaxed mb-3 line-clamp-1 opacity-70">
-                        {getTagline()}
-                    </p>
 
-                    <div className="flex items-center justify-between pt-3 border-t border-slate-50">
-                        <div className="flex -space-x-1">
-                             {[1,2,3].map(i => (
-                                 <div key={i} className="w-5 h-5 rounded-full border border-white bg-slate-100 overflow-hidden">
-                                     <img src={`https://i.pravatar.cc/100?img=${i+10}`} alt="Explorer" className="w-full h-full object-cover" />
-                                 </div>
-                             ))}
+                    <div className="flex items-center justify-between pt-6 border-t border-white/10">
+                        {/* Avatar Group */}
+                        <div className="flex -space-x-3 items-center">
+                            {[1, 2, 3].map((i) => (
+                                <div key={i} className="w-9 h-9 rounded-full border-2 border-slate-900 bg-slate-800 overflow-hidden shadow-sm shadow-black">
+                                    <img src={`https://i.pravatar.cc/100?img=${i + 30}`} alt="Explorer" className="w-full h-full object-cover" />
+                                </div>
+                            ))}
+                            <div className="w-9 h-9 rounded-full border-2 border-slate-900 bg-slate-800 flex items-center justify-center text-[10px] font-black text-white">
+                                +12
+                            </div>
                         </div>
-                        <div className="w-6 h-6 rounded-lg bg-slate-50 text-slate-900 flex items-center justify-center group-hover:bg-blue-600 group-hover:text-white transition-all duration-300">
-                            <FaArrowRight size={10} />
+
+                        {/* Floating Explore Button */}
+                        <div className="w-14 h-14 rounded-full bg-white text-slate-900 flex items-center justify-center shadow-[0_15px_30px_rgba(255,255,255,0.2)] transform group-hover:scale-110 group-hover:rotate-[-45deg] transition-all duration-700">
+                            <FaArrowRight size={18} />
                         </div>
                     </div>
                 </div>
 
-                {/* VISUAL PREVIEW LIGHTBOX - FIXED POSITION */}
-                <AnimatePresence>
-                    {isHoveringImage && (
-                        <motion.div
-                            initial={{ opacity: 0 }}
-                            animate={{ opacity: 1 }}
-                            exit={{ opacity: 0 }}
-                            className="fixed inset-0 z-[1000] flex items-center justify-center p-6 md:p-20 pointer-events-none"
-                        >
-                            <div className="absolute inset-0 bg-slate-950/40 backdrop-blur-3xl" />
-                            <div className="relative w-full max-w-4xl aspect-video rounded-[32px] overflow-hidden shadow-2xl border-4 border-white/10">
-                                <img src={imageSrc} alt="" className="w-full h-full object-cover" />
-                                <div className="absolute bottom-8 left-8 text-white">
-                                    <h4 className="text-3xl font-black font-outfit tracking-tighter italic mb-2">{destination.title}</h4>
-                                    <p className="text-sm font-medium opacity-80">{destination.location}</p>
-                                </div>
-                            </div>
-                        </motion.div>
-                    )}
-                </AnimatePresence>
+                {/* Subtle Glow Effect on Hover */}
+                <div className="absolute -inset-[2px] bg-gradient-to-tr from-blue-500/20 to-purple-500/20 rounded-[20px] opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none" />
             </motion.div>
         </Link>
     );

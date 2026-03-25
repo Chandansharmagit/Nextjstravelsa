@@ -148,7 +148,7 @@ export default function HeroSlider() {
             <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-black/20 z-10" />
 
             {/* ─── Content ─── */}
-            <div className="relative z-20 h-full flex flex-col justify-center items-center text-center px-6 md:px-12 xl:px-20 max-w-[1100px] mx-auto w-full">
+            <div className="relative z-20 h-full flex flex-col justify-center items-center text-center px-6 md:px-12 xl:px-20 max-w-[1100px] mx-auto w-full pt-20 md:pt-32">
                 <AnimatePresence mode="wait">
                     <motion.div
                         key={`content-${slide.id}`}
@@ -163,9 +163,9 @@ export default function HeroSlider() {
                             initial={{ opacity: 0, x: -20 }}
                             animate={{ opacity: 1, x: 0 }}
                             transition={{ delay: 0.15, duration: 0.6 }}
-                            className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-md border border-white/20 text-white/90 text-xs font-bold uppercase tracking-[0.25em] px-5 py-2 rounded-full mb-6"
+                            className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-xl border border-white/20 text-white/90 text-[10px] font-black uppercase tracking-[0.3em] font-outfit px-6 py-2.5 rounded-full mb-8"
                         >
-                            <span className="w-1.5 h-1.5 rounded-full bg-orange-400 animate-pulse" />
+                            <span className="w-2 h-2 rounded-full bg-blue-400 animate-pulse shadow-[0_0_10px_rgba(96,165,250,0.8)]" />
                             {slide.tag}
                         </motion.div>
 
@@ -174,8 +174,7 @@ export default function HeroSlider() {
                             initial={{ opacity: 0, y: 30 }}
                             animate={{ opacity: 1, y: 0 }}
                             transition={{ delay: 0.25, duration: 0.75 }}
-                            className="text-5xl md:text-7xl xl:text-8xl font-black text-white leading-tight tracking-tight mb-1"
-                            style={{ fontFamily: 'var(--font-playfair), serif' }}
+                            className="text-6xl md:text-8xl xl:text-9xl font-black text-white leading-[0.85] tracking-tighter mb-2 font-outfit"
                         >
                             {slide.headline}
                         </motion.h1>
@@ -183,13 +182,7 @@ export default function HeroSlider() {
                             initial={{ opacity: 0, y: 30 }}
                             animate={{ opacity: 1, y: 0 }}
                             transition={{ delay: 0.35, duration: 0.75 }}
-                            className="text-5xl md:text-7xl xl:text-8xl font-black leading-tight tracking-tight mb-5"
-                            style={{
-                                fontFamily: 'var(--font-playfair), serif',
-                                background: 'linear-gradient(135deg, #f97316 0%, #fb923c 50%, #fbbf24 100%)',
-                                WebkitBackgroundClip: 'text',
-                                WebkitTextFillColor: 'transparent',
-                            }}
+                            className="text-6xl md:text-8xl xl:text-9xl font-normal italic leading-[0.85] tracking-tighter mb-8 font-playfair text-white/90"
                         >
                             {slide.headlineAccent}
                         </motion.h1>
@@ -199,7 +192,7 @@ export default function HeroSlider() {
                             initial={{ opacity: 0, y: 20 }}
                             animate={{ opacity: 1, y: 0 }}
                             transition={{ delay: 0.45, duration: 0.65 }}
-                            className="text-lg md:text-2xl text-white/90 font-medium max-w-2xl mx-auto leading-relaxed mb-3 drop-shadow-lg"
+                            className="text-xl md:text-2xl text-white/80 font-medium max-w-2xl mx-auto leading-relaxed mb-6 drop-shadow-lg"
                         >
                             {slide.sub}
                         </motion.p>
@@ -209,7 +202,7 @@ export default function HeroSlider() {
                             initial={{ opacity: 0 }}
                             animate={{ opacity: 1 }}
                             transition={{ delay: 0.55, duration: 0.6 }}
-                            className="inline-block bg-white/5 border border-white/10 text-white/60 text-xs px-4 py-1.5 rounded-full mb-4 font-medium"
+                            className="inline-block bg-white/5 backdrop-blur-sm border border-white/10 text-white/50 text-[10px] uppercase tracking-[0.2em] px-5 py-2 rounded-full mb-10 font-black font-outfit"
                         >
                             {slide.badge}
                         </motion.div>
@@ -221,23 +214,28 @@ export default function HeroSlider() {
                     initial={{ opacity: 0, y: 30 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: 0.7, duration: 0.8, ease: 'easeOut' }}
-                    className="w-full max-w-2xl mx-auto"
+                    className="w-full max-w-3xl mx-auto"
                 >
-                    <div className={`w-full bg-white/95 backdrop-blur-2xl rounded-2xl md:rounded-[2rem] p-2 md:pl-6 shadow-2xl flex flex-col md:flex-row items-center gap-2 md:gap-4 transition-all duration-300 ${isAiEnabled ? 'ring-4 ring-purple-400/60' : ''}`}>
-                        <div className="w-full flex-1 flex items-center gap-3 md:border-r border-gray-200 px-4 md:px-0 md:pr-4 py-2 md:py-0">
+                    <div className={`
+                        w-full bg-white/10 backdrop-blur-[30px] rounded-3xl md:rounded-[32px] p-2 md:pl-8 
+                        shadow-[0_32px_64px_-16px_rgba(0,0,0,0.5)] border border-white/20
+                        flex flex-col md:flex-row items-center gap-2 md:gap-4 transition-all duration-500 
+                        ${isAiEnabled ? 'ring-4 ring-blue-400/30 border-blue-400/50' : ''}
+                    `}>
+                        <div className="w-full flex-1 flex items-center gap-4 md:border-r border-white/10 px-4 md:px-0 md:pr-6 py-3 md:py-0">
                             {isAiEnabled ? (
-                                <FaMagic className="text-purple-500 text-xl animate-pulse shrink-0" />
+                                <FaMagic className="text-blue-400 text-xl animate-pulse shrink-0" />
                             ) : (
-                                <FaMapMarkerAlt className="text-orange-500 text-xl shrink-0" />
+                                <FaMapMarkerAlt className="text-white/60 text-xl shrink-0" />
                             )}
                             <div className="flex flex-col items-start w-full">
-                                <span className="text-[10px] font-black text-gray-400 uppercase tracking-widest">
-                                    {isAiEnabled ? 'AI Smart Search' : 'Destination'}
+                                <span className="text-[10px] font-black text-white/40 uppercase tracking-[0.2em] font-outfit mb-0.5">
+                                    {isAiEnabled ? 'AI Intelligence' : 'Destination'}
                                 </span>
                                 <input
                                     type="text"
-                                    placeholder={isAiEnabled ? 'Describe your dream trip…' : 'Where are you going?'}
-                                    className="w-full bg-transparent outline-none text-gray-800 placeholder-gray-400 font-semibold text-sm md:text-base"
+                                    placeholder={isAiEnabled ? 'Describe your dream sanctuary…' : 'Where to next?'}
+                                    className="w-full bg-transparent outline-none text-white placeholder-white/30 font-bold text-lg"
                                     value={query}
                                     onChange={e => setQuery(e.target.value)}
                                     onKeyDown={e => e.key === 'Enter' && handleSearch(e as any)}
@@ -245,20 +243,28 @@ export default function HeroSlider() {
                                 />
                             </div>
                         </div>
-                        <div className="flex w-full md:w-auto items-center gap-2 px-2 pb-2 md:pb-0">
+                        <div className="flex w-full md:w-auto items-center gap-3 px-2 pb-2 md:pb-0 md:pr-2">
                             <button
                                 onClick={() => setIsAiEnabled(!isAiEnabled)}
                                 title="Toggle AI"
-                                className={`p-3 rounded-full transition-colors shrink-0 ${isAiEnabled ? 'bg-purple-100 text-purple-600' : 'bg-gray-100 text-gray-400 hover:bg-gray-200'}`}
+                                className={`p-4 rounded-[20px] transition-all duration-300 shrink-0 ${isAiEnabled ? 'bg-blue-600 text-white' : 'bg-white/10 text-white/60 hover:bg-white/20'}`}
                             >
-                                <FaMagic />
+                                <FaMagic size={18} />
                             </button>
                             <button
                                 onClick={handleSearch}
-                                className={`flex-1 md:flex-none ${isAiEnabled ? 'bg-purple-600 hover:bg-purple-700' : 'bg-orange-500 hover:bg-orange-600'} text-white rounded-xl md:rounded-2xl p-3 md:p-4 md:px-8 font-black text-sm md:text-base transition-all duration-300 shadow-xl flex items-center justify-center gap-2`}
+                                className={`
+                                    flex-1 md:flex-none h-14 md:px-10 rounded-[20px] font-black text-[13px] uppercase tracking-widest font-outfit
+                                    transition-all duration-500 shadow-xl flex items-center justify-center gap-3
+                                    ${isAiEnabled 
+                                        ? 'bg-gradient-to-r from-blue-600 to-indigo-600 hover:shadow-blue-500/40' 
+                                        : 'bg-white text-slate-900 hover:bg-white/90 hover:scale-[1.02] shadow-white/10'
+                                    }
+                                    text-slate-900
+                                `}
                             >
-                                {isLoading ? <span className="animate-spin inline-block">⌛</span> : <FaSearch />}
-                                <span>Search</span>
+                                {isLoading ? <div className="w-5 h-5 border-2 border-slate-900/30 border-t-slate-900 rounded-full animate-spin" /> : <FaSearch size={14} />}
+                                <span className={isAiEnabled ? 'text-white' : 'text-slate-900'}>Search</span>
                             </button>
                         </div>
                     </div>

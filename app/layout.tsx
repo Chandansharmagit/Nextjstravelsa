@@ -122,7 +122,7 @@ export default function RootLayout({
                     "@type": "Organization",
                     "@id": `${CONFIG.SITE_URL}/#organization`,
                     "name": "Travel Sansar",
-                    "alternateName": "Travel Sansar Nepal",
+                    "alternateName": ["Travel Sansar Nepal", "TravelSansar"],
                     "url": CONFIG.SITE_URL,
                     "logo": {
                       "@type": "ImageObject",
@@ -149,6 +149,7 @@ export default function RootLayout({
                     "@type": "WebSite",
                     "@id": `${CONFIG.SITE_URL}/#website`,
                     "name": "Travel Sansar",
+                    "alternateName": ["Travel Sansar", "TravelSansar", "travelsansr"],
                     "url": CONFIG.SITE_URL,
                     "description": "Best Travel Agency in Nepal | Fly Now",
                     "potentialAction": {

@@ -85,11 +85,11 @@ const TourCard = ({ tour, featured = false }: TourProps) => {
                 initial={{ opacity: 0, scale: 0.95 }}
                 whileInView={{ opacity: 1, scale: 1 }}
                 viewport={{ once: true }}
-                className={`group relative overflow-hidden rounded-[30px] cursor-pointer ${featured ? 'h-[500px]' : 'h-[420px]'} shadow-2xl hover:shadow-[0_64px_120px_-20px_rgba(0,0,0,0.3)] transition-all duration-700`}
+                className={`group relative overflow-hidden rounded-[20px] cursor-pointer ${featured ? 'h-[500px]' : 'h-[420px]'} shadow-[0_20px_50px_-15px_rgba(0,0,0,0.3)] hover:shadow-[0_40px_80px_-20px_rgba(0,0,0,0.4)] transition-all duration-700 border border-slate-200/50`}
             >
                 {/* Background Image */}
                 <div
-                    className="absolute inset-0 transition-transform duration-700 group-hover:scale-110"
+                    className="absolute inset-0 transition-transform duration-1000 group-hover:scale-110"
                     style={{ transform: "translateZ(-20px)" }}
                 >
                     <Image
@@ -101,22 +101,22 @@ const TourCard = ({ tour, featured = false }: TourProps) => {
                 </div>
 
                 {/* Overlays */}
-                <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-900/50 to-transparent opacity-80 group-hover:opacity-95 transition-opacity duration-500" />
+                <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-900/40 to-transparent opacity-90 group-hover:opacity-100 transition-opacity duration-500" />
 
                 {/* Top Badges */}
-                <div className="absolute top-6 left-6 right-6 flex justify-between items-start z-20" style={{ transform: "translateZ(30px)" }}>
+                <div className="absolute top-5 left-5 right-5 flex justify-between items-start z-20" style={{ transform: "translateZ(30px)" }}>
                     <div className="flex flex-col gap-2">
                         {tour.difficulty && (
-                            <div className={`px-3 py-1.5 ${getDifficultyStyles()} backdrop-blur-md rounded-full border border-white/20 shadow-lg`}>
-                                <span className="text-[10px] font-black uppercase tracking-widest h-font flex items-center gap-2">
+                            <div className={`px-4 py-1.5 ${getDifficultyStyles()} backdrop-blur-xl rounded-full border border-white/20 shadow-lg`}>
+                                <span className="text-[9px] font-black uppercase tracking-[0.2em] font-outfit flex items-center gap-2">
                                     <FaShieldAlt className="opacity-70" />
                                     {tour.difficulty}
                                 </span>
                             </div>
                         )}
                         {tour.type && (
-                            <div className="px-3 py-1.5 bg-white/10 backdrop-blur-md border border-white/20 rounded-full shadow-lg">
-                                <span className="text-white text-[10px] font-black uppercase tracking-widest flex items-center gap-2 h-font">
+                            <div className="px-4 py-1.5 bg-white/10 backdrop-blur-xl border border-white/20 rounded-full shadow-lg">
+                                <span className="text-white text-[9px] font-black uppercase tracking-[0.2em] flex items-center gap-2 font-outfit">
                                     {getTourIcon()}
                                     {tour.type}
                                 </span>
@@ -124,10 +124,10 @@ const TourCard = ({ tour, featured = false }: TourProps) => {
                         )}
                     </div>
 
-                    <div className="px-5 py-2.5 bg-blue-600/90 backdrop-blur-md border border-blue-400/30 rounded-2xl shadow-xl shadow-blue-500/20">
-                        <div className="text-[10px] font-black text-blue-100 uppercase tracking-widest h-font mb-0.5">Value</div>
-                        <div className="text-xl font-black text-white tracking-tighter leading-none h-font">
-                            <span className="text-xs mr-1 opacity-70">NRS</span>{tour.price}
+                    <div className="px-5 py-2.5 bg-blue-600/90 backdrop-blur-xl border border-blue-400/30 rounded-[18px] shadow-xl shadow-blue-500/20">
+                        <div className="text-[9px] font-black text-blue-100/60 uppercase tracking-widest font-outfit mb-0.5 text-center">Value</div>
+                        <div className="text-xl font-black text-white tracking-tighter leading-none font-outfit">
+                            <span className="text-xs mr-0.5 opacity-60">NRS</span>{tour.price}
                         </div>
                     </div>
                 </div>
@@ -135,44 +135,43 @@ const TourCard = ({ tour, featured = false }: TourProps) => {
                 {/* Content */}
                 <div className="absolute inset-0 p-8 flex flex-col justify-end" style={{ transform: "translateZ(30px)" }}>
                     {/* Interactive Content Wrapper */}
-                    <div className="relative w-full transition-all duration-700 transform group-hover:-translate-y-[15%]">
-                        {/* Title Section - slides to center on hover */}
-                        <div className="space-y-4 transition-all duration-700 group-hover:mb-8">
+                    <div className="relative w-full transition-all duration-700 transform group-hover:-translate-y-4">
+                        {/* Title Section */}
+                        <div className="space-y-3 transition-all duration-700">
                             {tour.destination && (
-                                <div className="flex items-center gap-2 text-blue-400 text-[10px] font-black uppercase tracking-[0.3em] h-font">
-                                    <span className="w-1.5 h-1.5 bg-blue-500 rounded-full" />
+                                <div className="flex items-center gap-2 text-blue-400 text-[10px] font-black uppercase tracking-[0.3em] font-outfit">
+                                    <span className="w-2 h-0.5 bg-blue-500 rounded-full" />
                                     {typeof tour.destination === 'string' ? tour.destination : tour.destination.title || 'Nepal'}
                                 </div>
                             )}
-                            <h3 className={`text-white font-black tracking-tighter leading-[0.9] h-font transition-all duration-700 ${featured ? 'text-4xl md:text-5xl' : 'text-2xl md:text-3xl'} group-hover:scale-110 origin-left`}>
+                            <h3 className={`text-white font-black tracking-tighter leading-[0.95] font-outfit transition-all duration-700 ${featured ? 'text-4xl md:text-5xl' : 'text-2xl md:text-3xl'} group-hover:text-white group-hover:scale-[1.02] origin-left`}>
                                 {title}
                             </h3>
                         </div>
 
-                        {/* Hidden Content - Revealed on Hover */}
-                        <div className="overflow-hidden max-h-0 group-hover:max-h-[300px] transition-all duration-700 ease-in-out">
-                            {/* Info Pills */}
-                            <div className="flex flex-wrap gap-2 mb-6 pt-4 opacity-0 group-hover:opacity-100 transition-opacity duration-700 delay-100">
-                                <div className="px-3 py-1.5 bg-white/10 backdrop-blur-md border border-white/20 rounded-full flex items-center gap-2 text-white text-[10px] font-black uppercase tracking-widest h-font">
-                                    <FaClock className="text-blue-400" />
+                        {/* Revealed on Hover */}
+                        <div className="overflow-hidden max-h-0 group-hover:max-h-[300px] transition-all duration-700 ease-in-out opacity-0 group-hover:opacity-100 pt-0 group-hover:pt-6">
+                            <div className="flex flex-wrap gap-2 mb-6">
+                                <div className="px-3 py-1.5 bg-white/10 backdrop-blur-xl border border-white/20 rounded-full flex items-center gap-2 text-white text-[9px] font-black uppercase tracking-[0.15em] font-outfit">
+                                    <FaClock className="text-blue-400 opacity-70" />
                                     {tour.duration}
                                 </div>
                                 {tour.groupSize && (
-                                    <div className="px-3 py-1.5 bg-white/10 backdrop-blur-md border border-white/20 rounded-full flex items-center gap-2 text-white text-[10px] font-black uppercase tracking-widest h-font">
-                                        <FaUsers className="text-blue-400" />
+                                    <div className="px-3 py-1.5 bg-white/10 backdrop-blur-xl border border-white/20 rounded-full flex items-center gap-2 text-white text-[9px] font-black uppercase tracking-[0.15em] font-outfit">
+                                        <FaUsers className="text-blue-400 opacity-70" />
                                         {tour.groupSize}
                                     </div>
                                 )}
-                                <div className="px-3 py-1.5 bg-white/10 backdrop-blur-md border border-white/20 rounded-full flex items-center gap-2 text-white text-[10px] font-black uppercase tracking-widest h-font">
-                                    <FaStar className="text-amber-400" />
+                                <div className="px-3 py-1.5 bg-white/10 backdrop-blur-xl border border-white/20 rounded-full flex items-center gap-2 text-white text-[9px] font-black uppercase tracking-[0.15em] font-outfit text-amber-400">
+                                    <FaStar />
                                     4.8
                                 </div>
                             </div>
 
-                            <div className="flex items-center justify-between pt-6 border-t border-white/10 opacity-0 group-hover:opacity-100 transition-all duration-700 delay-200">
-                                <span className="text-[10px] font-black text-white uppercase tracking-[0.2em] h-font">Examine Journey</span>
-                                <div className="w-10 h-10 rounded-[12px] bg-white flex items-center justify-center text-slate-900 group-hover:bg-blue-600 group-hover:text-white transition-all duration-500 shadow-xl">
-                                    <FaArrowRight />
+                            <div className="flex items-center justify-between pt-6 border-t border-white/10">
+                                <span className="text-[10px] font-black text-white/50 uppercase tracking-[0.3em] font-outfit">Examine Journey</span>
+                                <div className="w-10 h-10 rounded-[14px] bg-white flex items-center justify-center text-slate-950 group-hover:bg-blue-600 group-hover:text-white transition-all duration-500 shadow-xl group-hover:rotate-[360deg]">
+                                    <FaArrowRight size={12} />
                                 </div>
                             </div>
                         </div>
@@ -180,7 +179,7 @@ const TourCard = ({ tour, featured = false }: TourProps) => {
                 </div>
 
                 {/* Border Glow */}
-                <div className="absolute inset-0 border border-white/20 rounded-[30px] pointer-events-none" />
+                <div className="absolute inset-0 border border-white/10 rounded-[20px] pointer-events-none group-hover:border-white/20 transition-colors" />
             </motion.div>
 
             <style jsx global>{`
