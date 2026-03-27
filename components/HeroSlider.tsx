@@ -1,5 +1,7 @@
 "use client";
 
+import Image from 'next/image';
+
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -122,7 +124,7 @@ export default function HeroSlider() {
 
     return (
         <div
-            className="relative w-full h-[100vh] overflow-hidden"
+            className="relative w-full h-[calc(100vh-126px)] overflow-hidden"
             onMouseEnter={() => setIsPaused(true)}
             onMouseLeave={() => setIsPaused(false)}
         >
@@ -135,12 +137,17 @@ export default function HeroSlider() {
                     exit={{ scale: 0.96, opacity: 0 }}
                     transition={{ duration: 1.2, ease: [0.76, 0, 0.24, 1] }}
                     className="absolute inset-0 w-full h-full"
-                    style={{
-                        backgroundImage: `url('${slide.image}')`,
-                        backgroundSize: 'cover',
-                        backgroundPosition: 'center',
-                    }}
-                />
+                >
+                    <Image
+                        src={slide.image}
+                        alt={slide.headline}
+                        fill
+                        className="object-cover"
+                        priority={current === 0}
+                        quality={90}
+                        sizes="100vw"
+                    />
+                </motion.div>
             </AnimatePresence>
 
             {/* Multi-layer gradient overlay */}
@@ -148,7 +155,7 @@ export default function HeroSlider() {
             <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-black/20 z-10" />
 
             {/* ─── Content ─── */}
-            <div className="relative z-20 h-full flex flex-col justify-center items-center text-center px-6 md:px-12 xl:px-20 max-w-[1100px] mx-auto w-full pt-20 md:pt-32">
+            <div className="relative z-20 h-full flex flex-col justify-center items-center text-center px-6 md:px-12 xl:px-20 max-w-[1100px] mx-auto w-full pt-12 md:pt-20">
                 <AnimatePresence mode="wait">
                     <motion.div
                         key={`content-${slide.id}`}
@@ -163,7 +170,7 @@ export default function HeroSlider() {
                             initial={{ opacity: 0, x: -20 }}
                             animate={{ opacity: 1, x: 0 }}
                             transition={{ delay: 0.15, duration: 0.6 }}
-                            className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-xl border border-white/20 text-white/90 text-[10px] font-black uppercase tracking-[0.3em] font-outfit px-6 py-2.5 rounded-full mb-8"
+                            className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-xl border border-white/20 text-white/90 text-[10px] font-black uppercase tracking-[0.3em] font-outfit px-6 py-2.5 rounded-full mb-4"
                         >
                             <span className="w-2 h-2 rounded-full bg-blue-400 animate-pulse shadow-[0_0_10px_rgba(96,165,250,0.8)]" />
                             {slide.tag}
@@ -174,7 +181,7 @@ export default function HeroSlider() {
                             initial={{ opacity: 0, y: 30 }}
                             animate={{ opacity: 1, y: 0 }}
                             transition={{ delay: 0.25, duration: 0.75 }}
-                            className="text-6xl md:text-8xl xl:text-9xl font-black text-white leading-[0.85] tracking-tighter mb-2 font-outfit"
+                            className="text-4xl md:text-6xl xl:text-8xl font-black text-white leading-[0.85] tracking-tighter mb-1 font-outfit"
                         >
                             {slide.headline}
                         </motion.h1>
@@ -182,7 +189,7 @@ export default function HeroSlider() {
                             initial={{ opacity: 0, y: 30 }}
                             animate={{ opacity: 1, y: 0 }}
                             transition={{ delay: 0.35, duration: 0.75 }}
-                            className="text-6xl md:text-8xl xl:text-9xl font-normal italic leading-[0.85] tracking-tighter mb-8 font-playfair text-white/90"
+                            className="text-4xl md:text-6xl xl:text-8xl font-normal italic leading-[0.85] tracking-tighter mb-4 font-playfair text-white/90"
                         >
                             {slide.headlineAccent}
                         </motion.h1>
@@ -192,7 +199,7 @@ export default function HeroSlider() {
                             initial={{ opacity: 0, y: 20 }}
                             animate={{ opacity: 1, y: 0 }}
                             transition={{ delay: 0.45, duration: 0.65 }}
-                            className="text-xl md:text-2xl text-white/80 font-medium max-w-2xl mx-auto leading-relaxed mb-6 drop-shadow-lg"
+                            className="text-lg md:text-xl text-white/80 font-medium max-w-2xl mx-auto leading-relaxed mb-4 drop-shadow-lg"
                         >
                             {slide.sub}
                         </motion.p>
@@ -202,7 +209,7 @@ export default function HeroSlider() {
                             initial={{ opacity: 0 }}
                             animate={{ opacity: 1 }}
                             transition={{ delay: 0.55, duration: 0.6 }}
-                            className="inline-block bg-white/5 backdrop-blur-sm border border-white/10 text-white/50 text-[10px] uppercase tracking-[0.2em] px-5 py-2 rounded-full mb-10 font-black font-outfit"
+                            className="inline-block bg-white/5 backdrop-blur-sm border border-white/10 text-white/50 text-[10px] uppercase tracking-[0.2em] px-5 py-2 rounded-full mb-6 font-black font-outfit"
                         >
                             {slide.badge}
                         </motion.div>
@@ -347,10 +354,12 @@ export default function HeroSlider() {
                         onClick={() => goTo(i)}
                         className={`w-12 h-12 rounded-2xl overflow-hidden border-2 transition-all duration-300 ${i === current ? 'border-orange-400 scale-110 shadow-lg shadow-orange-400/30' : 'border-white/20 opacity-50 hover:opacity-75'}`}
                     >
-                        <img
+                        <Image
                             src={s.image}
                             alt={s.tag}
-                            className="w-full h-full object-cover"
+                            fill
+                            className="object-cover"
+                            sizes="48px"
                         />
                     </button>
                 ))}

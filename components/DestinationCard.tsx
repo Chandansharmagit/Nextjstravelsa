@@ -35,14 +35,17 @@ const DestinationCard = ({ destination, className }: DestinationProps) => {
                 viewport={{ once: true }}
                 transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
                 whileHover={{ y: -10 }}
-                className={`group relative aspect-[4/5] bg-slate-100 rounded-[20px] overflow-hidden shadow-[0_10px_30px_-10px_rgba(0,0,0,0.1)] hover:shadow-[0_40px_80px_-20px_rgba(0,0,0,0.25)] transition-all duration-700 ${className}`}
+                className={`group relative aspect-[3/4] bg-slate-100 rounded-[20px] overflow-hidden shadow-[0_10px_30px_-10px_rgba(0,0,0,0.1)] hover:shadow-[0_40px_80px_-20px_rgba(0,0,0,0.25)] transition-all duration-700 ${className}`}
             >
                 {/* Full-Bleed Background Photo */}
                 <div className="absolute inset-0 z-0">
-                    <img
+                    <Image
                         src={imageSrc}
                         alt={destination.title}
-                        className="w-full h-full object-cover transition-transform duration-[2.5s] ease-out group-hover:scale-110"
+                        fill
+                        className="object-cover transition-transform duration-[2.5s] ease-out group-hover:scale-110"
+                        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 33vw, 20vw"
+                        quality={85}
                     />
                     {/* Immersive Gradient Overlay */}
                     <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/20 to-transparent opacity-80 group-hover:opacity-90 transition-opacity duration-700" />
@@ -64,13 +67,13 @@ const DestinationCard = ({ destination, className }: DestinationProps) => {
                 </div>
 
                 {/* Content Overlay */}
-                <div className="absolute inset-x-0 bottom-0 p-8 z-20 flex flex-col justify-end min-h-[50%] transition-transform duration-700 group-hover:translate-y-[-8px]">
+                <div className="absolute inset-x-0 bottom-0 p-6 z-20 flex flex-col justify-end min-h-[50%] transition-transform duration-700 group-hover:translate-y-[-8px]">
                     <div className="flex items-center gap-2 text-blue-400 mb-3 opacity-0 group-hover:opacity-100 transition-all duration-700 transform translate-y-4 group-hover:translate-y-0">
                         <FaMapMarkerAlt size={12} />
                         <span className="text-[10px] font-black uppercase tracking-[0.3em]">{destination.location}</span>
                     </div>
 
-                    <h3 className="text-3xl md:text-4xl font-black text-white tracking-tighter leading-[0.9] h-font uppercase mb-6 group-hover:mb-8 transition-all duration-700">
+                    <h3 className="text-2xl md:text-3xl font-black text-white tracking-tighter leading-[0.9] h-font uppercase mb-4 group-hover:mb-6 transition-all duration-700">
                         {destination.title}
                     </h3>
 

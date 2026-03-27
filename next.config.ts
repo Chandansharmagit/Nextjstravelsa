@@ -64,6 +64,7 @@ const nextConfig: NextConfig = {
         hostname: 'www.vectorlogo.zone',
       }
     ],
+    qualities: [75, 85, 90],
   },
 };
 

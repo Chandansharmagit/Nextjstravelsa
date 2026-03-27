@@ -49,6 +49,10 @@ const config: Config = {
                 'candy-stripe': {
                     '0%': { backgroundPosition: '0 0' },
                     '100%': { backgroundPosition: '40px 40px' },
+                },
+                shimmer: {
+                    '0%': { transform: 'translateX(-100%)' },
+                    '100%': { transform: 'translateX(100%)' },
                 }
             },
             animation: {
@@ -56,6 +60,7 @@ const config: Config = {
                 twinkle: 'twinkle 2s ease-in-out infinite',
                 'fly-across': 'fly-across 20s linear infinite',
                 'candy-stripe': 'candy-stripe 1s linear infinite',
+                shimmer: 'shimmer 2s infinite',
             },
         },
     },
