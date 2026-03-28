@@ -4,7 +4,7 @@ import { useAuth } from '@/context/AuthContext';
 import { useRouter, usePathname } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
-import { FaTachometerAlt, FaUsers, FaMapMarkedAlt, FaSuitcase, FaUserTie, FaComments, FaSignOutAlt, FaCalendarCheck, FaEnvelope, FaBars, FaTimes, FaChevronLeft, FaChevronRight, FaCog, FaChartLine, FaBriefcase, FaFileAlt, FaPaperPlane } from 'react-icons/fa';
+import { FaTachometerAlt, FaUsers, FaMapMarkedAlt, FaSuitcase, FaUserTie, FaComments, FaSignOutAlt, FaCalendarCheck, FaEnvelope, FaBars, FaTimes, FaChevronLeft, FaChevronRight, FaCog, FaChartLine, FaBriefcase, FaFileAlt, FaPaperPlane, FaShieldAlt } from 'react-icons/fa';
 import { motion, AnimatePresence } from 'framer-motion';
 import api from '@/lib/api';
 
@@ -83,6 +83,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
         { icon: <FaComments />, label: 'Feedback', path: '/admin/feedback', count: stats?.recentFeedbackCount },
         { icon: <FaPaperPlane />, label: 'Plan My Trip', path: '/admin/leads', count: stats?.leadsInquiryCount },
         { icon: <FaPaperPlane />, label: 'Newsletter', path: '/admin/newsletter' },
+        { icon: <FaShieldAlt />, label: 'Super Admin', path: '/admin/superadmin' },
     ];
 
     return (
