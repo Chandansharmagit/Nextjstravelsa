@@ -35,7 +35,7 @@ const DestinationCard = ({ destination, className }: DestinationProps) => {
                 viewport={{ once: true }}
                 transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
                 whileHover={{ y: -10 }}
-                className={`group relative aspect-[3/4] bg-slate-100 rounded-[20px] overflow-hidden shadow-[0_10px_30px_-10px_rgba(0,0,0,0.1)] hover:shadow-[0_40px_80px_-20px_rgba(0,0,0,0.25)] transition-all duration-700 ${className}`}
+                className={`group relative aspect-[4/5] bg-slate-100 rounded-[20px] overflow-hidden shadow-[0_10px_30px_-10px_rgba(0,0,0,0.1)] hover:shadow-[0_40px_80px_-20px_rgba(0,0,0,0.25)] transition-all duration-700 ${className}`}
             >
                 {/* Full-Bleed Background Photo */}
                 <div className="absolute inset-0 z-0">
@@ -73,7 +73,7 @@ const DestinationCard = ({ destination, className }: DestinationProps) => {
                         <span className="text-[10px] font-black uppercase tracking-[0.3em]">{destination.location}</span>
                     </div>
 
-                    <h3 className="text-2xl md:text-3xl font-black text-white tracking-tighter leading-[0.9] h-font uppercase mb-4 group-hover:mb-6 transition-all duration-700">
+                    <h3 className="text-xl md:text-2xl font-black text-white tracking-tighter leading-[0.9] h-font uppercase mb-4 group-hover:mb-6 transition-all duration-700">
                         {destination.title}
                     </h3>
 

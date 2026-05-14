@@ -14,6 +14,7 @@ import FeaturedServices from '@/components/FeaturedServices';
 import { TiltCard } from '@/components/TiltCard';
 import { CONFIG } from '@/lib/config';
 import LeadCaptureForm from '@/components/LeadCaptureForm';
+import DestinationSlider from '@/components/DestinationSlider';
 export const dynamic = 'force-dynamic';
 
 // Use environment variable for API URL
@@ -119,17 +120,11 @@ export default async function Home() {
           <p className="text-gray-600">Discover places that everyone is talking about</p>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        <div className="mt-8">
           {destinations && destinations.length > 0 ? (
-            destinations.map((dest: any) => {
-              return (
-                <TiltCard key={dest._id}>
-                  <DestinationCard destination={dest} />
-                </TiltCard>
-              );
-            })
+            <DestinationSlider destinations={destinations} />
           ) : (
-            <div className="col-span-full text-center text-gray-500">
+            <div className="text-center text-gray-500 py-20">
               <p>No featured destinations available at the moment.</p>
               <p className="text-sm">Please make sure backend is running.</p>
             </div>

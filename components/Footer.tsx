@@ -1,7 +1,41 @@
+"use client";
+
 import Link from "next/link";
-import { FaFacebook, FaTwitter, FaInstagram, FaLinkedin, FaMapMarkerAlt, FaPhone, FaEnvelope } from "react-icons/fa";
+import { useState } from "react";
+import { FaFacebook, FaTwitter, FaInstagram, FaLinkedin, FaMapMarkerAlt, FaPhone, FaEnvelope, FaPaperPlane } from "react-icons/fa";
+import api from '@/lib/api';
+import { toast } from "react-hot-toast";
 
 const Footer = () => {
+    const [email, setEmail] = useState('');
+    const [fullName, setFullName] = useState('');
+    const [loading, setLoading] = useState(false);
+
+    const handleSubmit = async (e: React.FormEvent) => {
+        e.preventDefault();
+        if (!email) return;
+
+        // Split fullName into first and last
+        const nameParts = fullName.trim().split(/\s+/);
+        const firstName = nameParts[0] || '';
+        const lastName = nameParts.slice(1).join(' ') || '';
+
+        setLoading(true);
+        try {
+            await api.post('/newsletter', { 
+                email,
+                firstName,
+                lastName
+            });
+            toast.success("Subscribed successfully!");
+            setEmail('');
+            setFullName('');
+        } catch (error: any) {
+            toast.error(error.response?.data?.message || "Subscription failed");
+        } finally {
+            setLoading(false);
+        }
+    };
     return (
         <footer className="bg-slate-950 text-white pt-24 pb-0 relative overflow-hidden">
             {/* Background Accents */}
@@ -81,17 +115,42 @@ const Footer = () => {
                     <div>
                         <h3 className="text-[11px] font-black uppercase tracking-[0.3em] text-blue-500 mb-10 font-outfit">Pulse Sanctuary</h3>
                         <p className="text-slate-400 text-sm font-medium mb-6">Stay attuned to our latest discoveries.</p>
-                        <div className="relative group">
-                            <input 
-                                suppressHydrationWarning 
-                                type="email" 
-                                placeholder="Enter sanctuary email..." 
-                                className="w-full bg-white/5 border border-white/10 rounded-[18px] px-6 py-4 text-sm font-bold focus:outline-none focus:ring-4 focus:ring-blue-600/20 focus:border-blue-600/50 transition-all placeholder:text-slate-600 outline-none pr-16" 
-                            />
-                            <button suppressHydrationWarning className="absolute right-2 top-2 bottom-2 bg-blue-600 px-4 rounded-[14px] font-black text-[10px] uppercase tracking-widest hover:bg-blue-700 transition-all shadow-xl shadow-blue-500/20 flex items-center justify-center">
-                                GO
-                            </button>
-                        </div>
+                        <form onSubmit={handleSubmit} className="space-y-4">
+                            <div className="relative group">
+                                <input 
+                                    suppressHydrationWarning 
+                                    type="text" 
+                                    value={fullName}
+                                    onChange={(e) => setFullName(e.target.value)}
+                                    placeholder="Your Full Name..." 
+                                    className="w-full bg-white/5 border border-white/10 rounded-[18px] px-6 py-4 text-sm font-bold focus:outline-none focus:ring-4 focus:ring-blue-600/20 focus:border-blue-600/50 transition-all placeholder:text-slate-600 outline-none text-white" 
+                                    required
+                                />
+                            </div>
+                            <div className="relative group">
+                                <input 
+                                    suppressHydrationWarning 
+                                    type="email" 
+                                    value={email}
+                                    onChange={(e) => setEmail(e.target.value)}
+                                    placeholder="Enter sanctuary email..." 
+                                    className="w-full bg-white/5 border border-white/10 rounded-[18px] px-6 py-4 text-sm font-bold focus:outline-none focus:ring-4 focus:ring-blue-600/20 focus:border-blue-600/50 transition-all placeholder:text-slate-600 outline-none pr-16 text-white" 
+                                    required
+                                />
+                                <button 
+                                    type="submit"
+                                    disabled={loading}
+                                    suppressHydrationWarning 
+                                    className="absolute right-2 top-2 bottom-2 bg-blue-600 px-4 rounded-[14px] font-black text-[10px] uppercase tracking-widest hover:bg-blue-700 transition-all shadow-xl shadow-blue-500/20 flex items-center justify-center disabled:opacity-50"
+                                >
+                                    {loading ? (
+                                        <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                                    ) : (
+                                        "GO"
+                                    )}
+                                </button>
+                            </div>
+                        </form>
                     </div>
 
                     <div className="pt-4 flex items-center gap-4">
