@@ -96,9 +96,18 @@ export default function RootLayout({
           strategy="lazyOnload"
         />
 
+        {/* Google AdSense */}
+        <Script
+          id="google-adsense"
+          async
+          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9091730293191563"
+          crossOrigin="anonymous"
+          strategy="afterInteractive"
+        />
+
         {/* Google Analytics (gtag.js) */}
         <Script
-          src="https://www.googletagmanager.com/gtag/js?id=G-LGTRJDSD9V"
+          src="https://www.googletagmanager.com/gtag/js?id=G-0DEE0H7J4G"
           strategy="afterInteractive"
         />
         <Script id="google-analytics" strategy="afterInteractive">
@@ -107,7 +116,7 @@ export default function RootLayout({
             function gtag(){dataLayer.push(arguments);}
             gtag('js', new Date());
 
-            gtag('config', 'G-LGTRJDSD9V');
+            gtag('config', 'G-0DEE0H7J4G');
           `}
         </Script>
         <AuthProvider>
