@@ -53,7 +53,7 @@ The beauty of Kathmandu lies not just in its famous monuments, but in the everyd
         date: "Nov 28, 2025",
         author: "Michael Chen",
         readTime: "12 min read",
-        image: "https://images.unsplash.com/photo-1545562083-c583d014b261?q=80&w=2670&auto=format&fit=crop",
+        image: "https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?q=80&w=1600&auto=format&fit=crop",
         excerpt: "Don't get caught unaware. Here is everything you need to survive and thrive on the world's most famous trek.",
         content: `
 # The Complete Everest Base Camp Packing Guide
@@ -131,7 +131,7 @@ Remember, you can buy or rent most equipment in Kathmandu or Namche Bazaar if yo
         date: "Dec 05, 2025",
         author: "Priya Sharma",
         readTime: "6 min read",
-        image: "https://images.unsplash.com/photo-1578559318534-1100df88d04a?q=80&w=2681&auto=format&fit=crop",
+        image: "https://images.unsplash.com/photo-1506197603052-3cc9c3a201bd?q=80&w=1600&auto=format&fit=crop",
         excerpt: "Discover the serenity of the Thunder Dragon Kingdom and find inner peace in its monasteries.",
         content: `
 # Finding Peace in the Land of the Thunder Dragon

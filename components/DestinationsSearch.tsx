@@ -48,7 +48,7 @@ export default function DestinationsSearch() {
                 initial={{ opacity: 0, y: 40 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.2, duration: 1.2, ease: [0.22, 1, 0.36, 1] }}
-                className="bg-white/90 backdrop-blur-[50px] p-4 rounded-[20px] shadow-[0_50px_120px_-30px_rgba(0,0,0,0.2)] border border-white flex flex-col md:flex-row items-center gap-4"
+                className="bg-white p-4 rounded-[20px] shadow-xl border border-gray-200/80 flex flex-col md:flex-row items-center gap-4"
             >
                 <div className="relative flex-1 w-full group">
                     <FaSearch className="absolute left-6 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-blue-600 transition-colors" size={18} />

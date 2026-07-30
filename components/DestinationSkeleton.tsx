@@ -4,35 +4,47 @@ import { motion } from 'framer-motion';
 
 const DestinationSkeleton = () => {
     return (
-        <div className="relative aspect-[3/4] bg-slate-100 rounded-[20px] overflow-hidden shadow-sm border border-slate-200/50">
-            {/* Shimmer overlay */}
-            <div className="absolute inset-0 z-10 pointer-events-none">
-                <div className="w-full h-full bg-gradient-to-r from-transparent via-white/40 to-transparent -translate-x-full animate-shimmer" />
-            </div>
+        <motion.div 
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.5 }}
+            className="relative aspect-[4/5] bg-gradient-to-br from-slate-100 via-slate-50 to-slate-200/80 rounded-[20px] overflow-hidden shadow-xs border border-slate-200/60"
+        >
+            {/* Smooth Continuous Linear Shimmer Wave */}
+            <motion.div
+                initial={{ x: '-100%' }}
+                animate={{ x: '100%' }}
+                transition={{
+                    repeat: Infinity,
+                    duration: 1.8,
+                    ease: "easeInOut"
+                }}
+                className="absolute inset-0 z-10 bg-gradient-to-r from-transparent via-white/80 to-transparent pointer-events-none"
+            />
 
             {/* Top Badges placeholders */}
-            <div className="absolute top-4 left-4 z-20">
-                <div className="w-20 h-7 bg-slate-200/60 rounded-full" />
+            <div className="absolute top-5 left-5 z-20">
+                <div className="w-24 h-7 bg-slate-200/80 rounded-full" />
             </div>
-            <div className="absolute top-4 right-4 z-20">
-                <div className="w-14 h-7 bg-slate-200/60 rounded-full" />
+            <div className="absolute top-5 right-5 z-20">
+                <div className="w-16 h-7 bg-slate-200/80 rounded-full" />
             </div>
 
             {/* Bottom Content placeholders */}
             <div className="absolute inset-x-0 bottom-0 p-6 z-20 flex flex-col justify-end gap-3">
-                <div className="w-16 h-3 bg-slate-200/60 rounded-full ml-1" />
-                <div className="w-40 h-8 bg-slate-200/80 rounded-lg" />
+                <div className="w-20 h-3 bg-slate-200/70 rounded-full" />
+                <div className="w-48 h-8 bg-slate-300/80 rounded-xl" />
                 
-                <div className="flex items-center justify-between pt-4 border-t border-slate-200/40">
+                <div className="flex items-center justify-between pt-6 border-t border-slate-200/60">
                     <div className="flex -space-x-3">
-                        {[1, 2, 3, 4].map((i) => (
-                            <div key={i} className="w-9 h-9 rounded-full bg-slate-200/60 border-2 border-slate-100" />
+                        {[1, 2, 3].map((i) => (
+                            <div key={i} className="w-9 h-9 rounded-full bg-slate-200 border-2 border-white" />
                         ))}
                     </div>
-                    <div className="w-14 h-14 rounded-full bg-slate-200/80" />
+                    <div className="w-12 h-12 rounded-full bg-slate-300/80" />
                 </div>
             </div>
-        </div>
+        </motion.div>
     );
 };
 

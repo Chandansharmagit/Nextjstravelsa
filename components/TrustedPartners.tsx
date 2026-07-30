@@ -13,7 +13,7 @@ const partners = [
 export default function TrustedPartners() {
     return (
         <section className="py-12 bg-white border-b border-gray-100">
-            <div className="container mx-auto px-4 xl:px-20">
+            <div className="max-w-[1400px] mx-auto px-4 md:px-8 lg:px-12">
                 <div className="text-center mb-10">
                     <p className="text-sm font-bold text-gray-500 uppercase tracking-widest">Trusted By Global Partners</p>
                 </div>

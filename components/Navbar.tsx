@@ -104,7 +104,7 @@ const Navbar = () => {
                 transition-all duration-300
                 ${scrolled ? 'shadow-lg py-1' : 'shadow-sm py-2'}
             `}>
-                <div className="max-w-[1800px] mx-auto px-6 lg:px-12">
+                <div className="max-w-[1400px] mx-auto px-4 md:px-8 lg:px-12">
                     {/* Main Flex Container: Logo | Links | Search | Actions */}
                     <div className="flex items-center justify-between h-[70px]">
 
@@ -121,53 +121,50 @@ const Navbar = () => {
                             </Link>
                         </div>
 
-                        {/* CENTER: Navigation Links (Desktop) */}
-                        <nav className="hidden xl:flex items-center justify-center gap-8 flex-1 px-8 overflow-hidden">
-                            {menuItems.map((item) => (
-                                <Link
-                                    key={item.name}
-                                    href={item.path}
-                                    className={`
-                                        relative text-[11px] xl:text-[13px] font-bold uppercase tracking-wider
-                                        transition-colors duration-200 whitespace-nowrap
-                                        ${isActive(item.path)
-                                            ? 'text-blue-600'
-                                            : 'text-slate-500 hover:text-slate-900'
-                                        }
-                                    `}
-                                >
-                                    <span className="flex items-center gap-1.5">
-                                        {item.name}
-                                        {item.name === "Expedition Planner" && (
-                                            <span className="relative flex h-1.5 w-1.5">
-                                                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-500 opacity-75"></span>
-                                                <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-blue-600"></span>
+                        {/* CENTER: Navigation Links Bar (Pill Container) */}
+                        <div className="hidden xl:flex items-center justify-center flex-1 px-4">
+                            <nav className="inline-flex items-center bg-slate-100/80 border border-slate-200/80 rounded-full p-1.5 shadow-xs font-sans">
+                                {menuItems.map((item) => {
+                                    const active = isActive(item.path);
+                                    return (
+                                        <Link
+                                            key={item.name}
+                                            href={item.path}
+                                            className={`
+                                                relative text-[12px] font-bold tracking-wide transition-all duration-200 whitespace-nowrap rounded-full px-5 py-2
+                                                ${active
+                                                    ? 'bg-indigo-600 text-white shadow-md shadow-indigo-500/20'
+                                                    : 'text-slate-700 hover:text-slate-900 hover:bg-slate-200/60'
+                                                }
+                                            `}
+                                        >
+                                            <span className="flex items-center gap-1.5">
+                                                {item.name}
+                                                {item.name === "Expedition Planner" && !active && (
+                                                    <span className="relative flex h-1.5 w-1.5">
+                                                        <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-indigo-400 opacity-75"></span>
+                                                        <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-indigo-600"></span>
+                                                    </span>
+                                                )}
                                             </span>
-                                        )}
-                                    </span>
-                                    {isActive(item.path) && (
-                                        <motion.div
-                                            layoutId="activeNavItem"
-                                            className="absolute -bottom-1 left-0 right-0 h-[2.5px] bg-blue-600 rounded-full"
-                                            transition={{ duration: 0.3 }}
-                                        />
-                                    )}
-                                </Link>
-                            ))}
-                        </nav>
+                                        </Link>
+                                    );
+                                })}
+                            </nav>
+                        </div>
 
-                        {/* RIGHT: Search Bar + User Actions */}
-                        <div className="flex items-center justify-end gap-3 xl:gap-5 shrink-0 ml-auto min-w-[200px]">
+                        {/* RIGHT: Search Bar + Action Pills */}
+                        <div className="flex items-center justify-end gap-2.5 shrink-0 ml-auto font-sans">
                             {/* Desktop Search Trigger */}
                             <div className="hidden xl:block">
                                 <button
                                     onClick={() => setShowSearchDropdown(true)}
-                                    className="group flex items-center gap-3 h-11 px-4 bg-slate-100 hover:bg-slate-200 rounded-2xl transition-all duration-300 border border-transparent hover:border-slate-200"
+                                    className="group flex items-center gap-2.5 h-10 px-4 bg-slate-100 hover:bg-slate-200/80 rounded-full transition-all duration-300 border border-slate-200/60"
                                 >
-                                    <FaSearch className="text-slate-400 group-hover:text-blue-600 transition-colors" size={16} />
-                                    <span className="text-[13px] font-bold text-slate-500 group-hover:text-slate-900 transition-colors pr-8">Search sanctuary...</span>
-                                    <kbd className="hidden xl:inline-flex items-center gap-1 px-2 py-0.5 text-[10px] font-black text-slate-400 bg-white border border-slate-200 rounded-md shadow-sm">
-                                        ESC
+                                    <FaSearch className="text-slate-400 group-hover:text-indigo-600 transition-colors" size={13} />
+                                    <span className="text-[12px] font-bold text-slate-500 group-hover:text-slate-900 transition-colors">Search...</span>
+                                    <kbd className="hidden xl:inline-flex items-center px-1.5 py-0.5 text-[9px] font-black text-slate-400 bg-white border border-slate-200 rounded-md shadow-2xs">
+                                        ⌘ K
                                     </kbd>
                                 </button>
 
@@ -390,26 +387,6 @@ const Navbar = () => {
                                 {mobileMenuOpen ? <FaTimes size={22} /> : <FaBars size={22} />}
                             </button>
 
-                            {/* Social Icons (Desktop) - Adjusted for more compact layout */}
-                            <div className="hidden xl:flex items-center gap-1.5 border-l border-slate-100 pl-4 h-8 ml-2">
-                                <a
-                                    href="#"
-                                    className="w-8 h-8 flex items-center justify-center rounded-lg text-slate-400 hover:text-pink-600 hover:bg-pink-50 transition-all shadow-sm bg-white border border-slate-50"
-                                    aria-label="Instagram"
-                                >
-                                    <FaInstagram size={14} />
-                                </a>
-                                <a
-                                    href="https://www.facebook.com/share/v/1BMuExj5x5/"
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    className="w-8 h-8 flex items-center justify-center rounded-lg text-slate-400 hover:text-blue-600 hover:bg-blue-50 transition-all shadow-sm bg-white border border-slate-50"
-                                    aria-label="Facebook"
-                                >
-                                    <FaFacebookF size={14} />
-                                </a>
-                            </div>
-
                             {/* User Section */}
                             {/* User Section with Premium Hover Popup */}
                             {user ? (
@@ -535,13 +512,23 @@ const Navbar = () => {
                                     </AnimatePresence>
                                 </div>
                             ) : (
-                                <Link
-                                    href="/login"
-                                    className="hidden xl:flex items-center gap-2 px-6 py-2.5 bg-slate-900 hover:bg-slate-800 text-white text-xs font-bold uppercase tracking-wider rounded-lg transition-all shadow-lg hover:shadow-xl hover:-translate-y-0.5"
-                                >
-                                    <FaUser size={12} />
-                                    <span>Login</span>
-                                </Link>
+                                <div className="hidden xl:flex items-center gap-2">
+                                    <Link
+                                        href="/login"
+                                        className="inline-flex items-center gap-2 px-5 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-800 text-xs font-bold rounded-full transition-all border border-slate-200/80 shadow-2xs"
+                                    >
+                                        <FaUser size={12} className="text-slate-600" />
+                                        <span>Sign In</span>
+                                    </Link>
+
+                                    <Link
+                                        href="/expedition-planner"
+                                        className="inline-flex items-center gap-2 px-6 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-black rounded-full transition-all shadow-md shadow-indigo-500/25 hover:scale-105 active:scale-95"
+                                    >
+                                        <span>Client Portal</span>
+                                        <FaArrowRight size={11} />
+                                    </Link>
+                                </div>
                             )}
                         </div>
                     </div>

@@ -19,7 +19,7 @@ const guides = [
         title: "The Ultimate Packing List for Everest Base Camp",
         category: "Trekking",
         date: "Nov 28, 2025",
-        image: "https://images.unsplash.com/photo-1545562083-c583d014b261?q=80&w=2670&auto=format&fit=crop",
+        image: "https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?q=80&w=1600&auto=format&fit=crop",
         excerpt: "Don't get caught unaware. Here is everything you need to survive and thrive on the world's most famous trek."
     },
     {
@@ -27,15 +27,15 @@ const guides = [
         title: "Why Bhutan Should Be Your Next Spiritual Retreat",
         category: "Wellness",
         date: "Dec 05, 2025",
-        image: "https://images.unsplash.com/photo-1578559318534-1100df88d04a?q=80&w=2681&auto=format&fit=crop",
+        image: "https://images.unsplash.com/photo-1506197603052-3cc9c3a201bd?q=80&w=1600&auto=format&fit=crop",
         excerpt: "Discover the serenity of the Thunder Dragon Kingdom and find inner peace in its monasteries."
     }
 ];
 
 export default function FeaturedGuides() {
     return (
-        <section className="py-20 px-4 xl:px-20 bg-gray-50">
-            <div className="container mx-auto">
+        <section className="py-20 bg-gray-50 border-b border-gray-100">
+            <div className="max-w-[1400px] mx-auto px-4 md:px-8 lg:px-12">
                 <div className="flex justify-between items-end mb-12">
                     <div>
                         <h2 className="text-4xl font-bold text-gray-800 mb-4">Travel Inspiration & Tips</h2>

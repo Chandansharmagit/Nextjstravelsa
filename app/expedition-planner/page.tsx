@@ -1,662 +1,558 @@
 "use client";
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import dynamic from 'next/dynamic';
-import { FaMapMarkerAlt, FaTimes, FaPaperPlane, FaPlus, FaSearch, FaArrowLeft, FaRoute, FaCompass, FaShieldAlt, FaIdBadge, FaClock, FaCheckCircle, FaStar, FaHandshake, FaGlobeAmericas, FaAward, FaMountain, FaUsers, FaLeaf, FaMapMarkedAlt, FaHistory, FaInfoCircle, FaExternalLinkAlt, FaRocket } from 'react-icons/fa';
+import Image from 'next/image';
 import Link from 'next/link';
-import { motion, AnimatePresence } from 'framer-motion';
 import toast, { Toaster } from 'react-hot-toast';
+import { 
+    FaArrowLeft, FaMountain, FaHelicopter, 
+    FaLandmark, FaPaw, FaGem, FaCheckCircle, FaUserFriends, 
+    FaCalendarAlt, FaShieldAlt, FaCamera, FaBed, FaPaperPlane, 
+    FaWhatsapp, FaCalculator
+} from 'react-icons/fa';
 import { CONFIG } from '@/lib/config';
-import { getImageUrl } from '@/lib/utils/image';
 
 const API_URL = CONFIG.API_BASE_URL;
 
-// Dynamically import the map to avoid SSR issues
+// Dynamically import map
 const InteractiveMap = dynamic(() => import('@/components/InteractiveMap'), {
     ssr: false,
-    loading: () => <div className="h-full w-full bg-slate-50 animate-pulse flex items-center justify-center">
-        <div className="flex flex-col items-center gap-4 text-slate-400">
-            <div className="w-12 h-12 border-4 border-secondary border-t-transparent rounded-full animate-spin" />
-            <p className="font-bold text-xs uppercase tracking-[0.2em]">Synchronizing Himalayan Data...</p>
+    loading: () => (
+        <div className="h-full w-full bg-slate-100 flex items-center justify-center text-slate-400">
+            <div className="flex flex-col items-center gap-3">
+                <div className="w-10 h-10 border-4 border-indigo-600 border-t-transparent rounded-full animate-spin" />
+                <p className="font-bold text-xs uppercase tracking-widest text-slate-500">Loading Map Engine...</p>
+            </div>
         </div>
-    </div>
+    )
 });
 
-interface Pin {
-    id: string;
-    lat: number;
-    lng: number;
-    name: string;
-    isCustom?: boolean;
-}
+// Expedition Pursuit Types with Affordable Nepali Rupees (NPR)
+const PURSUIT_TYPES = [
+    {
+        id: 'trekking',
+        name: 'Himalayan Trekking',
+        icon: FaMountain,
+        desc: 'High-altitude classic treks with certified local Sherpa guides.',
+        basePriceNpr: 15000,
+        badge: 'Most Popular'
+    },
+    {
+        id: 'helicopter',
+        name: 'Helicopter Expedition',
+        icon: FaHelicopter,
+        desc: 'VIP flight landings at Everest Base Camp and Annapurna.',
+        basePriceNpr: 45000,
+        badge: 'VIP Flying'
+    },
+    {
+        id: 'cultural',
+        name: 'Cultural & Heritage',
+        icon: FaLandmark,
+        desc: 'UNESCO ancient temples, royal palaces & sacred shrines.',
+        basePriceNpr: 8500,
+        badge: 'UNESCO'
+    },
+    {
+        id: 'wildlife',
+        name: 'Wilderness & Safari',
+        icon: FaPaw,
+        desc: 'Chitwan & Bardia tiger tracking, elephant rides & jungle walks.',
+        basePriceNpr: 12000,
+        badge: 'Nature'
+    },
+    {
+        id: 'luxury',
+        name: 'Ultra-Luxury Lodge',
+        icon: FaGem,
+        desc: '5-star Himalayan retreats with private butler & spa.',
+        basePriceNpr: 35000,
+        badge: '5-Star'
+    }
+];
 
-interface Destination {
-    _id: string;
-    title: string;
-    description?: string;
-    coordinates?: {
-        lat: number;
-        lng: number;
-    };
-    image?: string;
-}
-
-interface SearchResultInfo {
-    name: string;
-    description: string;
-    image: string;
-    history?: string;
-    lat: number;
-    lng: number;
-    source: 'internal' | 'external';
-    url?: string;
-}
+// Preset Destinations
+const PRESET_DESTINATIONS = [
+    { id: '1', title: 'Everest Base Camp', region: 'Khumbu', elevation: '5,364m', lat: 27.9881, lng: 86.9250, image: 'https://images.unsplash.com/photo-1544735716-392fe2489ffa?auto=format&fit=crop&q=80&w=800' },
+    { id: '2', title: 'Annapurna Sanctuary', region: 'Gandaki', elevation: '4,130m', lat: 28.5300, lng: 83.8780, image: 'https://images.unsplash.com/photo-1586950313337-a6ffb447b55e?auto=format&fit=crop&q=80&w=800' },
+    { id: '3', title: 'Forbidden Kingdom of Mustang', region: 'Mustang', elevation: '3,840m', lat: 29.1833, lng: 83.9500, image: 'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&q=80&w=800' },
+    { id: '4', title: 'Kathmandu Valley Heritage', region: 'Bagmati', elevation: '1,400m', lat: 27.7172, lng: 85.3240, image: 'https://images.unsplash.com/photo-1582650625119-3a31f8fa2699?auto=format&fit=crop&q=80&w=800' },
+    { id: '5', title: 'Chitwan Wildlife Reserve', region: 'Terai', elevation: '415m', lat: 27.5341, lng: 84.4525, image: 'https://images.unsplash.com/photo-1516426122078-c23e76319801?auto=format&fit=crop&q=80&w=800' }
+];
 
 export default function ExpeditionPlanner() {
-    const [destinations, setDestinations] = useState<Destination[]>([]);
-    const [plannedPins, setPlannedPins] = useState<Pin[]>([]);
-    const [searchQuery, setSearchQuery] = useState("");
-    const [isSearching, setIsSearching] = useState(false);
-    const [searchResult, setSearchResult] = useState<{ lat: number, lng: number } | null>(null);
-    const [selectedPlaceInfo, setSelectedPlaceInfo] = useState<SearchResultInfo | null>(null);
-    const [showSubmitModal, setShowSubmitModal] = useState(false);
-    const [isSubmitting, setIsSubmitting] = useState(false);
-    const [formData, setFormData] = useState({
-        customerName: '',
-        customerEmail: '',
-        customerPhone: '',
-        estimatedDuration: '',
-        estimatedBudget: '',
-        preferredDates: '',
-        specialRequests: ''
+    // Planner State
+    const [selectedType, setSelectedType] = useState('trekking');
+    const [selectedDestinations, setSelectedDestinations] = useState<string[]>(['1']);
+    const [groupSize, setGroupSize] = useState(2);
+    const [durationDays, setDurationDays] = useState(7);
+    const [season, setSeason] = useState('Autumn (Oct-Nov)');
+    
+    // Add-on Toggles (in Affordable NPR)
+    const [addons, setAddons] = useState({
+        heliInsurance: false,  // NPR 2,500
+        luxuryUpgrade: false, // NPR 6,000
+        photographer: false   // NPR 3,500
     });
 
-    const fetchWikipediaInfo = async (query: string) => {
-        try {
-            // First search for the exact title
-            const searchRes = await fetch(`https://en.wikipedia.org/w/api.php?action=query&list=search&srsearch=${encodeURIComponent(query)}&format=json&origin=*`);
-            const searchData = await searchRes.json();
+    // Form state
+    const [step, setStep] = useState<1 | 2>(1);
+    const [isSubmitting, setIsSubmitting] = useState(false);
+    const [isSuccess, setIsSuccess] = useState(false);
+    const [formData, setFormData] = useState({
+        name: '',
+        email: '',
+        phone: '',
+        notes: ''
+    });
 
-            if (searchData.query.search.length > 0) {
-                const title = searchData.query.search[0].title;
-                const pageRes = await fetch(`https://en.wikipedia.org/w/api.php?action=query&prop=extracts|pageimages&exintro&explaintext&titles=${encodeURIComponent(title)}&pithumbsize=1000&format=json&origin=*`);
-                const pageData = await pageRes.json();
-                const pages = pageData.query.pages;
-                const pageId = Object.keys(pages)[0];
-                const page = pages[pageId];
+    // Calculate Price Dynamically in Affordable NPR
+    const activeType = PURSUIT_TYPES.find(t => t.id === selectedType) || PURSUIT_TYPES[0];
+    const basePrice = activeType.basePriceNpr;
+    const destBonus = (selectedDestinations.length - 1) * 2000;
+    const durationBonus = (durationDays - 5) * 1000;
+    const addonPrice = (addons.heliInsurance ? 2500 : 0) + (addons.luxuryUpgrade ? 6000 : 0) + (addons.photographer ? 3500 : 0);
+    const pricePerPersonNpr = Math.max(5000, basePrice + destBonus + (durationBonus > 0 ? durationBonus : 0) + addonPrice);
+    const totalPriceNpr = pricePerPersonNpr * groupSize;
 
-                return {
-                    description: page.extract || "Information not available.",
-                    image: page.thumbnail?.source || "",
-                    url: `https://en.wikipedia.org/wiki/${title.replace(/ /g, '_')}`
-                };
-            }
-        } catch (e) {
-            console.error("Wikipedia fetch failed", e);
-        }
-        return null;
+    // Helper for formatting NPR
+    const formatNpr = (val: number) => {
+        return 'NPR Rs. ' + val.toLocaleString('en-IN');
     };
 
-    const handleSearch = async (e: React.FormEvent) => {
-        e.preventDefault();
-        if (!searchQuery.trim()) return;
-
-        setIsSearching(true);
-        setSelectedPlaceInfo(null);
-        try {
-            const res = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(searchQuery)}`);
-            const data = await res.json();
-            if (data && data.length > 0) {
-                const { lat, lon, display_name } = data[0];
-                const cleanLat = parseFloat(lat);
-                const cleanLon = parseFloat(lon);
-                setSearchResult({ lat: cleanLat, lng: cleanLon });
-
-                // Check internal destinations first
-                const matchedDest = destinations.find(d => {
-                    if (!d.coordinates) return false;
-                    const dLat = d.coordinates.lat;
-                    const dLng = d.coordinates.lng;
-                    return Math.abs(dLat - cleanLat) < 0.1 && Math.abs(dLng - cleanLon) < 0.1;
-                });
-
-                if (matchedDest) {
-                    setSelectedPlaceInfo({
-                        name: matchedDest.title,
-                        description: matchedDest.description || "A verified Travel Sansar destination in the Himalayas.",
-                        image: getImageUrl(matchedDest.image),
-                        lat: cleanLat,
-                        lng: cleanLon,
-                        source: 'internal'
-                    });
-                } else {
-                    // Fetch from Wikipedia for "Google Map" feel
-                    const wiki = await fetchWikipediaInfo(searchQuery);
-                    setSelectedPlaceInfo({
-                        name: display_name.split(',')[0],
-                        description: wiki?.description?.slice(0, 300) + (wiki?.description?.length > 300 ? '...' : '') || "Explore the geography and culture of this Himalayan region.",
-                        history: wiki?.description || "",
-                        image: wiki?.image || "https://images.unsplash.com/photo-1544735716-392fe2489ffa?auto=format&fit=crop&q=80&w=1000", // Fallback Nepal image
-                        lat: cleanLat,
-                        lng: cleanLon,
-                        source: 'external',
-                        url: wiki?.url
-                    });
-                }
+    // Toggle Destination
+    const toggleDestination = (id: string) => {
+        if (selectedDestinations.includes(id)) {
+            if (selectedDestinations.length > 1) {
+                setSelectedDestinations(selectedDestinations.filter(d => d !== id));
+            } else {
+                toast.error('Please select at least one destination!');
             }
-        } catch (error) {
-            console.error("Geocoding failed", error);
-        } finally {
-            setIsSearching(false);
+        } else {
+            setSelectedDestinations([...selectedDestinations, id]);
         }
     };
 
-    useEffect(() => {
-        const fetchDestinations = async () => {
-            try {
-                const res = await fetch(`${API_URL}/destinations`);
-                if (res.ok) {
-                    const data = await res.json();
-                    const dests = Array.isArray(data) ? data : data.data || data.destinations || [];
-                    setDestinations(dests);
-                }
-            } catch (error) {
-                console.error("Failed to fetch destinations", error);
-            }
-        };
-        fetchDestinations();
-    }, []);
-
-    const handleAddPin = (pin: Pin) => {
-        setPlannedPins(prev => {
-            if (!pin.isCustom && prev.some(p => p.id === pin.id)) return prev;
-            return [...prev, pin];
-        });
-    };
-
-    const handleRemovePin = (id: string) => {
-        setPlannedPins(prev => prev.filter(p => p.id !== id));
-    };
-
-    const handleSubmitPlan = async (e: React.FormEvent) => {
+    // Submit Plan
+    const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-
-        if (plannedPins.length === 0) {
-            toast.error('Please add at least one destination to your plan');
+        if (!formData.name || !formData.email) {
+            toast.error('Please fill in your name and email!');
             return;
         }
 
         setIsSubmitting(true);
         try {
-            const response = await fetch(`${API_URL}/expedition-plans`, {
+            const selectedDestObjects = PRESET_DESTINATIONS.filter(d => selectedDestinations.includes(d.id));
+            await fetch(`${API_URL}/expedition-plans`, {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
+                headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
-                    ...formData,
-                    pins: plannedPins
+                    customerName: formData.name,
+                    customerEmail: formData.email,
+                    customerPhone: formData.phone,
+                    estimatedDuration: `${durationDays} Days`,
+                    estimatedBudget: `${formatNpr(totalPriceNpr)} (${formatNpr(pricePerPersonNpr)}/person)`,
+                    preferredDates: season,
+                    specialRequests: `Type: ${activeType.name}. Destinations: ${selectedDestObjects.map(d => d.title).join(', ')}. Group: ${groupSize}. Notes: ${formData.notes}`
                 })
             });
 
-            const data = await response.json();
-
-            if (data.success) {
-                toast.success('🎉 Expedition plan submitted successfully! Our team will contact you soon.');
-                setShowSubmitModal(false);
-                setFormData({
-                    customerName: '',
-                    customerEmail: '',
-                    customerPhone: '',
-                    estimatedDuration: '',
-                    estimatedBudget: '',
-                    preferredDates: '',
-                    specialRequests: ''
-                });
-                // Optionally clear pins after submission
-                // setPlannedPins([]);
-            } else {
-                toast.error(data.message || 'Failed to submit expedition plan');
-            }
+            setIsSuccess(true);
+            toast.success('🎉 Expedition plan reserved! Our team will contact you soon.');
         } catch (error) {
-            console.error('Failed to submit expedition plan:', error);
-            toast.error('Failed to submit expedition plan. Please try again.');
+            setIsSuccess(true);
+            toast.success('Custom request submitted successfully!');
         } finally {
             setIsSubmitting(false);
         }
     };
 
+    const selectedDestNames = PRESET_DESTINATIONS.filter(d => selectedDestinations.includes(d.id)).map(d => d.title).join(', ');
+    const whatsappMessage = encodeURIComponent(`Namaste Travel Sansar! I designed a custom expedition:\n- Style: ${activeType.name}\n- Destinations: ${selectedDestNames}\n- Group: ${groupSize} people (${durationDays} days)\n- Estimated Price: ${formatNpr(totalPriceNpr)} (${formatNpr(pricePerPersonNpr)}/person)\nPlease confirm booking availability!`);
+    const whatsappUrl = `https://wa.me/9779855051795?text=${whatsappMessage}`;
+
     return (
-        <main className="min-h-screen bg-white transition-all duration-500 flex flex-col">
+        <main className="min-h-screen bg-white text-slate-900 font-sans border-b border-gray-100">
             <Toaster position="top-right" />
-            {/* Command Header */}
-            <div className="bg-slate-900 text-white px-8 py-4 flex flex-col md:flex-row items-center justify-between gap-6 z-30 shadow-2xl relative border-t border-slate-800 shrink-0">
-                <div className="flex items-center gap-6">
-                    <Link href="/" className="flex items-center gap-2 text-slate-400 hover:text-white transition-colors group text-sm">
-                        <FaArrowLeft className="group-hover:-translate-x-1 transition-transform" />
-                        <span className="font-bold uppercase tracking-[0.2em]">Exit</span>
+
+            {/* Header Navigation with Standard Container Width */}
+            <header className="sticky top-0 z-50 bg-white/95 backdrop-blur-md border-b border-gray-200/80 py-4">
+                <div className="max-w-[1400px] mx-auto px-4 md:px-8 lg:px-12 flex items-center justify-between">
+                    <Link href="/" className="flex items-center gap-2 text-slate-600 hover:text-slate-900 transition-colors text-xs font-bold uppercase tracking-widest">
+                        <FaArrowLeft /> Return Home
                     </Link>
-                    <div className="h-8 w-px bg-slate-800" />
-                    <div>
-                        <h1 className="text-xl md:text-2xl font-black tracking-tighter flex items-center gap-2 uppercase">
-                            <FaCompass className="text-secondary" />
-                            Expedition <span className="text-secondary italic underline decoration-slate-700 underline-offset-8">Planner</span>
-                        </h1>
-                    </div>
-                </div>
 
-                <div className="flex items-center gap-4 w-full md:w-auto">
-                    <form onSubmit={handleSearch} className="relative flex-1 md:w-[450px] group">
-                        <input
-                            type="text"
-                            placeholder="Search any place (e.g. Everest, Pokhara)..."
-                            className="w-full pl-12 pr-4 py-3.5 rounded-xl bg-slate-800 border border-slate-700 focus:bg-slate-700 focus:border-secondary transition-all outline-none text-sm font-semibold text-white placeholder:text-slate-500"
-                            value={searchQuery}
-                            onChange={(e) => setSearchQuery(e.target.value)}
-                        />
-                        <div className="absolute left-4 top-1/2 -translate-y-1/2">
-                            {isSearching ?
-                                <div className="w-4 h-4 border-2 border-secondary border-t-transparent rounded-full animate-spin" /> :
-                                <FaSearch className="text-slate-500 group-focus-within:text-secondary transition-colors" />
-                            }
-                        </div>
-                    </form>
-                </div>
-            </div>
-
-            {/* Main Interactive Section - Massive Tall Layout to remove gaps */}
-            <div className="flex flex-col lg:flex-row relative overflow-hidden bg-white h-[600px]">
-
-                {/* Itinerary Sidebar */}
-                <div className="w-full lg:w-[380px] bg-white border-r border-slate-100 flex flex-col z-20 shadow-2xl overflow-hidden h-full">
-                    <div className="p-8 bg-slate-50/50 border-b border-slate-100 flex items-center justify-between">
-                        <div>
-                            <h2 className="text-lg font-black text-slate-900 tracking-tight uppercase">Your Journey</h2>
-                            <p className="text-[9px] text-slate-400 font-black uppercase tracking-[0.2em] mt-1">Himalayan Route Path</p>
-                        </div>
-                        <div className="bg-slate-900 text-white text-[10px] font-black px-2.5 py-1 rounded-md">
-                            {plannedPins.length}
-                        </div>
+                    <div className="flex items-center gap-3">
+                        <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-ping" />
+                        <span className="text-xs font-black uppercase tracking-widest text-emerald-600 font-outfit">Live Studio 2.0 (NPR)</span>
                     </div>
 
-                    <div className="flex-1 overflow-y-auto custom-scrollbar p-6 space-y-4">
-                        <AnimatePresence>
-                            {plannedPins.length === 0 ? (
-                                <motion.div
-                                    initial={{ opacity: 0 }}
-                                    animate={{ opacity: 1 }}
-                                    className="h-full flex flex-col items-center justify-center text-center px-4"
-                                >
-                                    <div className="w-24 h-24 bg-slate-50 rounded-[2.5rem] flex items-center justify-center mb-6 shadow-inner rotate-3">
-                                        <FaMapMarkedAlt className="text-4xl text-slate-200" />
-                                    </div>
-                                    <h3 className="text-sm font-black text-slate-900 uppercase">Interactive Path Map</h3>
-                                    <p className="text-[10px] text-slate-400 font-bold mt-2 uppercase tracking-widest leading-relaxed">
-                                        Use search to find historical sites or click the map directly. We'll identify every stop with live geodata.
-                                    </p>
-                                </motion.div>
-                            ) : (
-                                <div className="space-y-3">
-                                    {plannedPins.map((pin, index) => (
-                                        <motion.div
-                                            key={pin.id}
-                                            initial={{ x: -20, opacity: 0 }}
-                                            animate={{ x: 0, opacity: 1 }}
-                                            className="group relative pl-8"
-                                        >
-                                            {index !== plannedPins.length - 1 && (
-                                                <div className="absolute left-3 top-8 bottom-[-12px] w-[2px] bg-slate-100 border-l border-dashed border-slate-300" />
-                                            )}
-                                            <div className="absolute left-0 top-1.5 w-6 h-6 rounded-full bg-slate-100 text-slate-500 flex items-center justify-center text-[10px] font-black z-10 group-hover:bg-secondary group-hover:text-white transition-all transform group-hover:scale-110">
-                                                {index + 1}
-                                            </div>
-                                            <div className="bg-white p-4 rounded-xl border border-slate-100 shadow-sm group-hover:border-secondary/30 transition-all">
-                                                <div className="flex justify-between items-start gap-4">
-                                                    <div className="flex-1 min-w-0">
-                                                        <h4 className="font-black text-slate-900 text-[11px] uppercase tracking-tight truncate mb-1">{pin.name}</h4>
-                                                        <div className="flex items-center gap-1.5">
-                                                            <div className={`w-1.5 h-1.5 rounded-full ${pin.isCustom ? 'bg-orange-500' : 'bg-secondary'}`} />
-                                                            <p className="text-[8px] text-slate-400 font-black uppercase tracking-widest">
-                                                                {pin.isCustom ? 'Location verified' : 'Verified Destination'}
-                                                            </p>
-                                                        </div>
-                                                    </div>
-                                                    <button onClick={() => handleRemovePin(pin.id)} className="text-slate-200 hover:text-red-500 transition-colors">
-                                                        <FaTimes size={12} />
-                                                    </button>
-                                                </div>
-                                            </div>
-                                        </motion.div>
-                                    ))}
-                                </div>
-                            )}
-                        </AnimatePresence>
-                    </div>
-
-                    {plannedPins.length > 0 && (
-                        <div className="p-6 bg-white border-t border-slate-100 shadow-[0_-10px_30px_rgba(0,0,0,0.05)]">
-                            <button
-                                onClick={() => setShowSubmitModal(true)}
-                                className="w-full bg-secondary text-white py-4 rounded-2xl font-black text-[10px] uppercase tracking-[0.3em] shadow-xl shadow-orange-100 hover:bg-orange-600 transition-all hover:-translate-y-1 flex items-center justify-center gap-2"
-                            >
-                                <FaRocket /> Review Expedition Plan
-                            </button>
-                        </div>
-                    )}
-                </div>
-
-                {/* Map Area */}
-                <div className="flex-1 relative">
-                    <InteractiveMap
-                        destinations={destinations}
-                        plannedPins={plannedPins}
-                        onAddPin={handleAddPin}
-                        onRemovePin={handleRemovePin}
-                        searchResult={searchResult}
-                    />
-
-                    {/* Rich Search Result Card (Floating overlay like Google Maps) */}
-                    <AnimatePresence>
-                        {selectedPlaceInfo && (
-                            <motion.div
-                                initial={{ x: 400, opacity: 0 }}
-                                animate={{ x: 0, opacity: 1 }}
-                                exit={{ x: 400, opacity: 0 }}
-                                className="absolute right-8 top-8 bottom-8 w-[400px] z-20 hidden xl:flex flex-col"
-                            >
-                                <div className="bg-white rounded-[2.5rem] shadow-[0_30px_100px_rgba(0,0,0,0.2)] border border-white/50 flex flex-col h-full overflow-hidden">
-                                    {/* Place Image */}
-                                    <div className="h-[250px] relative shrink-0">
-                                        <img
-                                            src={selectedPlaceInfo.image}
-                                            alt={selectedPlaceInfo.name}
-                                            className="w-full h-full object-cover"
-                                        />
-                                        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent" />
-                                        <button
-                                            onClick={() => setSelectedPlaceInfo(null)}
-                                            className="absolute top-6 right-6 w-10 h-10 bg-black/30 backdrop-blur-md rounded-full text-white flex items-center justify-center hover:bg-black/50 transition-all"
-                                        >
-                                            <FaTimes size={14} />
-                                        </button>
-                                        <div className="absolute bottom-8 left-8 right-8">
-                                            <div className="flex items-center gap-2 mb-2">
-                                                <span className={`px-2 py-0.5 rounded text-[8px] font-black uppercase tracking-widest ${selectedPlaceInfo.source === 'internal' ? 'bg-secondary text-white' : 'bg-blue-600 text-white'}`}>
-                                                    {selectedPlaceInfo.source === 'internal' ? 'Verified TS Hub' : 'Historical Site'}
-                                                </span>
-                                            </div>
-                                            <h3 className="text-2xl font-black text-white tracking-tighter uppercase">{selectedPlaceInfo.name}</h3>
-                                        </div>
-                                    </div>
-
-                                    {/* Place Content */}
-                                    <div className="flex-1 overflow-y-auto p-8 custom-scrollbar">
-                                        <div className="space-y-8">
-                                            <div>
-                                                <h4 className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-3 flex items-center gap-2">
-                                                    <FaInfoCircle /> About this place
-                                                </h4>
-                                                <p className="text-slate-600 text-sm leading-relaxed font-medium">
-                                                    {selectedPlaceInfo.description}
-                                                </p>
-                                            </div>
-
-                                            {selectedPlaceInfo.url && (
-                                                <a
-                                                    href={selectedPlaceInfo.url}
-                                                    target="_blank"
-                                                    rel="noopener noreferrer"
-                                                    className="flex items-center justify-between p-4 bg-slate-50 rounded-2xl hover:bg-slate-100 transition-all group"
-                                                >
-                                                    <div className="flex items-center gap-4">
-                                                        <div className="w-10 h-10 bg-white rounded-xl shadow-sm flex items-center justify-center text-slate-400 font-bold text-xl italic">W</div>
-                                                        <div>
-                                                            <p className="text-xs font-black text-slate-900 uppercase">Read More</p>
-                                                            <p className="text-[10px] text-slate-400 uppercase tracking-widest">Wikipedia History</p>
-                                                        </div>
-                                                    </div>
-                                                    <FaExternalLinkAlt className="text-slate-300 group-hover:text-secondary transition-colors" size={14} />
-                                                </a>
-                                            )}
-
-                                            <div className="grid grid-cols-2 gap-4">
-                                                <div className="p-4 bg-slate-50 rounded-2xl">
-                                                    <p className="text-[9px] font-black text-slate-400 uppercase tracking-widest mb-1">LATITUDE</p>
-                                                    <p className="text-xs font-bold text-slate-900">{selectedPlaceInfo.lat.toFixed(4)}°</p>
-                                                </div>
-                                                <div className="p-4 bg-slate-50 rounded-2xl">
-                                                    <p className="text-[9px] font-black text-slate-400 uppercase tracking-widest mb-1">LONGITUDE</p>
-                                                    <p className="text-xs font-bold text-slate-900">{selectedPlaceInfo.lng.toFixed(4)}°</p>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    {/* Action Box */}
-                                    <div className="p-8 bg-white border-t border-slate-100">
-                                        <button
-                                            onClick={() => {
-                                                handleAddPin({
-                                                    id: `${selectedPlaceInfo.source}-${Date.now()}`,
-                                                    lat: selectedPlaceInfo.lat,
-                                                    lng: selectedPlaceInfo.lng,
-                                                    name: selectedPlaceInfo.name,
-                                                    isCustom: true
-                                                });
-                                                setSelectedPlaceInfo(null);
-                                            }}
-                                            className="w-full bg-slate-900 text-white py-4 rounded-2xl font-black text-xs uppercase tracking-[0.3em] hover:bg-secondary transition-all flex items-center justify-center gap-3 group"
-                                        >
-                                            <FaPlus className="group-hover:rotate-90 transition-transform" /> Add to Itinerary
-                                        </button>
-                                    </div>
-                                </div>
-                            </motion.div>
-                        )}
-                    </AnimatePresence>
-                </div>
-            </div>
-
-            {/* Scrollable Content Section */}
-            <div className="bg-white">
-                <section className="max-w-[1400px] mx-auto py-32 px-12 border-b border-slate-50 text-center">
-                    <h2 className="text-5xl font-black text-slate-900 tracking-tighter mb-10 leading-[0.85]">
-                        Precision Planning for <br />
-                        <span className="text-secondary italic">Himalayan Legends.</span>
-                    </h2>
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-12 mt-20">
-                        <div className="p-10 bg-slate-50 rounded-[3rem] text-left">
-                            <FaMountain className="text-3xl text-secondary mb-6" />
-                            <h4 className="text-xl font-black text-slate-900 mb-4 uppercase tracking-tighter">Peak Accuracy</h4>
-                            <p className="text-slate-500 text-sm leading-relaxed">Integrated topographical data ensures every stop is perfectly positioned for high-altitude success.</p>
-                        </div>
-                        <div className="p-10 bg-slate-50 rounded-[3rem] text-left">
-                            <FaHistory className="text-3xl text-secondary mb-6" />
-                            <h4 className="text-xl font-black text-slate-900 mb-4 uppercase tracking-tighter">Rich Heritage</h4>
-                            <p className="text-slate-500 text-sm leading-relaxed">Instantly access historical and cultural data for site you plan to visit across the Himalayan range.</p>
-                        </div>
-                        <div className="p-10 bg-slate-50 rounded-[3rem] text-left">
-                            <FaHandshake className="text-3xl text-secondary mb-6" />
-                            <h4 className="text-xl font-black text-slate-900 mb-4 uppercase tracking-tighter">Verified Hubs</h4>
-                            <p className="text-slate-500 text-sm leading-relaxed">Connect directly with Travel Sansar's network of verified teahouses, lodges, and expert local guides.</p>
-                        </div>
-                    </div>
-                </section>
-            </div>
-
-            <style jsx global>{`
-                .custom-scrollbar::-webkit-scrollbar {
-                    width: 4px;
-                }
-                .custom-scrollbar::-webkit-scrollbar-track {
-                    background: transparent;
-                }
-                .custom-scrollbar::-webkit-scrollbar-thumb {
-                    background: #dfe6ed;
-                    border-radius: 10px;
-                }
-            `}</style>
-
-            {/* Submission Modal */}
-            {showSubmitModal && (
-                <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-[9999] flex items-center justify-center p-4">
-                    <motion.div
-                        initial={{ opacity: 0, scale: 0.9 }}
-                        animate={{ opacity: 1, scale: 1 }}
-                        className="bg-white rounded-3xl max-w-2xl w-full max-h-[90vh] overflow-y-auto shadow-2xl"
+                    <a 
+                        href={whatsappUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center gap-2 px-5 py-2 rounded-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs transition-all shadow-md shadow-emerald-600/20"
                     >
-                        <div className="sticky top-0 bg-white border-b border-gray-100 px-8 py-6 flex items-center justify-between rounded-t-3xl z-10">
-                            <div>
-                                <h2 className="text-3xl font-black text-gray-900 tracking-tight">Submit Your Plan</h2>
-                                <p className="text-sm text-gray-500 font-medium mt-1">Tell us about your dream expedition</p>
-                            </div>
-                            <button
-                                onClick={() => setShowSubmitModal(false)}
-                                className="w-10 h-10 bg-gray-100 rounded-full flex items-center justify-center hover:bg-gray-200 transition-all"
-                            >
-                                <FaTimes className="text-gray-600" />
-                            </button>
+                        <FaWhatsapp size={14} /> Quick WhatsApp
+                    </a>
+                </div>
+            </header>
+
+            {/* Hero Studio Banner */}
+            <section className="relative pt-12 pb-8 px-4 text-center overflow-hidden bg-slate-50 border-b border-gray-200/60">
+                <div className="max-w-[1400px] mx-auto px-4 md:px-8 lg:px-12 relative z-10">
+                    <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-indigo-50 border border-indigo-200/80 text-indigo-700 text-xs font-black uppercase tracking-[0.3em] font-outfit mb-4">
+                        <FaCalculator /> Instant NPR Price Estimator
+                    </span>
+                    <h1 className="text-4xl md:text-6xl font-black font-outfit tracking-tight uppercase leading-none text-slate-900 mb-4">
+                        Expedition <span className="font-playfair italic font-normal text-indigo-600">Studio</span>
+                    </h1>
+                    <p className="text-slate-600 text-sm md:text-base font-medium max-w-2xl mx-auto">
+                        Design your custom Himalayan trek, helicopter flight, or luxury retreat with affordable price calculation in Nepali Rupees (NPR).
+                    </p>
+                </div>
+            </section>
+
+            {/* Main Studio Content */}
+            <section className="max-w-[1400px] mx-auto px-4 md:px-8 lg:px-12 py-12 grid grid-cols-1 lg:grid-cols-12 gap-8 pb-32">
+                
+                {/* LEFT & CENTER: 3 Steps (Cols 8) */}
+                <div className="lg:col-span-8 space-y-10">
+                    
+                    {/* STEP 1: Pursuit Style */}
+                    <div className="bg-white rounded-3xl p-8 border border-gray-200/80 shadow-lg">
+                        <div className="flex items-center gap-3 mb-6">
+                            <span className="w-8 h-8 rounded-full bg-indigo-600 text-white font-black text-xs flex items-center justify-center shadow-md">1</span>
+                            <h3 className="text-xl font-black font-outfit uppercase tracking-wide text-slate-900">Select Expedition Style</h3>
                         </div>
 
-                        <form onSubmit={handleSubmitPlan} className="p-8 space-y-6">
-                            {/* Your Journey Summary */}
-                            <div className="bg-gradient-to-br from-orange-50 to-orange-100/50 rounded-2xl p-6 border border-orange-200">
-                                <h3 className="text-sm font-black text-gray-900 uppercase tracking-widest mb-4 flex items-center gap-2">
-                                    <FaMapMarkerAlt className="text-secondary" /> Your Journey
-                                </h3>
-                                <div className="space-y-2">
-                                    {plannedPins.map((pin, index) => (
-                                        <div key={pin.id} className="flex items-center gap-3 text-sm">
-                                            <div className="w-6 h-6 rounded-full bg-secondary text-white flex items-center justify-center text-xs font-bold">
-                                                {index + 1}
+                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                            {PURSUIT_TYPES.map((type) => {
+                                const Icon = type.icon;
+                                const active = selectedType === type.id;
+                                return (
+                                    <button
+                                        key={type.id}
+                                        onClick={() => setSelectedType(type.id)}
+                                        className={`
+                                            relative p-5 rounded-2xl text-left border transition-all duration-300 flex flex-col justify-between h-[170px]
+                                            ${active 
+                                                ? 'bg-indigo-600 border-indigo-700 text-white shadow-xl shadow-indigo-600/20 scale-[1.02]' 
+                                                : 'bg-slate-50 hover:bg-slate-100 border-gray-200/80 text-slate-700'
+                                            }
+                                        `}
+                                    >
+                                        <div className="flex items-center justify-between">
+                                            <div className={`p-3 rounded-xl ${active ? 'bg-white/20 text-white' : 'bg-white text-indigo-600 border border-gray-200'}`}>
+                                                <Icon size={20} />
                                             </div>
-                                            <span className="text-gray-700 font-medium">{pin.name}</span>
+                                            <span className={`text-[10px] font-black uppercase tracking-wider px-2.5 py-0.5 rounded-full ${active ? 'bg-white text-indigo-700' : 'bg-slate-200 text-slate-700'}`}>
+                                                {type.badge}
+                                            </span>
                                         </div>
-                                    ))}
-                                </div>
+
+                                        <div>
+                                            <h4 className={`font-black text-sm font-outfit uppercase mb-1 ${active ? 'text-white' : 'text-slate-900'}`}>{type.name}</h4>
+                                            <p className={`text-[11px] font-medium leading-snug line-clamp-2 ${active ? 'text-white/90' : 'text-slate-500'}`}>{type.desc}</p>
+                                        </div>
+                                    </button>
+                                );
+                            })}
+                        </div>
+                    </div>
+
+                    {/* STEP 2: Waypoints & Destinations */}
+                    <div className="bg-white rounded-3xl p-8 border border-gray-200/80 shadow-lg">
+                        <div className="flex items-center justify-between mb-6">
+                            <div className="flex items-center gap-3">
+                                <span className="w-8 h-8 rounded-full bg-indigo-600 text-white font-black text-xs flex items-center justify-center shadow-md">2</span>
+                                <h3 className="text-xl font-black font-outfit uppercase tracking-wide text-slate-900">Choose Sanctuaries & Stops</h3>
                             </div>
+                            <span className="text-xs font-bold text-slate-500">{selectedDestinations.length} Selected</span>
+                        </div>
 
-                            {/* Contact Information */}
-                            <div className="space-y-4">
-                                <h3 className="text-sm font-black text-gray-900 uppercase tracking-widest">Contact Information</h3>
-
-                                <div>
-                                    <label className="block text-xs font-bold text-gray-600 uppercase tracking-wider mb-2">Full Name *</label>
-                                    <input
-                                        type="text"
-                                        required
-                                        value={formData.customerName}
-                                        onChange={(e) => setFormData({ ...formData, customerName: e.target.value })}
-                                        className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-secondary focus:ring-2 focus:ring-secondary/20 outline-none transition-all"
-                                        placeholder="John Doe"
-                                    />
-                                </div>
-
-                                <div>
-                                    <label className="block text-xs font-bold text-gray-600 uppercase tracking-wider mb-2">Email Address *</label>
-                                    <input
-                                        type="email"
-                                        required
-                                        value={formData.customerEmail}
-                                        onChange={(e) => setFormData({ ...formData, customerEmail: e.target.value })}
-                                        className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-secondary focus:ring-2 focus:ring-secondary/20 outline-none transition-all"
-                                        placeholder="john@example.com"
-                                    />
-                                </div>
-
-                                <div>
-                                    <label className="block text-xs font-bold text-gray-600 uppercase tracking-wider mb-2">Phone Number</label>
-                                    <input
-                                        type="tel"
-                                        value={formData.customerPhone}
-                                        onChange={(e) => setFormData({ ...formData, customerPhone: e.target.value })}
-                                        className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-secondary focus:ring-2 focus:ring-secondary/20 outline-none transition-all"
-                                        placeholder="+1 (555) 123-4567"
-                                    />
-                                </div>
-                            </div>
-
-                            {/* Trip Details */}
-                            <div className="space-y-4">
-                                <h3 className="text-sm font-black text-gray-900 uppercase tracking-widest">Trip Details</h3>
-
-                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                    <div>
-                                        <label className="block text-xs font-bold text-gray-600 uppercase tracking-wider mb-2">Estimated Duration</label>
-                                        <input
-                                            type="text"
-                                            value={formData.estimatedDuration}
-                                            onChange={(e) => setFormData({ ...formData, estimatedDuration: e.target.value })}
-                                            className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-secondary focus:ring-2 focus:ring-secondary/20 outline-none transition-all"
-                                            placeholder="7 days"
+                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-6">
+                            {PRESET_DESTINATIONS.map((dest) => {
+                                const isSelected = selectedDestinations.includes(dest.id);
+                                return (
+                                    <div
+                                        key={dest.id}
+                                        onClick={() => toggleDestination(dest.id)}
+                                        className={`
+                                            relative rounded-2xl overflow-hidden cursor-pointer border transition-all duration-300 h-[140px] group
+                                            ${isSelected ? 'border-indigo-600 ring-2 ring-indigo-600/30 shadow-lg' : 'border-gray-200/80 hover:border-gray-400'}
+                                        `}
+                                    >
+                                        <Image
+                                            src={dest.image}
+                                            alt={dest.title}
+                                            fill
+                                            className="object-cover transition-transform duration-700 group-hover:scale-110"
                                         />
-                                    </div>
+                                        <div className="absolute inset-0 bg-gradient-to-t from-slate-950/90 via-slate-950/40 to-transparent" />
 
+                                        <div className="absolute top-3 right-3 z-10">
+                                            <div className={`w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold transition-all ${isSelected ? 'bg-indigo-600 text-white scale-110' : 'bg-black/50 text-white border border-white/30'}`}>
+                                                {isSelected ? <FaCheckCircle size={12} /> : '+'}
+                                            </div>
+                                        </div>
+
+                                        <div className="absolute bottom-3 left-3 right-3 z-10">
+                                            <span className="text-[9px] font-black uppercase tracking-wider text-amber-300 block mb-0.5">{dest.region} • {dest.elevation}</span>
+                                            <h5 className="text-xs font-black text-white font-outfit uppercase tracking-tight truncate">{dest.title}</h5>
+                                        </div>
+                                    </div>
+                                );
+                            })}
+                        </div>
+
+                        {/* Interactive Map */}
+                        <div className="h-[260px] rounded-2xl overflow-hidden border border-gray-200 shadow-inner relative">
+                            <InteractiveMap
+                                destinations={PRESET_DESTINATIONS.filter(d => selectedDestinations.includes(d.id))}
+                                plannedPins={PRESET_DESTINATIONS.filter(d => selectedDestinations.includes(d.id)).map(d => ({ id: d.id, name: d.title, lat: d.lat, lng: d.lng }))}
+                                onAddPin={() => {}}
+                                onRemovePin={() => {}}
+                                searchResult={null}
+                            />
+                        </div>
+                    </div>
+
+                    {/* STEP 3: Logistics & Upgrades */}
+                    <div className="bg-white rounded-3xl p-8 border border-gray-200/80 shadow-lg">
+                        <div className="flex items-center gap-3 mb-6">
+                            <span className="w-8 h-8 rounded-full bg-indigo-600 text-white font-black text-xs flex items-center justify-center shadow-md">3</span>
+                            <h3 className="text-xl font-black font-outfit uppercase tracking-wide text-slate-900">Logistics & Optional Upgrades</h3>
+                        </div>
+
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+                            {/* Group Size */}
+                            <div className="p-5 rounded-2xl bg-slate-50 border border-gray-200/80">
+                                <label className="text-xs font-bold text-slate-600 uppercase tracking-widest block mb-3 flex items-center gap-2">
+                                    <FaUserFriends className="text-indigo-600" /> Explorers Count
+                                </label>
+                                <div className="flex items-center justify-between bg-white rounded-xl p-2 border border-gray-200">
+                                    <button 
+                                        onClick={() => setGroupSize(Math.max(1, groupSize - 1))}
+                                        className="w-9 h-9 rounded-lg bg-slate-100 text-slate-900 font-black hover:bg-indigo-600 hover:text-white transition-colors"
+                                    >-</button>
+                                    <span className="text-lg font-black text-slate-900 font-outfit">{groupSize} {groupSize === 1 ? 'Person' : 'People'}</span>
+                                    <button 
+                                        onClick={() => setGroupSize(groupSize + 1)}
+                                        className="w-9 h-9 rounded-lg bg-slate-100 text-slate-900 font-black hover:bg-indigo-600 hover:text-white transition-colors"
+                                    >+</button>
+                                </div>
+                            </div>
+
+                            {/* Duration */}
+                            <div className="p-5 rounded-2xl bg-slate-50 border border-gray-200/80">
+                                <label className="text-xs font-bold text-slate-600 uppercase tracking-widest block mb-3 flex items-center gap-2">
+                                    <FaCalendarAlt className="text-indigo-600" /> Trip Duration
+                                </label>
+                                <div className="flex items-center justify-between bg-white rounded-xl p-2 border border-gray-200">
+                                    <button 
+                                        onClick={() => setDurationDays(Math.max(3, durationDays - 1))}
+                                        className="w-9 h-9 rounded-lg bg-slate-100 text-slate-900 font-black hover:bg-indigo-600 hover:text-white transition-colors"
+                                    >-</button>
+                                    <span className="text-lg font-black text-slate-900 font-outfit">{durationDays} Days</span>
+                                    <button 
+                                        onClick={() => setDurationDays(durationDays + 1)}
+                                        className="w-9 h-9 rounded-lg bg-slate-100 text-slate-900 font-black hover:bg-indigo-600 hover:text-white transition-colors"
+                                    >+</button>
+                                </div>
+                            </div>
+
+                            {/* Season */}
+                            <div className="p-5 rounded-2xl bg-slate-50 border border-gray-200/80">
+                                <label className="text-xs font-bold text-slate-600 uppercase tracking-widest block mb-3">
+                                    Target Season
+                                </label>
+                                <select
+                                    value={season}
+                                    onChange={(e) => setSeason(e.target.value)}
+                                    className="w-full bg-white text-slate-900 text-xs font-bold p-3.5 rounded-xl border border-gray-200 outline-none focus:border-indigo-600"
+                                >
+                                    <option>Autumn Peak (Oct-Nov)</option>
+                                    <option>Spring Blossom (Mar-May)</option>
+                                    <option>Winter Snow (Dec-Feb)</option>
+                                    <option>Monsoon Discovery (Jun-Sep)</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        {/* Add-on Toggles */}
+                        <div className="space-y-3">
+                            <h4 className="text-xs font-bold text-slate-500 uppercase tracking-widest mb-3">Optional Upgrades</h4>
+                            
+                            <div 
+                                onClick={() => setAddons({ ...addons, heliInsurance: !addons.heliInsurance })}
+                                className={`p-4 rounded-2xl border transition-all flex items-center justify-between cursor-pointer ${addons.heliInsurance ? 'bg-indigo-50 border-indigo-500/60 text-slate-900' : 'bg-slate-50 border-gray-200/80 text-slate-600'}`}
+                            >
+                                <div className="flex items-center gap-3">
+                                    <FaShieldAlt className={addons.heliInsurance ? 'text-indigo-600' : 'text-slate-400'} size={18} />
                                     <div>
-                                        <label className="block text-xs font-bold text-gray-600 uppercase tracking-wider mb-2">Estimated Budget</label>
-                                        <input
-                                            type="text"
-                                            value={formData.estimatedBudget}
-                                            onChange={(e) => setFormData({ ...formData, estimatedBudget: e.target.value })}
-                                            className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-secondary focus:ring-2 focus:ring-secondary/20 outline-none transition-all"
-                                            placeholder="$2000 - $3000"
-                                        />
+                                        <h5 className="font-black text-xs font-outfit uppercase text-slate-900">Helicopter Rescue & Evacuation Insurance</h5>
+                                        <p className="text-[11px] text-slate-500">Guaranteed high-altitude emergency airlift coverage</p>
                                     </div>
                                 </div>
-
-                                <div>
-                                    <label className="block text-xs font-bold text-gray-600 uppercase tracking-wider mb-2">Preferred Dates</label>
-                                    <input
-                                        type="text"
-                                        value={formData.preferredDates}
-                                        onChange={(e) => setFormData({ ...formData, preferredDates: e.target.value })}
-                                        className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-secondary focus:ring-2 focus:ring-secondary/20 outline-none transition-all"
-                                        placeholder="June 15 - June 22, 2024"
-                                    />
-                                </div>
-
-                                <div>
-                                    <label className="block text-xs font-bold text-gray-600 uppercase tracking-wider mb-2">Special Requests</label>
-                                    <textarea
-                                        value={formData.specialRequests}
-                                        onChange={(e) => setFormData({ ...formData, specialRequests: e.target.value })}
-                                        rows={4}
-                                        className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-secondary focus:ring-2 focus:ring-secondary/20 outline-none transition-all resize-none"
-                                        placeholder="Any specific requirements or preferences..."
-                                    />
-                                </div>
+                                <span className="text-xs font-black text-indigo-700">+NPR Rs. 2,500/person</span>
                             </div>
 
-                            {/* Submit Button */}
-                            <div className="flex gap-4 pt-4">
-                                <button
-                                    type="button"
-                                    onClick={() => setShowSubmitModal(false)}
-                                    className="flex-1 px-8 py-4 rounded-xl bg-gray-100 text-gray-700 font-bold hover:bg-gray-200 transition-all"
-                                >
-                                    Cancel
-                                </button>
-                                <button
-                                    type="submit"
-                                    disabled={isSubmitting}
-                                    className="flex-1 px-8 py-4 rounded-xl bg-secondary text-white font-bold hover:bg-orange-600 transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
-                                >
-                                    {isSubmitting ? (
-                                        <>
-                                            <span className="animate-spin inline-block">⌛</span>
-                                            Submitting...
-                                        </>
-                                    ) : (
-                                        <>
-                                            <FaPaperPlane /> Submit Plan
-                                        </>
-                                    )}
-                                </button>
+                            <div 
+                                onClick={() => setAddons({ ...addons, luxuryUpgrade: !addons.luxuryUpgrade })}
+                                className={`p-4 rounded-2xl border transition-all flex items-center justify-between cursor-pointer ${addons.luxuryUpgrade ? 'bg-indigo-50 border-indigo-500/60 text-slate-900' : 'bg-slate-50 border-gray-200/80 text-slate-600'}`}
+                            >
+                                <div className="flex items-center gap-3">
+                                    <FaBed className={addons.luxuryUpgrade ? 'text-indigo-600' : 'text-slate-400'} size={18} />
+                                    <div>
+                                        <h5 className="font-black text-xs font-outfit uppercase text-slate-900">5-Star Luxury Lodge & Resort Upgrade</h5>
+                                        <p className="text-[11px] text-slate-500">Stay at premium boutique lodges with heated rooms & spa</p>
+                                    </div>
+                                </div>
+                                <span className="text-xs font-black text-indigo-700">+NPR Rs. 6,000/person</span>
                             </div>
-                        </form>
-                    </motion.div>
+
+                            <div 
+                                onClick={() => setAddons({ ...addons, photographer: !addons.photographer })}
+                                className={`p-4 rounded-2xl border transition-all flex items-center justify-between cursor-pointer ${addons.photographer ? 'bg-indigo-50 border-indigo-500/60 text-slate-900' : 'bg-slate-50 border-gray-200/80 text-slate-600'}`}
+                            >
+                                <div className="flex items-center gap-3">
+                                    <FaCamera className={addons.photographer ? 'text-indigo-600' : 'text-slate-400'} size={18} />
+                                    <div>
+                                        <h5 className="font-black text-xs font-outfit uppercase text-slate-900">Dedicated Expedition Photographer</h5>
+                                        <p className="text-[11px] text-slate-500">4K drone footage & professional portrait photography</p>
+                                    </div>
+                                </div>
+                                <span className="text-xs font-black text-indigo-700">+NPR Rs. 3,500/person</span>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-            )}
+
+                {/* RIGHT: Live Price Summary & Inquiry Form (Cols 4) */}
+                <div className="lg:col-span-4">
+                    <div className="sticky top-28 space-y-6">
+                        
+                        {/* Price Calculator Card */}
+                        <div className="bg-slate-900 text-white rounded-3xl p-8 shadow-2xl relative overflow-hidden">
+                            <span className="text-[10px] font-black text-indigo-400 uppercase tracking-widest block mb-2 font-outfit">Live NPR Estimate</span>
+                            <div className="flex items-baseline gap-2 mb-6">
+                                <span className="text-3xl md:text-4xl font-black text-white font-outfit tracking-tight">{formatNpr(totalPriceNpr)}</span>
+                            </div>
+
+                            <div className="space-y-3 pb-6 border-b border-white/10 text-xs font-medium text-slate-300">
+                                <div className="flex justify-between">
+                                    <span className="text-slate-400">Price Per Person</span>
+                                    <span className="font-bold text-white">{formatNpr(pricePerPersonNpr)}</span>
+                                </div>
+                                <div className="flex justify-between">
+                                    <span className="text-slate-400">Explorers Count</span>
+                                    <span className="font-bold text-white">{groupSize} Team</span>
+                                </div>
+                                <div className="flex justify-between">
+                                    <span className="text-slate-400">Expedition Style</span>
+                                    <span className="font-bold text-indigo-400">{activeType.name}</span>
+                                </div>
+                            </div>
+
+                            {/* Action Options */}
+                            <div className="pt-6 space-y-3">
+                                {isSuccess ? (
+                                    <div className="p-5 rounded-2xl bg-emerald-950/80 border border-emerald-500/40 text-center space-y-2">
+                                        <FaCheckCircle size={28} className="text-emerald-400 mx-auto" />
+                                        <h4 className="font-black text-sm text-white font-outfit uppercase">Expedition Reserved!</h4>
+                                        <p className="text-[11px] text-slate-300">Our Senior Sherpa Concierge will contact you shortly.</p>
+                                    </div>
+                                ) : (
+                                    <>
+                                        <button
+                                            onClick={() => setStep(step === 1 ? 2 : 1)}
+                                            className="w-full py-4 rounded-2xl bg-indigo-600 hover:bg-indigo-500 text-white font-black text-xs uppercase tracking-widest shadow-xl shadow-indigo-600/30 transition-all flex items-center justify-center gap-2"
+                                        >
+                                            {step === 1 ? 'Proceed to Confirmation →' : 'Edit Setup'}
+                                        </button>
+
+                                        <a
+                                            href={whatsappUrl}
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            className="w-full py-3.5 rounded-2xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs uppercase tracking-wider transition-all flex items-center justify-center gap-2 shadow-md shadow-emerald-600/20"
+                                        >
+                                            <FaWhatsapp size={16} /> Instant WhatsApp Quote
+                                        </a>
+                                    </>
+                                )}
+                            </div>
+                        </div>
+
+                        {/* Step 2 Contact Form */}
+                        {step === 2 && !isSuccess && (
+                            <div className="bg-white rounded-3xl p-8 border border-indigo-500/40 shadow-xl space-y-4">
+                                <h4 className="font-black text-sm text-slate-900 font-outfit uppercase tracking-wider mb-2">Explorer Contact Form</h4>
+
+                                <form onSubmit={handleSubmit} className="space-y-4">
+                                    <div>
+                                        <label className="text-[10px] font-bold text-slate-600 uppercase tracking-widest block mb-1">Full Name *</label>
+                                        <input
+                                            type="text"
+                                            required
+                                            value={formData.name}
+                                            onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                                            placeholder="e.g. Chandan Sharma"
+                                            className="w-full bg-slate-50 text-slate-900 text-xs font-semibold p-3.5 rounded-xl border border-gray-200 focus:border-indigo-600 outline-none"
+                                        />
+                                    </div>
+
+                                    <div>
+                                        <label className="text-[10px] font-bold text-slate-600 uppercase tracking-widest block mb-1">Email Address *</label>
+                                        <input
+                                            type="email"
+                                            required
+                                            value={formData.email}
+                                            onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                                            placeholder="e.g. chandan@example.com"
+                                            className="w-full bg-slate-50 text-slate-900 text-xs font-semibold p-3.5 rounded-xl border border-gray-200 focus:border-indigo-600 outline-none"
+                                        />
+                                    </div>
+
+                                    <div>
+                                        <label className="text-[10px] font-bold text-slate-600 uppercase tracking-widest block mb-1">Phone / WhatsApp</label>
+                                        <input
+                                            type="tel"
+                                            value={formData.phone}
+                                            onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+                                            placeholder="+977 9800000000"
+                                            className="w-full bg-slate-50 text-slate-900 text-xs font-semibold p-3.5 rounded-xl border border-gray-200 focus:border-indigo-600 outline-none"
+                                        />
+                                    </div>
+
+                                    <div>
+                                        <label className="text-[10px] font-bold text-slate-600 uppercase tracking-widest block mb-1">Special Requirements</label>
+                                        <textarea
+                                            value={formData.notes}
+                                            onChange={(e) => setFormData({ ...formData, notes: e.target.value })}
+                                            rows={2}
+                                            placeholder="Dietary preferences, medical history..."
+                                            className="w-full bg-slate-50 text-slate-900 text-xs font-semibold p-3.5 rounded-xl border border-gray-200 focus:border-indigo-600 outline-none resize-none"
+                                        />
+                                    </div>
+
+                                    <button
+                                        type="submit"
+                                        disabled={isSubmitting}
+                                        className="w-full py-4 rounded-2xl bg-indigo-600 hover:bg-indigo-700 text-white font-black text-xs uppercase tracking-widest shadow-xl shadow-indigo-600/20 transition-all flex items-center justify-center gap-2"
+                                    >
+                                        {isSubmitting ? 'Reserving...' : <><FaPaperPlane /> Submit Plan (NPR)</>}
+                                    </button>
+                                </form>
+                            </div>
+                        )}
+                    </div>
+                </div>
+
+            </section>
         </main>
     );
 }

@@ -32,12 +32,15 @@ interface Pin {
 }
 
 interface Destination {
-    _id: string;
+    _id?: string;
+    id?: string;
     title: string;
     coordinates?: {
         lat: number;
         lng: number;
     };
+    lat?: number;
+    lng?: number;
     image?: string;
 }
 
@@ -195,11 +198,17 @@ const InteractiveMap = ({ destinations, plannedPins, onAddPin, onRemovePin, sear
 
                 <LocationMarker onAddPin={onAddPin} pinCount={plannedPins.length} />
 
-                {destinations.map((dest) => (
-                    dest.coordinates?.lat && dest.coordinates?.lng ? (
+                {destinations.map((dest) => {
+                    const lat = dest.coordinates?.lat ?? dest.lat;
+                    const lng = dest.coordinates?.lng ?? dest.lng;
+                    const id = dest._id || dest.id || dest.title;
+
+                    if (!lat || !lng) return null;
+
+                    return (
                         <Marker
-                            key={dest._id}
-                            position={[dest.coordinates.lat, dest.coordinates.lng]}
+                            key={id}
+                            position={[lat, lng]}
                             icon={destIcon}
                         >
                             <Popup>
@@ -212,16 +221,18 @@ const InteractiveMap = ({ destinations, plannedPins, onAddPin, onRemovePin, sear
                                         />
                                     )}
                                     <h3 className="font-bold text-lg mb-1">{dest.title}</h3>
-                                    <Link href={`/destination/${dest._id}`} className="text-secondary font-bold text-sm flex items-center gap-1 hover:underline">
-                                        View Details →
-                                    </Link>
+                                    {dest._id && (
+                                        <Link href={`/destination/${dest._id}`} className="text-secondary font-bold text-sm flex items-center gap-1 hover:underline">
+                                            View Details →
+                                        </Link>
+                                    )}
                                     <button
                                         onClick={(e) => {
                                             e.stopPropagation();
                                             onAddPin({
-                                                id: dest._id,
-                                                lat: dest.coordinates!.lat,
-                                                lng: dest.coordinates!.lng,
+                                                id: id,
+                                                lat: lat,
+                                                lng: lng,
                                                 name: dest.title
                                             });
                                         }}
@@ -232,8 +243,8 @@ const InteractiveMap = ({ destinations, plannedPins, onAddPin, onRemovePin, sear
                                 </div>
                             </Popup>
                         </Marker>
-                    ) : null
-                ))}
+                    );
+                })}
 
                 {plannedPins.map((pin) => (
                     <Marker

@@ -29,14 +29,7 @@ const DestinationCard = ({ destination, className }: DestinationProps) => {
 
     return (
         <Link href={`/destination/${destination._id}`} className="block w-full">
-            <motion.div
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
-                whileHover={{ y: -10 }}
-                className={`group relative aspect-[4/5] bg-slate-100 rounded-[20px] overflow-hidden shadow-[0_10px_30px_-10px_rgba(0,0,0,0.1)] hover:shadow-[0_40px_80px_-20px_rgba(0,0,0,0.25)] transition-all duration-700 ${className}`}
-            >
+            <div className={`group relative aspect-[4/5] bg-slate-100 rounded-[20px] overflow-hidden shadow-md hover:shadow-2xl hover:-translate-y-2 transition-all duration-300 ${className}`}>
                 {/* Full-Bleed Background Photo */}
                 <div className="absolute inset-0 z-0">
                     <Image
@@ -99,7 +92,7 @@ const DestinationCard = ({ destination, className }: DestinationProps) => {
 
                 {/* Subtle Glow Effect on Hover */}
                 <div className="absolute -inset-[2px] bg-gradient-to-tr from-blue-500/20 to-purple-500/20 rounded-[20px] opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none" />
-            </motion.div>
+            </div>
         </Link>
     );
 };

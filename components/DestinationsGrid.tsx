@@ -1,74 +1,89 @@
 "use client";
 
-import { motion, AnimatePresence } from 'framer-motion';
-import dynamic from 'next/dynamic';
+import { useState, useEffect, useRef } from 'react';
 import DestinationCard from '@/components/DestinationCard';
-import DestinationSkeleton from '@/components/DestinationSkeleton';
-
-// Dynamically import Masonry to reduce initial bundle size
-const Masonry = dynamic(() => import('react-masonry-css'), {
-    loading: () => (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-            {[...Array(8)].map((_, i) => (
-                <DestinationSkeleton key={i} />
-            ))}
-        </div>
-    ),
-    ssr: false
-});
+import { FaSpinner, FaCheckCircle } from 'react-icons/fa';
 
 interface DestinationsGridProps {
     destinations: any[];
 }
 
 export default function DestinationsGrid({ destinations }: DestinationsGridProps) {
-    const breakpointColumns = {
-        default: 5,
-        1600: 4,
-        1200: 3,
-        700: 2,
-        500: 1
-    };
+    const [displayCount, setDisplayCount] = useState(8);
+    const [isLoadingMore, setIsLoadingMore] = useState(false);
+    const loadMoreRef = useRef<HTMLDivElement>(null);
+
+    // Reset displayCount when destinations filter changes
+    useEffect(() => {
+        setDisplayCount(8);
+    }, [destinations]);
+
+    // Infinite Scroll IntersectionObserver (YouTube-style auto load)
+    useEffect(() => {
+        const observer = new IntersectionObserver(
+            (entries) => {
+                const target = entries[0];
+                if (target.isIntersecting && displayCount < destinations.length && !isLoadingMore) {
+                    setIsLoadingMore(true);
+                    setTimeout(() => {
+                        setDisplayCount((prev) => Math.min(prev + 6, destinations.length));
+                        setIsLoadingMore(false);
+                    }, 300);
+                }
+            },
+            { rootMargin: '300px' }
+        );
+
+        if (loadMoreRef.current) {
+            observer.observe(loadMoreRef.current);
+        }
+
+        return () => {
+            if (loadMoreRef.current) {
+                observer.unobserve(loadMoreRef.current);
+            }
+        };
+    }, [displayCount, destinations.length, isLoadingMore]);
+
+    const visibleDestinations = destinations.slice(0, displayCount);
 
     if (destinations.length === 0) {
         return (
-            <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                className="text-center py-64 bg-slate-50/50 rounded-[24px] border border-slate-100"
-            >
-                <div className="text-[120px] mb-12 grayscale opacity-10">🧭</div>
-                <h3 className="text-6xl font-black text-slate-900 tracking-tighter mb-6 h-font uppercase italic">Horizon Empty</h3>
-                <p className="text-slate-400 font-bold max-w-sm mx-auto uppercase text-xs tracking-[0.4em] leading-loose">
-                    The requested sanctuary has not been archived. <br /> Venture other pursuits.
+            <div className="text-center py-32 bg-slate-50 rounded-3xl border border-slate-200">
+                <div className="text-7xl mb-6 grayscale opacity-20">🧭</div>
+                <h3 className="text-3xl font-black text-slate-900 tracking-tighter mb-4 font-outfit uppercase italic">No Sanctuaries Discovered</h3>
+                <p className="text-slate-500 font-bold max-w-sm mx-auto text-xs uppercase tracking-widest leading-loose">
+                    Adjust your pursuit parameters or explore other regions.
                 </p>
-            </motion.div>
+            </div>
         );
     }
 
     return (
-        <AnimatePresence mode="popLayout">
-            <Masonry
-                breakpointCols={breakpointColumns}
-                className="flex -ml-6 w-auto h-masonry"
-                columnClassName="pl-6 bg-clip-padding"
-            >
-                {destinations.map((dest: any, index: number) => (
-                    <motion.div
-                        key={dest._id}
-                        initial={{ opacity: 0, scale: 0.95 }}
-                        animate={{ opacity: 1, scale: 1 }}
-                        transition={{ 
-                            duration: 0.8, 
-                            delay: index * 0.05, 
-                            ease: [0.22, 1, 0.36, 1] 
-                        }}
-                        className="mb-6"
-                    >
+        <div>
+            {/* Clean Instant CSS Grid without SSR dynamic import delay or opacity fading */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                {visibleDestinations.map((dest: any, index: number) => (
+                    <div key={dest._id || index} className="w-full">
                         <DestinationCard destination={dest} />
-                    </motion.div>
+                    </div>
                 ))}
-            </Masonry>
-        </AnimatePresence>
+            </div>
+
+            {/* Infinite Scroll Sentinel & Loader */}
+            <div ref={loadMoreRef} className="py-12 flex items-center justify-center">
+                {displayCount < destinations.length ? (
+                    <div className="flex items-center gap-3 px-6 py-3 rounded-full bg-slate-100 border border-slate-200 text-slate-700 font-bold text-xs uppercase tracking-widest shadow-2xs">
+                        <FaSpinner className="animate-spin text-teal-600" size={14} />
+                        <span>Loading More Sanctuaries...</span>
+                    </div>
+                ) : (
+                    <div className="flex items-center gap-2 text-slate-400 text-xs font-bold uppercase tracking-widest pt-4">
+                        <FaCheckCircle className="text-teal-600" size={14} />
+                        <span>All Sanctuaries Loaded</span>
+                    </div>
+                )}
+            </div>
+        </div>
     );
 }

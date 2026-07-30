@@ -155,7 +155,7 @@ export default function HeroSlider() {
             <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-black/20 z-10" />
 
             {/* ─── Content ─── */}
-            <div className="relative z-20 h-full flex flex-col justify-center items-center text-center px-6 md:px-12 xl:px-20 max-w-[1100px] mx-auto w-full pt-12 md:pt-20">
+            <div className="relative z-20 h-full flex flex-col justify-center items-center text-center px-4 md:px-8 lg:px-12 max-w-[1400px] mx-auto w-full pt-12 md:pt-20">
                 <AnimatePresence mode="wait">
                     <motion.div
                         key={`content-${slide.id}`}
@@ -216,13 +216,35 @@ export default function HeroSlider() {
                     </motion.div>
                 </AnimatePresence>
 
-                {/* ─── Search Bar ─── */}
+                {/* ─── Search Bar with Category Tabs ─── */}
                 <motion.div
                     initial={{ opacity: 0, y: 30 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: 0.7, duration: 0.8, ease: 'easeOut' }}
                     className="w-full max-w-3xl mx-auto"
                 >
+                    {/* Search Category Tabs */}
+                    <div className="flex justify-center md:justify-start gap-2 mb-2 px-2">
+                        {['All Expeditions', 'Mountain Treks', 'Helicopter Tours', 'Cultural Safaris'].map((tab, idx) => (
+                            <button
+                                key={tab}
+                                onClick={() => {
+                                    if (idx === 1) setQuery('Trek');
+                                    else if (idx === 2) setQuery('Helicopter');
+                                    else if (idx === 3) setQuery('Cultural');
+                                    else setQuery('');
+                                }}
+                                className={`px-4 py-2 rounded-t-2xl text-[11px] font-black uppercase tracking-wider font-outfit transition-all ${
+                                    (idx === 0 && !query) || (idx === 1 && query === 'Trek') || (idx === 2 && query === 'Helicopter') || (idx === 3 && query === 'Cultural')
+                                        ? 'bg-white/20 text-white backdrop-blur-xl border-t border-x border-white/30'
+                                        : 'bg-black/20 text-white/60 hover:text-white hover:bg-white/10'
+                                }`}
+                            >
+                                {tab}
+                            </button>
+                        ))}
+                    </div>
+
                     <div className={`
                         w-full bg-white/10 backdrop-blur-[30px] rounded-3xl md:rounded-[32px] p-2 md:pl-8 
                         shadow-[0_32px_64px_-16px_rgba(0,0,0,0.5)] border border-white/20
@@ -233,16 +255,16 @@ export default function HeroSlider() {
                             {isAiEnabled ? (
                                 <FaMagic className="text-blue-400 text-xl animate-pulse shrink-0" />
                             ) : (
-                                <FaMapMarkerAlt className="text-white/60 text-xl shrink-0" />
+                                <FaMapMarkerAlt className="text-amber-400 text-xl shrink-0" />
                             )}
                             <div className="flex flex-col items-start w-full">
-                                <span className="text-[10px] font-black text-white/40 uppercase tracking-[0.2em] font-outfit mb-0.5">
-                                    {isAiEnabled ? 'AI Intelligence' : 'Destination'}
+                                <span className="text-[10px] font-black text-white/50 uppercase tracking-[0.2em] font-outfit mb-0.5">
+                                    {isAiEnabled ? 'AI Smart Intelligence' : 'Destination / Experience'}
                                 </span>
                                 <input
                                     type="text"
-                                    placeholder={isAiEnabled ? 'Describe your dream sanctuary…' : 'Where to next?'}
-                                    className="w-full bg-transparent outline-none text-white placeholder-white/30 font-bold text-lg"
+                                    placeholder={isAiEnabled ? 'Describe your dream sanctuary…' : 'Search Everest, Annapurna, Chitwan…'}
+                                    className="w-full bg-transparent outline-none text-white placeholder-white/40 font-bold text-lg"
                                     value={query}
                                     onChange={e => setQuery(e.target.value)}
                                     onKeyDown={e => e.key === 'Enter' && handleSearch(e as any)}
@@ -253,8 +275,8 @@ export default function HeroSlider() {
                         <div className="flex w-full md:w-auto items-center gap-3 px-2 pb-2 md:pb-0 md:pr-2">
                             <button
                                 onClick={() => setIsAiEnabled(!isAiEnabled)}
-                                title="Toggle AI"
-                                className={`p-4 rounded-[20px] transition-all duration-300 shrink-0 ${isAiEnabled ? 'bg-blue-600 text-white' : 'bg-white/10 text-white/60 hover:bg-white/20'}`}
+                                title="Toggle AI Smart Search"
+                                className={`p-4 rounded-[20px] transition-all duration-300 shrink-0 ${isAiEnabled ? 'bg-blue-600 text-white shadow-lg shadow-blue-500/40' : 'bg-white/10 text-white/70 hover:bg-white/20'}`}
                             >
                                 <FaMagic size={18} />
                             </button>
@@ -264,26 +286,25 @@ export default function HeroSlider() {
                                     flex-1 md:flex-none h-14 md:px-10 rounded-[20px] font-black text-[13px] uppercase tracking-widest font-outfit
                                     transition-all duration-500 shadow-xl flex items-center justify-center gap-3
                                     ${isAiEnabled 
-                                        ? 'bg-gradient-to-r from-blue-600 to-indigo-600 hover:shadow-blue-500/40' 
-                                        : 'bg-white text-slate-900 hover:bg-white/90 hover:scale-[1.02] shadow-white/10'
+                                        ? 'bg-gradient-to-r from-blue-600 to-indigo-600 text-white hover:shadow-blue-500/40' 
+                                        : 'bg-amber-400 hover:bg-amber-300 text-slate-950 hover:scale-[1.02] shadow-amber-400/20'
                                     }
-                                    text-slate-900
                                 `}
                             >
                                 {isLoading ? <div className="w-5 h-5 border-2 border-slate-900/30 border-t-slate-900 rounded-full animate-spin" /> : <FaSearch size={14} />}
-                                <span className={isAiEnabled ? 'text-white' : 'text-slate-900'}>Search</span>
+                                <span>Find Journeys</span>
                             </button>
                         </div>
                     </div>
 
                     {/* Popular Tags */}
-                    <div className="mt-4 flex flex-wrap justify-center gap-2 text-xs text-white/70 font-medium px-1">
-                        <span className="text-white/40">Popular:</span>
-                        {['Pokhara', 'Everest', 'Chitwan', 'Mustang', 'Bhutan'].map(tag => (
+                    <div className="mt-4 flex flex-wrap justify-center gap-2 text-xs text-white/80 font-medium px-1">
+                        <span className="text-white/40 font-bold uppercase tracking-wider text-[10px]">Trending:</span>
+                        {['Everest Base Camp', 'Annapurna Circuit', 'Pokhara Helicopter', 'Chitwan Safari', 'Mustang Kingdom'].map(tag => (
                             <button
                                 key={tag}
-                                onClick={() => router.push(`/search?query=${tag}`)}
-                                className="hover:text-orange-400 transition-colors underline underline-offset-2 decoration-white/20 hover:decoration-orange-400"
+                                onClick={() => router.push(`/search?query=${encodeURIComponent(tag)}`)}
+                                className="hover:text-amber-300 transition-colors underline underline-offset-2 decoration-white/20 hover:decoration-amber-400 text-xs font-semibold"
                             >
                                 {tag}
                             </button>
@@ -315,18 +336,19 @@ export default function HeroSlider() {
             </div>
 
             {/* ─── Navigation + Controls ─── */}
-            <div className="absolute right-6 md:right-10 bottom-10 z-30 flex items-center gap-3">
+            <div className="absolute right-6 md:right-12 bottom-12 z-30 flex items-center gap-3">
                 {/* Slide Counter */}
-                <div className="text-white/50 text-xs font-bold tracking-widest">
-                    <span className="text-white text-sm">{String(current + 1).padStart(2, '0')}</span>
+                <div className="text-white/70 text-xs font-black tracking-widest font-outfit px-3 py-1.5 rounded-full bg-slate-950/60 border border-white/20">
+                    <span className="text-amber-400 text-sm font-bold">{String(current + 1).padStart(2, '0')}</span>
                     {' / '}
-                    {String(slides.length).padStart(2, '0')}
+                    <span>{String(slides.length).padStart(2, '0')}</span>
                 </div>
 
                 {/* Play/Pause */}
                 <button
                     onClick={() => setIsPaused(p => !p)}
-                    className="w-9 h-9 rounded-full bg-white/10 hover:bg-white/20 border border-white/20 text-white flex items-center justify-center transition-all backdrop-blur-md"
+                    className="w-10 h-10 rounded-full bg-slate-950/60 hover:bg-slate-900 border border-white/20 text-white flex items-center justify-center transition-all duration-300 shadow-md"
+                    title={isPaused ? "Play Autoplay" : "Pause Autoplay"}
                 >
                     {isPaused ? <FaPlay size={10} /> : <FaPause size={10} />}
                 </button>
@@ -334,34 +356,33 @@ export default function HeroSlider() {
                 {/* Prev / Next */}
                 <button
                     onClick={prev}
-                    className="w-10 h-10 rounded-full bg-white/10 hover:bg-orange-500 border border-white/20 text-white flex items-center justify-center transition-all duration-300 backdrop-blur-md"
+                    className="w-11 h-11 rounded-full bg-slate-950/60 hover:bg-amber-400 hover:text-slate-950 border border-white/20 text-white flex items-center justify-center transition-all duration-300 shadow-md"
+                    title="Previous Slide"
                 >
-                    <FaChevronLeft size={12} />
+                    <FaChevronLeft size={13} />
                 </button>
                 <button
                     onClick={next}
-                    className="w-10 h-10 rounded-full bg-orange-500 hover:bg-orange-600 text-white flex items-center justify-center transition-all duration-300 shadow-lg shadow-orange-500/30"
+                    className="w-11 h-11 rounded-full bg-amber-400 hover:bg-amber-300 text-slate-950 flex items-center justify-center transition-all duration-300 shadow-lg shadow-amber-400/30 hover:scale-105"
+                    title="Next Slide"
                 >
-                    <FaChevronRight size={12} />
+                    <FaChevronRight size={13} />
                 </button>
             </div>
 
-            {/* ─── Side Slide Thumbs (desktop) ─── */}
-            <div className="hidden xl:flex absolute right-10 top-1/2 -translate-y-1/2 z-30 flex-col gap-3">
+            {/* ─── Sleek Clean Slide Indicators (No blur container) ─── */}
+            <div className="hidden xl:flex absolute right-12 top-1/2 -translate-y-1/2 z-30 flex-col gap-2.5">
                 {slides.map((s, i) => (
                     <button
                         key={s.id}
                         onClick={() => goTo(i)}
-                        className={`w-12 h-12 rounded-2xl overflow-hidden border-2 transition-all duration-300 ${i === current ? 'border-orange-400 scale-110 shadow-lg shadow-orange-400/30' : 'border-white/20 opacity-50 hover:opacity-75'}`}
-                    >
-                        <Image
-                            src={s.image}
-                            alt={s.tag}
-                            fill
-                            className="object-cover"
-                            sizes="48px"
-                        />
-                    </button>
+                        className={`transition-all duration-300 ${
+                            i === current
+                                ? 'w-3 h-10 bg-amber-400 rounded-full shadow-lg shadow-amber-400/40'
+                                : 'w-3 h-3 bg-white/40 hover:bg-white/80 rounded-full'
+                        }`}
+                        title={s.tag}
+                    />
                 ))}
             </div>
         </div>

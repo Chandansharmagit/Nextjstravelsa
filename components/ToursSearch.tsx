@@ -48,12 +48,12 @@ export default function ToursSearch() {
     }, [debouncedSearch]);
 
     return (
-        <div className="container mx-auto px-4 xl:px-20 mb-12">
+        <div className="max-w-[1400px] mx-auto px-4 md:px-8 lg:px-12 mb-12">
             <motion.div 
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
-                className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 p-4 bg-white/60 backdrop-blur-2xl rounded-[30px] border border-white/40 shadow-2xl"
+                className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 p-4 bg-white rounded-[30px] border border-gray-200/80 shadow-xl"
             >
                 {/* Search Input */}
                 <div className="relative group">

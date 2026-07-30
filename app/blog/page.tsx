@@ -22,10 +22,10 @@ const articles = [
         title: "The Ultimate Packing List for Everest Base Camp",
         category: "Trekking",
         date: "Nov 28, 2025",
-        author: "Michael Chen",
-        readTime: "12 min read",
-        image: "https://images.unsplash.com/photo-1545562083-c583d014b261?q=80&w=2670&auto=format&fit=crop",
-        excerpt: "Don't get caught unaware. Here is everything you need to survive and thrive on the world's most famous trek, from gear to medications.",
+        author: "Pasang Sherpa",
+        readTime: "8 min read",
+        image: "https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?q=80&w=1600&auto=format&fit=crop",
+        excerpt: "Don't get caught unaware. Here is everything you need to survive and thrive on the world's most famous trek.",
         featured: true
     },
     {
@@ -33,9 +33,9 @@ const articles = [
         title: "Why Bhutan Should Be Your Next Spiritual Retreat",
         category: "Wellness",
         date: "Dec 05, 2025",
-        author: "Priya Sharma",
+        author: "Sonam Tshering",
         readTime: "6 min read",
-        image: "https://images.unsplash.com/photo-1578559318534-1100df88d04a?q=80&w=2681&auto=format&fit=crop",
+        image: "https://images.unsplash.com/photo-1506197603052-3cc9c3a201bd?q=80&w=1600&auto=format&fit=crop",
         excerpt: "Discover the serenity of the Thunder Dragon Kingdom and find inner peace in its monasteries, surrounded by pristine Himalayan landscapes.",
         featured: true
     },
