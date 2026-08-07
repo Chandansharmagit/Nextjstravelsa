@@ -58,7 +58,7 @@ const SeasonalOffer = () => {
     return (
         <AnimatePresence>
             {showModal && (
-                <div className="fixed inset-0 z-[99999] flex items-center justify-center p-4 sm:p-6 font-sans">
+                <div className="fixed inset-0 z-[99999] flex items-center justify-center p-3 sm:p-6 font-sans">
                     {/* Glassmorphic Backdrop */}
                     <motion.div
                         initial={{ opacity: 0 }}
@@ -70,23 +70,24 @@ const SeasonalOffer = () => {
 
                     {/* Main Popup Modal Card */}
                     <motion.div
-                        initial={{ scale: 0.92, opacity: 0, y: 30 }}
+                        initial={{ scale: 0.92, opacity: 0, y: 25 }}
                         animate={{ scale: 1, opacity: 1, y: 0 }}
-                        exit={{ scale: 0.92, opacity: 0, y: 30 }}
+                        exit={{ scale: 0.92, opacity: 0, y: 25 }}
                         transition={{ type: "spring", damping: 25, stiffness: 220 }}
-                        className="relative w-full max-w-5xl bg-slate-900 rounded-[2.5rem] shadow-[0_30px_100px_rgba(0,0,0,0.8)] overflow-hidden flex flex-col md:flex-row border border-white/15 z-10"
+                        className="relative w-full max-w-5xl bg-slate-900 rounded-3xl sm:rounded-[2.5rem] shadow-[0_30px_100px_rgba(0,0,0,0.8)] overflow-y-auto max-h-[90vh] custom-scrollbar flex flex-col md:flex-row border border-white/15 z-10"
                     >
-                        {/* Close Button */}
+                        {/* Prominent Floating Close Icon Button (Desktop & Mobile) */}
                         <button
                             onClick={() => setShowModal(false)}
-                            className="absolute top-5 right-5 z-30 w-10 h-10 rounded-full bg-white/10 hover:bg-white text-white hover:text-slate-900 flex items-center justify-center transition-all shadow-xl backdrop-blur-md"
+                            className="absolute top-4 right-4 z-40 w-10 h-10 rounded-full bg-slate-950/80 hover:bg-rose-600 text-white flex items-center justify-center transition-all shadow-2xl border border-white/20 backdrop-blur-md hover:scale-105 active:scale-95"
                             aria-label="Close modal"
+                            title="Close / Cancel"
                         >
                             <FaTimes size={16} />
                         </button>
 
                         {/* LEFT SIDE: Visual Himalayan Showcase */}
-                        <div className="flex-1 relative min-h-[320px] md:min-h-[540px] flex flex-col justify-between p-8 md:p-12 overflow-hidden">
+                        <div className="flex-1 relative min-h-[260px] sm:min-h-[320px] md:min-h-[540px] flex flex-col justify-between p-6 sm:p-8 md:p-12 overflow-hidden">
                             {/* Background Image */}
                             <Image
                                 src="https://images.unsplash.com/photo-1544735716-392fe2489ffa?q=80&w=1600&auto=format&fit=crop"
@@ -98,37 +99,37 @@ const SeasonalOffer = () => {
                             <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/40 to-transparent" />
 
                             {/* Top Badge */}
-                            <div className="relative z-10">
-                                <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/20 backdrop-blur-md border border-white/30 text-amber-300 text-[10px] font-black uppercase tracking-[0.3em] font-outfit">
+                            <div className="relative z-10 pr-12">
+                                <span className="inline-flex items-center gap-2 px-3 sm:px-4 py-1.5 rounded-full bg-white/20 backdrop-blur-md border border-white/30 text-amber-300 text-[9px] sm:text-[10px] font-black uppercase tracking-[0.25em] font-outfit">
                                     <FaCompass /> Spring Expedition Dispatch 2026
                                 </span>
                             </div>
 
                             {/* Center Content */}
-                            <div className="relative z-10 my-auto py-6">
-                                <h2 className="text-4xl md:text-6xl font-black text-white font-outfit uppercase tracking-tight leading-[0.9] mb-3">
+                            <div className="relative z-10 my-auto py-4 sm:py-6">
+                                <h2 className="text-3xl sm:text-4xl md:text-6xl font-black text-white font-outfit uppercase tracking-tight leading-[0.9] mb-2 sm:mb-3">
                                     Spring <br />
                                     <span className="font-playfair italic font-normal text-amber-400">Explorer</span>
                                 </h2>
-                                <p className="text-slate-200 text-xs md:text-sm font-medium max-w-md leading-relaxed mb-6">
+                                <p className="text-slate-200 text-xs md:text-sm font-medium max-w-md leading-relaxed mb-4 sm:mb-6 line-clamp-3 sm:line-clamp-none">
                                     Experience blooming rhododendron forests, crystal clear high-pass visibility, and peak trekking season across Nepal.
                                 </p>
 
                                 {/* Offer Highlight Pill */}
-                                <div className="inline-flex items-center gap-4 p-4 rounded-2xl bg-white/10 backdrop-blur-md border border-white/20">
-                                    <div className="w-12 h-12 rounded-xl bg-amber-500 text-slate-950 flex items-center justify-center font-black text-lg shadow-lg">
-                                        <FaPercent size={20} />
+                                <div className="inline-flex items-center gap-3 sm:gap-4 p-3 sm:p-4 rounded-2xl bg-white/10 backdrop-blur-md border border-white/20">
+                                    <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-amber-500 text-slate-950 flex items-center justify-center font-black text-base sm:text-lg shadow-lg shrink-0">
+                                        <FaPercent size={18} />
                                     </div>
                                     <div>
-                                        <span className="text-[10px] font-black uppercase tracking-widest text-amber-400 block">Promo Code: SPRING30</span>
-                                        <h4 className="text-lg font-black text-white font-outfit uppercase">30% OFF ALL TREKS</h4>
+                                        <span className="text-[9px] sm:text-[10px] font-black uppercase tracking-widest text-amber-400 block">Promo Code: SPRING30</span>
+                                        <h4 className="text-sm sm:text-lg font-black text-white font-outfit uppercase">30% OFF ALL TREKS</h4>
                                     </div>
                                 </div>
                             </div>
 
                             {/* Bottom Note */}
-                            <div className="relative z-10 flex items-center justify-between text-[11px] font-bold text-slate-300 uppercase tracking-widest">
-                                <span>Limited High-Pass Permits</span>
+                            <div className="relative z-10 flex items-center justify-between text-[10px] sm:text-[11px] font-bold text-slate-300 uppercase tracking-widest pt-2">
+                                <span>Limited Permits</span>
                                 <Link 
                                     href="/tours" 
                                     onClick={() => setShowModal(false)}
@@ -140,14 +141,14 @@ const SeasonalOffer = () => {
                         </div>
 
                         {/* RIGHT SIDE: Interactive Discount Claim Form */}
-                        <div className="w-full md:w-[420px] bg-slate-950 p-8 md:p-10 flex flex-col justify-center border-t md:border-t-0 md:border-l border-white/10 relative">
+                        <div className="w-full md:w-[420px] bg-slate-950 p-6 sm:p-8 md:p-10 flex flex-col justify-center border-t md:border-t-0 md:border-l border-white/10 relative">
                             {/* Ambient Glow */}
                             <div className="absolute top-0 right-0 w-48 h-48 bg-indigo-600/15 rounded-full blur-3xl pointer-events-none" />
 
                             <div className="relative z-10">
-                                <div className="mb-6">
+                                <div className="mb-4 sm:mb-6 pr-8">
                                     <span className="text-[10px] font-black text-indigo-400 uppercase tracking-[0.25em] block mb-1 font-outfit">Exclusive Pass</span>
-                                    <h3 className="text-2xl font-black text-white uppercase font-outfit tracking-tight">
+                                    <h3 className="text-xl sm:text-2xl font-black text-white uppercase font-outfit tracking-tight">
                                         Claim 30% Discount
                                     </h3>
                                     <p className="text-slate-400 text-xs font-medium mt-1">
@@ -162,11 +163,17 @@ const SeasonalOffer = () => {
                                         <p className="text-xs text-slate-300 font-medium">
                                             Our Senior Sherpa Concierge will contact you shortly on WhatsApp.
                                         </p>
+                                        <button
+                                            onClick={() => setShowModal(false)}
+                                            className="w-full py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-white font-bold text-xs uppercase tracking-wider transition-all mt-2"
+                                        >
+                                            Close Popup
+                                        </button>
                                     </div>
                                 ) : (
-                                    <form onSubmit={handleSubmit} className="space-y-4">
+                                    <form onSubmit={handleSubmit} className="space-y-3 sm:space-y-4">
                                         <div>
-                                            <label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest block mb-1.5">Full Name *</label>
+                                            <label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest block mb-1">Full Name *</label>
                                             <div className="relative">
                                                 <FaUser className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-500" size={12} />
                                                 <input
@@ -175,13 +182,13 @@ const SeasonalOffer = () => {
                                                     value={name}
                                                     onChange={(e) => setName(e.target.value)}
                                                     placeholder="e.g. Chandan Sharma"
-                                                    className="w-full pl-11 pr-4 py-3 bg-white/5 border border-white/10 rounded-xl focus:border-indigo-500 outline-none text-xs font-semibold text-white placeholder:text-slate-600 transition-all"
+                                                    className="w-full pl-11 pr-4 py-2.5 sm:py-3 bg-white/5 border border-white/10 rounded-xl focus:border-indigo-500 outline-none text-xs font-semibold text-white placeholder:text-slate-600 transition-all"
                                                 />
                                             </div>
                                         </div>
 
                                         <div>
-                                            <label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest block mb-1.5">Phone / WhatsApp *</label>
+                                            <label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest block mb-1">Phone / WhatsApp *</label>
                                             <div className="relative">
                                                 <FaPhoneAlt className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-500" size={12} />
                                                 <input
@@ -190,19 +197,19 @@ const SeasonalOffer = () => {
                                                     value={phone}
                                                     onChange={(e) => setPhone(e.target.value)}
                                                     placeholder="+977 9855051795"
-                                                    className="w-full pl-11 pr-4 py-3 bg-white/5 border border-white/10 rounded-xl focus:border-indigo-500 outline-none text-xs font-semibold text-white placeholder:text-slate-600 transition-all"
+                                                    className="w-full pl-11 pr-4 py-2.5 sm:py-3 bg-white/5 border border-white/10 rounded-xl focus:border-indigo-500 outline-none text-xs font-semibold text-white placeholder:text-slate-600 transition-all"
                                                 />
                                             </div>
                                         </div>
 
                                         <div>
-                                            <label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest block mb-1.5">Preferred Expedition</label>
+                                            <label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest block mb-1">Preferred Expedition</label>
                                             <div className="relative">
                                                 <FaMapMarkerAlt className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-500" size={12} />
                                                 <select
                                                     value={destination}
                                                     onChange={(e) => setDestination(e.target.value)}
-                                                    className="w-full pl-11 pr-4 py-3 bg-slate-900 text-white text-xs font-semibold rounded-xl border border-white/10 focus:border-indigo-500 outline-none"
+                                                    className="w-full pl-11 pr-4 py-2.5 sm:py-3 bg-slate-900 text-white text-xs font-semibold rounded-xl border border-white/10 focus:border-indigo-500 outline-none"
                                                 >
                                                     <option value="Everest Base Camp">Everest Base Camp Trek</option>
                                                     <option value="Annapurna Sanctuary">Annapurna Circuit & Base Camp</option>
@@ -215,7 +222,7 @@ const SeasonalOffer = () => {
                                         <button
                                             type="submit"
                                             disabled={submitting}
-                                            className="w-full py-4 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 font-black text-xs uppercase tracking-widest shadow-xl shadow-amber-500/20 transition-all flex items-center justify-center gap-2 mt-2 disabled:opacity-50"
+                                            className="w-full py-3.5 sm:py-4 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 font-black text-xs uppercase tracking-widest shadow-xl shadow-amber-500/20 transition-all flex items-center justify-center gap-2 mt-2 disabled:opacity-50"
                                         >
                                             {submitting ? 'Claiming...' : <><FaPaperPlane size={12} /> Claim 30% Discount Now</>}
                                         </button>
@@ -224,10 +231,19 @@ const SeasonalOffer = () => {
                                             href="https://wa.me/9779855051795?text=Namaste!%20I%20want%20to%20claim%20the%2030%25%20SPRING30%20discount."
                                             target="_blank"
                                             rel="noopener noreferrer"
-                                            className="w-full py-3 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs uppercase tracking-wider transition-all shadow-md flex items-center justify-center gap-2"
+                                            className="w-full py-2.5 sm:py-3 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs uppercase tracking-wider transition-all shadow-md flex items-center justify-center gap-2"
                                         >
                                             <FaWhatsapp size={15} /> Instant WhatsApp Claim
                                         </a>
+
+                                        {/* Explicit Cancel / Close Button */}
+                                        <button
+                                            type="button"
+                                            onClick={() => setShowModal(false)}
+                                            className="w-full py-2 text-[11px] font-bold text-slate-400 hover:text-rose-400 transition-colors flex items-center justify-center gap-1.5 uppercase tracking-wider pt-1"
+                                        >
+                                            <FaTimes size={10} /> No thanks, close popup
+                                        </button>
                                     </form>
                                 )}
                             </div>

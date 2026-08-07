@@ -123,9 +123,13 @@ export default function NewsletterPopup() {
                                     </form>
                                 )}
 
-                                <p className="text-xs text-gray-400 mt-6">
-                                    No spam, unsubscribe at any time.
-                                </p>
+                                <button
+                                    type="button"
+                                    onClick={handleClose}
+                                    className="text-xs text-gray-400 hover:text-gray-600 mt-4 transition-colors font-medium underline"
+                                >
+                                    No thanks, close window
+                                </button>
                             </div>
                         </div>
                     </motion.div>
